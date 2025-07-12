@@ -1,0 +1,63 @@
+{
+  "docs": {
+    "title": "Integration Guide",
+    "subtitle": "Choose how you want to integrate CheckoutBay into your website. Get started selling in minutes with our easy integration options.",
+    
+    "previewShop": "Preview Your Shop (Interactive)",
+    "previewShopDescription": "Modern, reactive shopping experience with Vue.js. Best for testing interactive features and user experience.",
+    "openPreviewShop": "Open Shop",
+    
+    "previewShopStatic": "Preview Your Shop (SEO-Optimized)",
+    "previewShopStaticDescription": "Static HTML version optimized for search engines. Better for SEO testing and performance analysis.",
+    "openStaticPreview": "Open Shop",
+    
+    "jsLibrary": "JavaScript Library",
+    "jsLibraryDescription": "Add e-commerce functionality to any website with just one script tag. Perfect for blogs, landing pages, and existing websites.",
+    
+    "customApiTitle": "Custom API Integration",
+    "customApiDescription": "Build a completely custom shopping experience using our REST API. Full control over design and user flow for advanced developers.",
+    
+    "getInstructions": "View Instructions",
+    
+    "needHelp": "Need Help?",
+    "helpDescription": "Check out our detailed integration guide and code examples to get started quickly.",
+    
+    "quickTip": "Quick Tip",
+    "jsLibraryQuickTip": "The JavaScript library requires only one script tag and automatically handles cart management, payment processing, and responsive design. Perfect for most use cases.",
+    
+    "apiOverview": "API Overview",
+    "apiOverviewDescription": "Our REST API gives you complete control over the shopping experience. Build custom interfaces, integrate with existing systems, or create mobile applications.",
+    
+    "quickStart": "Quick Start",
+    "quickStartDesc": "Copy and paste this code to get started immediately.",
+    
+    "customButtons": "Custom Buttons",
+    "customButtonsDesc": "Turn any HTML element into an 'Add to Cart' button.",
+    
+    "installationMethods": "Installation Methods",
+    "cdnRecommended": "CDN (Recommended)",
+    "selfHosted": "Self-Hosted",
+    
+    "globalConfiguration": "Global Configuration",
+    "javascriptApi": "JavaScript API",
+    
+    "stylingThemes": "Styling & Themes",
+    "cssCustomProperties": "CSS Custom Properties",
+    "cssClasses": "CSS Classes",
+    
+    "apiFeatures": "API Features",
+    "feature1": "Real-time inventory tracking",
+    "feature2": "Multi-currency support",
+    "feature3": "Automatic tax calculation",
+    "feature4": "Global shipping rates",
+    
+    "commonMethods": "Common API Methods",
+    
+    "getShopDetails": "Get Shop Details",
+    "getProducts": "Get Products",
+    "calculateOrder": "Calculate Order",
+    "createOrder": "Create Order",
+    "createPayment": "Create Payment",
+    "getOrderStatus": "Get Order Status"
+  }
+}

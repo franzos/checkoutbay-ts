@@ -1,0 +1,1 @@
+export const LOCAL_STORAGE_SHOP_KEY = 'rusty.selected_shop';

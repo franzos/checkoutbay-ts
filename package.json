@@ -1,0 +1,10 @@
+{
+  "name": "checkoutbay-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "pnpm --filter common build && pnpm --filter common-components build && pnpm --filter checkoutbay-common build && pnpm --filter checkoutbay-embed build && pnpm --filter checkoutbay-shop-vue build && pnpm --filter checkoutbay build",
+    "dev": "pnpm --filter checkoutbay-shop-vue dev",
+    "test": "pnpm --filter checkoutbay-shop-vue test"
+  }
+}

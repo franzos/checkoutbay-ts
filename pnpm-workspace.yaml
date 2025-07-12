@@ -1,0 +1,7 @@
+packages:
+  - 'common'
+  - 'common-components'
+  - 'checkoutbay-common'
+  - 'checkoutbay-embed'
+  - 'checkoutbay-shop-vue'
+  - 'checkoutbay'

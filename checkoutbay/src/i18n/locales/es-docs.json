@@ -1,0 +1,63 @@
+{
+  "docs": {
+    "title": "Guía de Integración",
+    "subtitle": "Elige cómo quieres integrar CheckoutBay en tu sitio web. Comienza a vender en minutos con nuestras opciones de integración fáciles.",
+    
+    "previewShop": "Vista Previa de tu Tienda (Interactiva)",
+    "previewShopDescription": "Experiencia de compra moderna y reactiva con Vue.js. Ideal para probar características interactivas y experiencia de usuario.",
+    "openPreviewShop": "Abrir Tienda",
+    
+    "previewShopStatic": "Vista Previa de tu Tienda (Optimizada para SEO)",
+    "previewShopStaticDescription": "Versión HTML estática optimizada para motores de búsqueda. Mejor para pruebas de SEO y análisis de rendimiento.",
+    "openStaticPreview": "Abrir Tienda",
+    
+    "jsLibrary": "Biblioteca JavaScript",
+    "jsLibraryDescription": "Agrega funcionalidad de comercio electrónico a cualquier sitio web con solo una etiqueta de script. Perfecto para blogs, páginas de destino y sitios web existentes.",
+    
+    "customApiTitle": "Integración de API Personalizada",
+    "customApiDescription": "Construye una experiencia de compra completamente personalizada usando nuestra API REST. Control total sobre el diseño y flujo de usuario para desarrolladores avanzados.",
+    
+    "getInstructions": "Ver Instrucciones",
+    
+    "needHelp": "¿Necesitas Ayuda?",
+    "helpDescription": "Consulta nuestra guía de integración detallada y ejemplos de código para comenzar rápidamente.",
+    
+    "quickTip": "Consejo Rápido",
+    "jsLibraryQuickTip": "La biblioteca JavaScript requiere solo una etiqueta de script y maneja automáticamente la gestión del carrito, procesamiento de pagos y diseño responsivo. Perfecto para la mayoría de casos de uso.",
+    
+    "apiOverview": "Resumen de la API",
+    "apiOverviewDescription": "Nuestra API REST te da control completo sobre la experiencia de compra. Construye interfaces personalizadas, integra con sistemas existentes o crea aplicaciones móviles.",
+    
+    "quickStart": "Inicio Rápido",
+    "quickStartDesc": "Copia y pega este código para comenzar inmediatamente.",
+    
+    "customButtons": "Botones Personalizados",
+    "customButtonsDesc": "Convierte cualquier elemento HTML en un botón 'Agregar al Carrito'.",
+    
+    "installationMethods": "Métodos de Instalación",
+    "cdnRecommended": "CDN (Recomendado)",
+    "selfHosted": "Auto-alojado",
+    
+    "globalConfiguration": "Configuración Global",
+    "javascriptApi": "API JavaScript",
+    
+    "stylingThemes": "Estilos y Temas",
+    "cssCustomProperties": "Propiedades Personalizadas CSS",
+    "cssClasses": "Clases CSS",
+    
+    "apiFeatures": "Características de la API",
+    "feature1": "Seguimiento de inventario en tiempo real",
+    "feature2": "Soporte multi-moneda",
+    "feature3": "Cálculo automático de impuestos",
+    "feature4": "Tarifas de envío globales",
+    
+    "commonMethods": "Métodos Comunes de la API",
+    
+    "getShopDetails": "Obtener Detalles de la Tienda",
+    "getProducts": "Obtener Productos",
+    "calculateOrder": "Calcular Pedido",
+    "createOrder": "Crear Pedido",
+    "createPayment": "Crear Pago",
+    "getOrderStatus": "Obtener Estado del Pedido"
+  }
+}

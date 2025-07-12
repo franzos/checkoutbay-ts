@@ -1,0 +1,34 @@
+{
+  "name": "@gofranz/checkoutbay-shop-vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "author": "Franz Geffke <mail@gofranz.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@css-render/vue3-ssr": "^0.15.14",
+    "@gofranz/common": "workspace:*",
+    "@gofranz/checkoutbay-common": "workspace:*",
+    "@vicons/ionicons5": "^0.13.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "decimal.js": "^10.5.0",
+    "lucide-vue-next": "^0.487.0",
+    "naive-ui": "^2.41.0",
+    "pinia": "^3.0.2",
+    "rust_iso3166-ts": "^0.1.14",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1",
+    "vueuc": "^0.4.64"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/compiler-sfc": "^3.5.13",
+    "vite": "^6.3.3"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "docs": {
+    "title": "Guide d'Intégration",
+    "subtitle": "Choisissez comment vous voulez intégrer CheckoutBay dans votre site web. Commencez à vendre en quelques minutes avec nos options d'intégration faciles.",
+    
+    "previewShop": "Prévisualiser Votre Boutique (Interactif)",
+    "previewShopDescription": "Expérience d'achat moderne et réactive avec Vue.js. Idéal pour tester les fonctionnalités interactives et l'expérience utilisateur.",
+    "openPreviewShop": "Ouvrir la Boutique",
+    
+    "previewShopStatic": "Prévisualiser Votre Boutique (Optimisé SEO)",
+    "previewShopStaticDescription": "Version HTML statique optimisée pour les moteurs de recherche. Meilleur pour les tests SEO et l'analyse de performance.",
+    "openStaticPreview": "Ouvrir la Boutique",
+    
+    "jsLibrary": "Bibliothèque JavaScript",
+    "jsLibraryDescription": "Ajoutez des fonctionnalités e-commerce à n'importe quel site web avec juste une balise script. Parfait pour les blogs, pages de destination et sites web existants.",
+    
+    "customApiTitle": "Intégration API Personnalisée",
+    "customApiDescription": "Construisez une expérience d'achat complètement personnalisée en utilisant notre API REST. Contrôle total sur le design et le flux utilisateur pour les développeurs avancés.",
+    
+    "getInstructions": "Voir les Instructions",
+    
+    "needHelp": "Besoin d'Aide ?",
+    "helpDescription": "Consultez notre guide d'intégration détaillé et nos exemples de code pour commencer rapidement.",
+    
+    "quickTip": "Conseil Rapide",
+    "jsLibraryQuickTip": "La bibliothèque JavaScript ne nécessite qu'une seule balise script et gère automatiquement la gestion du panier, le traitement des paiements et le design responsive. Parfait pour la plupart des cas d'usage.",
+    
+    "apiOverview": "Aperçu de l'API",
+    "apiOverviewDescription": "Notre API REST vous donne un contrôle complet sur l'expérience d'achat. Construisez des interfaces personnalisées, intégrez avec des systèmes existants, ou créez des applications mobiles.",
+    
+    "quickStart": "Démarrage Rapide",
+    "quickStartDesc": "Copiez et collez ce code pour commencer immédiatement.",
+    
+    "customButtons": "Boutons Personnalisés",
+    "customButtonsDesc": "Transformez n'importe quel élément HTML en bouton 'Ajouter au Panier'.",
+    
+    "installationMethods": "Méthodes d'Installation",
+    "cdnRecommended": "CDN (Recommandé)",
+    "selfHosted": "Auto-hébergé",
+    
+    "globalConfiguration": "Configuration Globale",
+    "javascriptApi": "API JavaScript",
+    
+    "stylingThemes": "Style et Thèmes",
+    "cssCustomProperties": "Propriétés CSS Personnalisées",
+    "cssClasses": "Classes CSS",
+    
+    "apiFeatures": "Fonctionnalités API",
+    "feature1": "Suivi d'inventaire en temps réel",
+    "feature2": "Support multi-devises",
+    "feature3": "Calcul automatique des taxes",
+    "feature4": "Tarifs d'expédition mondiaux",
+    
+    "commonMethods": "Méthodes API Communes",
+    
+    "getShopDetails": "Obtenir les Détails de la Boutique",
+    "getProducts": "Obtenir les Produits",
+    "calculateOrder": "Calculer la Commande",
+    "createOrder": "Créer une Commande",
+    "createPayment": "Créer un Paiement",
+    "getOrderStatus": "Obtenir le Statut de la Commande"
+  }
+}

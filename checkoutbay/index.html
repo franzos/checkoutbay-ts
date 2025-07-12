@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Essential SEO Meta Tags for crawlers (before React loads) -->
+    <title>CheckoutBay - Your Store. Your Way. | E-commerce Platform</title>
+    <meta name="description" content="Fast, cost-effective e-commerce platform. Manage inventory, orders, warehouses & payments in one place. Easy to use, privacy-focused." />
+    <meta name="author" content="CheckoutBay" />
+    <meta name="robots" content="index, follow" />
+    <meta name="msapplication-TileColor" content="#6a4c93" />
+    
+    <!-- Basic Open Graph for social sharing -->
+    <meta property="og:title" content="CheckoutBay - Your Store. Your Way." />
+    <meta property="og:description" content="Fast, cost-effective e-commerce platform. Easy to use, privacy-focused." />
+    <meta property="og:image" content="https://checkoutbay.com/banner.png" />
+    <meta property="og:url" content="https://checkoutbay.com/" />
+    
+    <!-- Structured Data for E-commerce Platform -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "CheckoutBay",
+      "description": "Fast, cost-effective e-commerce platform. Manage inventory, orders, warehouses & payments in one place. Easy to use for everyone.",
+      "url": "https://checkoutbay.com",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR",
+        "description": "Free during preview phase"
+      },
+      "featureList": [
+        "Inventory Management",
+        "Order Processing", 
+        "Warehouse Management",
+        "Payment Gateway Integration",
+        "Developer API",
+        "JavaScript Library",
+        "Multi-language Support",
+        "Privacy-Focused"
+      ],
+      "provider": {
+        "@type": "Organization",
+        "name": "CheckoutBay",
+        "url": "https://checkoutbay.com"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

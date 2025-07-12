@@ -1,0 +1,59 @@
+{
+  "docs": {
+    "title": "دليل التكامل",
+    "subtitle": "اختر كيف تريد دمج CheckoutBay في موقعك الإلكتروني. ابدأ البيع في دقائق مع خيارات التكامل السهلة لدينا.",
+    
+    "previewShop": "معاينة متجرك",
+    "previewShopDescription": "شاهد كيف يبدو متجرك للعملاء قبل النشر المباشر. اختبر تجربة التسوق الكاملة بما في ذلك عرض المنتجات ووظائف السلة وتدفق الدفع.",
+    "openPreviewShop": "فتح المعاينة",
+    
+    "jsLibrary": "مكتبة JavaScript",
+    "jsLibraryDescription": "أضف وظائف التجارة الإلكترونية إلى أي موقع ويب بوسم سكريبت واحد فقط. مثالي للمدونات وصفحات الهبوط والمواقع الموجودة.",
+    
+    "customApiTitle": "تكامل API مخصص",
+    "customApiDescription": "أنشئ تجربة تسوق مخصصة بالكامل باستخدام REST API الخاص بنا. تحكم كامل في التصميم وتدفق المستخدم للمطورين المتقدمين.",
+    
+    "getInstructions": "عرض التعليمات",
+    
+    "needHelp": "تحتاج مساعدة؟",
+    "helpDescription": "راجع دليل التكامل المفصل وأمثلة الكود الخاصة بنا للبدء بسرعة.",
+    
+    "quickTip": "نصيحة سريعة",
+    "jsLibraryQuickTip": "تتطلب مكتبة JavaScript وسم سكريبت واحد فقط وتتعامل تلقائياً مع إدارة السلة ومعالجة المدفوعات والتصميم المتجاوب. مثالية لمعظم حالات الاستخدام.",
+    
+    "apiOverview": "نظرة عامة على API",
+    "apiOverviewDescription": "يمنحك REST API الخاص بنا تحكماً كاملاً في تجربة التسوق. أنشئ واجهات مخصصة أو ادمج مع الأنظمة الموجودة أو أنشئ تطبيقات الهاتف المحمول.",
+    
+    "quickStart": "بداية سريعة",
+    "quickStartDesc": "انسخ والصق هذا الكود للبدء فوراً.",
+    
+    "customButtons": "أزرار مخصصة",
+    "customButtonsDesc": "حول أي عنصر HTML إلى زر 'إضافة إلى السلة'.",
+    
+    "installationMethods": "طرق التثبيت",
+    "cdnRecommended": "CDN (موصى به)",
+    "selfHosted": "استضافة ذاتية",
+    
+    "globalConfiguration": "التكوين العام",
+    "javascriptApi": "JavaScript API",
+    
+    "stylingThemes": "التصميم والقوالب",
+    "cssCustomProperties": "خصائص CSS المخصصة",
+    "cssClasses": "فئات CSS",
+    
+    "apiFeatures": "ميزات API",
+    "feature1": "تتبع المخزون في الوقت الفعلي",
+    "feature2": "دعم العملات المتعددة",
+    "feature3": "حساب الضرائب التلقائي",
+    "feature4": "أسعار الشحن العالمية",
+    
+    "commonMethods": "طرق API الشائعة",
+    
+    "getShopDetails": "الحصول على تفاصيل المتجر",
+    "getProducts": "الحصول على المنتجات",
+    "calculateOrder": "حساب الطلب",
+    "createOrder": "إنشاء طلب",
+    "createPayment": "إنشاء دفعة",
+    "getOrderStatus": "الحصول على حالة الطلب"
+  }
+}

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Rusty Shop - Your one-stop shop for all your needs" />
+    <meta name="theme-color" content="#18a058" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Rusty Shop</title>
+    <style>
+      /* Prevent FOUC (Flash of Unstyled Content) */
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: #fff;
+      }
+      @media (prefers-color-scheme: dark) {
+        html, body {
+          background-color: #18181c;
+        }
+      }
+      #app {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Configure payment redirect URLs (optional) -->
+    <script>
+      // Uncomment to override default redirect URLs after payment
+      // window.CheckoutBayConfig = {
+      //   successUrl: 'https://yoursite.com/payment-success',
+      //   cancelUrl: 'https://yoursite.com/payment-cancel'
+      // };
+    </script>
+    
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

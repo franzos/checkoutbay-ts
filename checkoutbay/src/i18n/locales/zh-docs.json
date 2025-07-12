@@ -1,0 +1,59 @@
+{
+  "docs": {
+    "title": "集成指南",
+    "subtitle": "选择如何将CheckoutBay集成到您的网站。通过我们简单的集成选项，几分钟内开始销售。",
+    
+    "previewShop": "预览您的商店",
+    "previewShopDescription": "在上线前查看客户眼中的商店外观。测试完整的购物体验，包括产品展示、购物车功能和结账流程。",
+    "openPreviewShop": "打开预览",
+    
+    "jsLibrary": "JavaScript库",
+    "jsLibraryDescription": "只需一个脚本标签即可为任何网站添加电商功能。非常适合博客、落地页和现有网站。",
+    
+    "customApiTitle": "自定义API集成",
+    "customApiDescription": "使用我们的REST API构建完全自定义的购物体验。为高级开发者提供设计和用户流程的完全控制。",
+    
+    "getInstructions": "查看说明",
+    
+    "needHelp": "需要帮助？",
+    "helpDescription": "查看我们详细的集成指南和代码示例，快速开始使用。",
+    
+    "quickTip": "快速提示",
+    "jsLibraryQuickTip": "JavaScript库只需要一个脚本标签，自动处理购物车管理、支付处理和响应式设计。适合大多数使用场景。",
+    
+    "apiOverview": "API概览",
+    "apiOverviewDescription": "我们的REST API为您提供购物体验的完全控制。构建自定义界面、与现有系统集成或创建移动应用程序。",
+    
+    "quickStart": "快速开始",
+    "quickStartDesc": "复制粘贴此代码立即开始使用。",
+    
+    "customButtons": "自定义按钮",
+    "customButtonsDesc": "将任何HTML元素转换为'加入购物车'按钮。",
+    
+    "installationMethods": "安装方法",
+    "cdnRecommended": "CDN（推荐）",
+    "selfHosted": "自托管",
+    
+    "globalConfiguration": "全局配置",
+    "javascriptApi": "JavaScript API",
+    
+    "stylingThemes": "样式和主题",
+    "cssCustomProperties": "CSS自定义属性",
+    "cssClasses": "CSS类",
+    
+    "apiFeatures": "API功能",
+    "feature1": "实时库存跟踪",
+    "feature2": "多货币支持",
+    "feature3": "自动税费计算",
+    "feature4": "全球运费标准",
+    
+    "commonMethods": "常用API方法",
+    
+    "getShopDetails": "获取商店详情",
+    "getProducts": "获取产品",
+    "calculateOrder": "计算订单",
+    "createOrder": "创建订单",
+    "createPayment": "创建支付",
+    "getOrderStatus": "获取订单状态"
+  }
+}

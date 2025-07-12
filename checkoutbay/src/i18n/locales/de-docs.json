@@ -1,0 +1,63 @@
+{
+  "docs": {
+    "title": "Integrationsleitfaden",
+    "subtitle": "Wählen Sie, wie Sie CheckoutBay in Ihre Website integrieren möchten. Beginnen Sie in wenigen Minuten mit dem Verkauf mit unseren einfachen Integrationsoptionen.",
+    
+    "previewShop": "Ihren Shop vorschauen (Interaktiv)",
+    "previewShopDescription": "Modernes, reaktionsschnelles Einkaufserlebnis mit Vue.js. Ideal zum Testen interaktiver Funktionen und Benutzererfahrung.",
+    "openPreviewShop": "Shop öffnen",
+    
+    "previewShopStatic": "Ihren Shop vorschauen (SEO-Optimiert)",
+    "previewShopStaticDescription": "Statische HTML-Version, optimiert für Suchmaschinen. Besser für SEO-Tests und Leistungsanalyse.",
+    "openStaticPreview": "Shop öffnen",
+    
+    "jsLibrary": "JavaScript-Bibliothek",
+    "jsLibraryDescription": "Fügen Sie E-Commerce-Funktionalität zu jeder Website mit nur einem Script-Tag hinzu. Perfekt für Blogs, Landing Pages und bestehende Websites.",
+    
+    "customApiTitle": "Benutzerdefinierte API-Integration",
+    "customApiDescription": "Erstellen Sie ein vollständig angepasstes Einkaufserlebnis mit unserer REST-API. Volle Kontrolle über Design und Benutzerführung für fortgeschrittene Entwickler.",
+    
+    "getInstructions": "Anweisungen anzeigen",
+    
+    "needHelp": "Brauchen Sie Hilfe?",
+    "helpDescription": "Schauen Sie sich unseren detaillierten Integrationsleitfaden und Code-Beispiele an, um schnell zu starten.",
+    
+    "quickTip": "Schneller Tipp",
+    "jsLibraryQuickTip": "Die JavaScript-Bibliothek benötigt nur ein Script-Tag und übernimmt automatisch die Warenkorbverwaltung, Zahlungsabwicklung und responsives Design. Perfekt für die meisten Anwendungsfälle.",
+    
+    "apiOverview": "API-Übersicht",
+    "apiOverviewDescription": "Unsere REST-API gibt Ihnen vollständige Kontrolle über das Einkaufserlebnis. Erstellen Sie benutzerdefinierte Schnittstellen, integrieren Sie in bestehende Systeme oder erstellen Sie mobile Anwendungen.",
+    
+    "quickStart": "Schnellstart",
+    "quickStartDesc": "Kopieren Sie diesen Code und fügen Sie ihn ein, um sofort zu starten.",
+    
+    "customButtons": "Benutzerdefinierte Buttons",
+    "customButtonsDesc": "Verwandeln Sie jedes HTML-Element in einen 'In den Warenkorb'-Button.",
+    
+    "installationMethods": "Installationsmethoden",
+    "cdnRecommended": "CDN (Empfohlen)",
+    "selfHosted": "Self-Hosted",
+    
+    "globalConfiguration": "Globale Konfiguration",
+    "javascriptApi": "JavaScript-API",
+    
+    "stylingThemes": "Styling & Themes",
+    "cssCustomProperties": "CSS Custom Properties",
+    "cssClasses": "CSS-Klassen",
+    
+    "apiFeatures": "API-Features",
+    "feature1": "Echtzeit-Bestandsverfolgung",
+    "feature2": "Multi-Währungsunterstützung",
+    "feature3": "Automatische Steuerberechnung",
+    "feature4": "Globale Versandtarife",
+    
+    "commonMethods": "Häufige API-Methoden",
+    
+    "getShopDetails": "Shop-Details abrufen",
+    "getProducts": "Produkte abrufen",
+    "calculateOrder": "Bestellung berechnen",
+    "createOrder": "Bestellung erstellen",
+    "createPayment": "Zahlung erstellen",
+    "getOrderStatus": "Bestellstatus abrufen"
+  }
+}
