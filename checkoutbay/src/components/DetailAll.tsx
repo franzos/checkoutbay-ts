@@ -1,7 +1,6 @@
 import {
   Address,
   Order,
-  OrderRegisteredOrPublicUser,
   PaymentGateway,
   Product,
   ShippingRateTemplate,
@@ -97,7 +96,7 @@ export function PaymentGatewayDetail(props: PaymentGatewayDetailProps) {
 }
 
 export interface OrderDetailProps {
-  item: OrderRegisteredOrPublicUser;
+  item: Order;
   submitCb?: (id: string, updateOrder: Partial<Order>) => Promise<void>;
   deleteCb?: (formId: string) => Promise<void>;
   reload?: () => Promise<void>;

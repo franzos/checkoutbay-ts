@@ -9,6 +9,7 @@ import {
   formatPrice,
 } from '@gofranz/checkoutbay-common';
 import { CommonTableProps } from '../../lib/table';
+import Decimal from 'decimal.js';
 
 export function ShippingRateTemplatesTable(
   props: CommonTableProps<ShippingRateTemplate, Partial<ShippingRateTemplate>>
@@ -101,7 +102,7 @@ export function ShippingRateTemplatesTable(
               <Text size="sm" c="dimmed">
                 {formatPrice(rate.amount, row.currency)}
                 {rate.free_above_value &&
-                  rate.free_above_value.greaterThan(0) &&
+                  new Decimal(rate.free_above_value || 0).greaterThan(0) &&
                   `, free above ${rate.free_above_value} ${row.currency}`}
               </Text>
             </Group>

@@ -17,6 +17,7 @@ import { RenderFieldsProps } from '../Entity/EntityForm';
 import React, { useEffect } from 'react';
 import { initialPhysicalPropertiesValues } from '../CreatingAll';
 import { useTranslation } from 'react-i18next';
+import Decimal from 'decimal.js';
 
 function createSlugFromTitle(title: string): string {
   return title
@@ -124,7 +125,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
         placeholder={t('products.pricePlaceholder')}
         withAsterisk
         {...form.getInputProps('price')}
-        value={form.values.price?.toNumber()}
+        value={new Decimal(form.values.price || 0)?.toNumber()}
         error={form.errors.price}
         thousandSeparator=" "
         allowDecimal={true}

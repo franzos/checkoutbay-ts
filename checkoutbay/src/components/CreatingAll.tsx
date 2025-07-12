@@ -4,7 +4,9 @@ import {
   Address,
   AddressType,
   DimensionUnit,
+  InlineAddress,
   PaymentGateway,
+  PaymentGatewayProvider,
   PhysicalProperties,
   Product,
   ShippingRate,
@@ -23,7 +25,7 @@ import { RenderAddressFields } from './Addresses/AddressFields';
 import { EntityForm } from './Entity/EntityForm';
 import { RenderPaymentGatewayFields } from './PaymentGateways/PaymentGatewayFields';
 import { RenderProductFields } from './Products/ProductFields';
-import { renderShippingRateTemplateFields } from './ShippingRateTemplates/ShippingRateTemplateFields';
+import { RenderShippingRateTemplateFields } from './ShippingRateTemplates/ShippingRateTemplateFields';
 import { RenderStockMovementsFields } from './StockMovements/StockMovementFields';
 import { RenderWarehouseFields } from './Warehouses/WarehouseFields';
 
@@ -64,7 +66,7 @@ export const productValidation: FormValidateInput<Partial<Product>> = {
   title: (value: string | undefined) => (value ? null : 'Title is required'),
   slug: (value: string | undefined) => (value ? null : 'Slug is required'),
   description: (value: string | undefined) => (value ? null : 'Description is required'),
-  price: (value: Decimal | undefined) => (value ? null : 'Price is required'),
+  price: (value: any) => (value ? null : 'Price is required'),
 };
 
 export function CreateProduct({
@@ -74,7 +76,7 @@ export function CreateProduct({
 }) {
   const shopId = useRustyState.getState().getShopId();
   return (
-    <EntityForm<Product>
+    <EntityForm<Partial<Product>>
       title="Create Product"
       description="Add a new product to your store."
       initialValues={getInitialProductValues(shopId)}
@@ -160,7 +162,7 @@ export function CreateAddress({
 }) {
   const shopId = useRustyState.getState().getShopId();
   return (
-    <EntityForm<any>
+    <EntityForm<InlineAddress>
       title="Create Address"
       description="Add a new address to your account."
       initialValues={getInitialAddressValues(shopId)}
@@ -231,7 +233,7 @@ const getInitialPaymentGatewayValues = (shopId: string) => {
 
 export const paymentGatewayValidation: FormValidateInput<Partial<PaymentGateway>> = {
   title: (value: string | undefined) => (value ? undefined : 'Title is required'),
-  provider: (value: string | undefined) => (value ? undefined : 'Provider is required'),
+  provider: (value: PaymentGatewayProvider | undefined) => (value ? undefined : 'Provider is required'),
   public_key: (value: string | undefined) => (value ? undefined : 'Public key is required'),
   secret_key: (value: string | undefined) => (value ? undefined : 'Secret key is required'),
   product_id: (value: string | undefined) => (value ? undefined : 'Product is required'),
@@ -242,7 +244,7 @@ export const paymentGatewayValidation: FormValidateInput<Partial<PaymentGateway>
 export function CreatePaymentGateway({
   submitFormCb,
 }: {
-  submitFormCb: (data: any) => Promise<void>;
+    submitFormCb: (data: Partial<PaymentGateway>) => Promise<void>;
 }) {
   const shopId = useRustyState.getState().getShopId();
   return (
@@ -295,19 +297,19 @@ export const shippingRateTemplateValidation: FormValidateInput<Partial<ShippingR
 export function CreateShippingRateTemplate({
   submitFormCb,
 }: {
-  submitFormCb: (data: any) => Promise<void>;
+    submitFormCb: (data: Partial<ShippingRateTemplate>) => Promise<void>;
 }) {
   const shopId = useRustyState.getState().getShopId();
   const defaultCurrency = useRustyState.getState().shopCurrency();
 
   return (
-    <EntityForm<any>
+    <EntityForm<ShippingRateTemplate>
       title="Create Shipping Rate Template"
       description="Add a new shipping rate template to your account."
       initialValues={getInitialShippingRateTemplateValues(shopId, defaultCurrency)}
       validation={shippingRateTemplateValidation}
       submitFormCb={submitFormCb}
-      renderFields={renderShippingRateTemplateFields}
+      renderFields={RenderShippingRateTemplateFields}
       shopId={shopId}
     />
   );

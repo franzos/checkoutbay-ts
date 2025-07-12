@@ -18,8 +18,8 @@ import {
   Product,
   Warehouse,
   InlineAddress,
-  OrderRegisteredOrPublicUser,
-  OrderStatus
+  OrderStatus,
+  Order
 } from "@gofranz/checkoutbay-common";
 import { useState, useEffect } from "react";
 import { useRustyState } from "../../state";
@@ -35,7 +35,7 @@ export function RenderOrder({
   data,
   setParentLoading,
   reload
-}: RenderEntityProps<OrderRegisteredOrPublicUser>) {
+}: RenderEntityProps<Order>) {
   // const [addresses, setAddresses] = useState<Address[]>([]);
   const [shippingAddress, setShippingAddress] = useState<InlineAddress | null>(null);
   const [billingAddress, setBillingAddress] = useState<InlineAddress | null>(null);
@@ -51,10 +51,10 @@ export function RenderOrder({
     setParentLoading(loading);
   };
 
-  const payable = data.status === OrderStatus.DRAFT || data.status === OrderStatus.NEW;
-  const shippable = data.status === OrderStatus.PAID || data.status === OrderStatus.PROCESSING || data.status === OrderStatus.ON_HOLD;
-  const deliverable = data.status === OrderStatus.SHIPPED;
-  const invoicable = data.status === OrderStatus.PAID || data.status === OrderStatus.SHIPPED || data.status === OrderStatus.DELIVERED;
+  const payable = data.status === OrderStatus.Draft || data.status === OrderStatus.New;
+  const shippable = data.status === OrderStatus.Paid || data.status === OrderStatus.Processing || data.status === OrderStatus.OnHold;
+  const deliverable = data.status === OrderStatus.Shipped;
+  const invoicable = data.status === OrderStatus.Paid || data.status === OrderStatus.Shipped || data.status === OrderStatus.Delivered;
 
   const loadData = async () => {
     loading(true);
@@ -71,7 +71,7 @@ export function RenderOrder({
       setWarehouse(warehouseResponse);
 
       // Only fetch addresses for registered user orders
-      if (data.source === OrderSource.RegisteredUser) {
+      if (data.source === OrderSource.RegisteredUser && data.shipping_address_id && data.billing_address_id) {
         const [shippingAddressResponse, billingAddressResponse] = await Promise.all([
           api.getAddress(data.shipping_address_id),
           api.getAddress(data.billing_address_id),
@@ -201,7 +201,7 @@ export function RenderOrder({
     );
   }
 
-  const renderAddress = (address: any) => {
+  const renderAddress = (address?: InlineAddress | null) => {
     if (!address) return "N/A";
     return `${address.street}, ${address.city}, ${address.country}`;
   };
@@ -386,7 +386,7 @@ export function RenderOrder({
         </Box>
 
         <Text size="sm" c="dimmed" mt="md">
-          Created At: {data.created_at.toISOString()}
+          Created At: {new Date(data.created_at).toISOString()}
         </Text>
         {data.notes && (
           <Text size="sm" mt="xs">

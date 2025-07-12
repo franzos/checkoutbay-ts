@@ -1,45 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import Decimal from "decimal.js";
 import {
-  Address,
-  AddressesResponse,
-  Warehouse,
-  WarehousesResponse,
-  Product,
-  ProductsResponse,
-  StockMovement,
-  StockMovementsResponse,
-  Order,
-  OrdersResponse,
-  NewRegisteredUserOrder,
-  NewPublicUserOrder,
-  PaymentGateway,
-  PaymentGatewaysResponse,
-  PublicProduct,
-  PublicProductsResponse,
-  PublicFile,
-  PublicStock,
-  PublicWarehouse,
-  PublicProductsResponseComplete,
-  TaxRate,
-  TaxRatesQuery,
-  ProcessedOrder,
-  NewOrderCalculation,
-  NewOrderPaymentSubmission,
-  OrderPayment,
-  ProductWarehouseStockLevels,
-  OrderItem,
-  Shop,
-  ShopUser,
-  ShopsResponse,
-  ShippingRateTemplate,
-  PublicShippingRate,
-  ShippingRateTemplatesWithWarehouseIdsResponse,
-  PublicShop,
-  OrderRegisteredOrPublicUser,
-  ProcessedOrderPreview,
-} from "./types/index.js";
-import {
   CommonQueryParams,
   makeAuthHeaders,
   QueryParamsBase,
@@ -50,36 +11,45 @@ import {
   RustyVerifiedEmails,
   HttpNewVerifiedEmail,
 } from "@gofranz/common";
+import { Address, AddressesResponse, NewOrderCalculation, NewOrderPaymentSubmission, NewPublicUserOrder, NewRegisteredUserOrder, Order, OrderItem, OrderPayment, OrderRecord, OrdersResponse, PaymentGateway, PaymentGatewaysResponse, ProcessedOrder, ProcessedOrderPreview, ProcessedPublicUserOrder, ProcessedRegisteredUserOrder, Product, PublicFile, PublicProduct, PublicProductsResponse, PublicShippingRate, PublicShop, PublicStock, PublicWarehouse, ShippingRateTemplate, Shop, ShopsResponse, ShopUser, StockMovement, StockMovementsResponse, TaxRate, TaxRatesQuery, TemplatesWithWarehouseIdResponse, Warehouse, WarehousesResponse, WarehouseStockLevel } from "./types";
 
 function convertToDecimal(value: string | number | Decimal): Decimal {
   if (value instanceof Decimal) return value;
   return new Decimal(value);
 }
 
-function convertOrderItemDecimals(item: OrderItem): OrderItem {
+// Type-safe decimal field converters
+function convertOrderItemDecimals(item: any): OrderItem {
   return {
     ...item,
-    unit_price: item.unit_price ? convertToDecimal(item.unit_price) : undefined,
-    unit_tax: item.unit_tax ? convertToDecimal(item.unit_tax) : undefined,
-    unit_discount: item.unit_discount
-      ? convertToDecimal(item.unit_discount)
-      : undefined,
-    subtotal_before_discount: item.subtotal_before_discount
-      ? convertToDecimal(item.subtotal_before_discount)
-      : undefined,
-    discount_total: item.discount_total
-      ? convertToDecimal(item.discount_total)
-      : undefined,
-    subtotal: item.subtotal ? convertToDecimal(item.subtotal) : undefined,
-    tax_total: item.tax_total ? convertToDecimal(item.tax_total) : undefined,
-    total: item.total ? convertToDecimal(item.total) : undefined,
+    unit_price: convertToDecimal(item.unit_price || 0),
+    unit_tax: convertToDecimal(item.unit_tax || 0),
+    unit_discount: convertToDecimal(item.unit_discount || 0),
+    subtotal_before_discount: convertToDecimal(item.subtotal_before_discount || 0),
+    discount_total: convertToDecimal(item.discount_total || 0),
+    subtotal: convertToDecimal(item.subtotal || 0),
+    tax_total: convertToDecimal(item.tax_total || 0),
+    total: convertToDecimal(item.total || 0),
   };
 }
 
-function convertOrderDecimals(
-  order: OrderRegisteredOrPublicUser
-): OrderRegisteredOrPublicUser {
-  const converted: OrderRegisteredOrPublicUser = {
+function convertProcessedOrderItemDecimals(item: any) {
+  return {
+    ...item,
+    unit_price: convertToDecimal(item.unit_price),
+    unit_tax: convertToDecimal(item.unit_tax),
+    unit_discount: convertToDecimal(item.unit_discount),
+    subtotal_before_discount: convertToDecimal(item.subtotal_before_discount),
+    discount_total: convertToDecimal(item.discount_total),
+    subtotal: convertToDecimal(item.subtotal),
+    tax_total: convertToDecimal(item.tax_total),
+    total: convertToDecimal(item.total),
+  };
+}
+
+// Type-specific order converters
+function convertOrderDecimals(order: any): Order {
+  const converted: Order = {
     ...order,
     shipping_total: convertToDecimal(order.shipping_total),
     subtotal_before_discount: convertToDecimal(order.subtotal_before_discount),
@@ -89,16 +59,11 @@ function convertOrderDecimals(
     total: convertToDecimal(order.total),
   };
 
-  // Only include items if they exist in the original order
-  if ("items" in order && Array.isArray(order.items)) {
-    converted.items = order.items.map(convertOrderItemDecimals);
-  }
-
   return converted;
 }
 
-function convertProcessedOrderDecimals(order: ProcessedOrder): ProcessedOrder {
-  const converted: ProcessedOrder = {
+function convertProcessedPublicUserOrder(order: any): any {
+  return {
     ...order,
     shipping_total: convertToDecimal(order.shipping_total),
     subtotal_before_discount: convertToDecimal(order.subtotal_before_discount),
@@ -106,24 +71,63 @@ function convertProcessedOrderDecimals(order: ProcessedOrder): ProcessedOrder {
     subtotal: convertToDecimal(order.subtotal),
     tax_total: convertToDecimal(order.tax_total),
     total: convertToDecimal(order.total),
+    items: order.items?.map(convertProcessedOrderItemDecimals) || []
   };
+}
 
-  // Only include items if they exist in the original order
-  if ("items" in order && Array.isArray(order.items)) {
-    converted.items = order.items.map((item) => ({
-      ...item,
-      unit_price: convertToDecimal(item.unit_price),
-      unit_tax: convertToDecimal(item.unit_tax),
-      unit_discount: convertToDecimal(item.unit_discount),
-      subtotal_before_discount: convertToDecimal(item.subtotal_before_discount),
-      discount_total: convertToDecimal(item.discount_total),
-      subtotal: convertToDecimal(item.subtotal),
-      tax_total: convertToDecimal(item.tax_total),
-      total: convertToDecimal(item.total),
-    }));
+function convertProcessedRegisteredUserOrder(order: any): Order {
+  return {
+    ...order,
+    shipping_total: convertToDecimal(order.shipping_total),
+    subtotal_before_discount: convertToDecimal(order.subtotal_before_discount),
+    discount_total: convertToDecimal(order.discount_total),
+    subtotal: convertToDecimal(order.subtotal),
+    tax_total: convertToDecimal(order.tax_total),
+    total: convertToDecimal(order.total),
+    items: order.items?.map(convertProcessedOrderItemDecimals) || []
+  };
+}
+
+function convertProcessedOrderCalculation(order: any) {
+  return {
+    ...order,
+    shipping_total: convertToDecimal(order.shipping_total),
+    subtotal_before_discount: convertToDecimal(order.subtotal_before_discount),
+    discount_total: convertToDecimal(order.discount_total),
+    subtotal: convertToDecimal(order.subtotal),
+    tax_total: convertToDecimal(order.tax_total),
+    total: convertToDecimal(order.total),
+    items: order.items?.map(convertProcessedOrderItemDecimals) || []
+  };
+}
+
+// Discriminated union converter for ProcessedOrder types
+function convertProcessedOrderDecimals(order: any): any {
+  // Handle OrderRecord discriminated union format
+  if (!(order as ProcessedRegisteredUserOrder).customer_user_id) {
+    return convertProcessedPublicUserOrder(order)
+  } else if ((order as ProcessedRegisteredUserOrder).customer_user_id) {
+    return convertProcessedRegisteredUserOrder(order)
   }
+  
+  // Handle direct ProcessedOrder objects - try to determine type by fields
+  if ('customer_user_email' in order) {
+    return convertProcessedPublicUserOrder(order);
+  } else if ('customer_user_id' in order) {
+    return convertProcessedRegisteredUserOrder(order);
+  } else {
+    // Fallback to calculation type
+    return convertProcessedOrderCalculation(order);
+  }
+}
 
-  return converted;
+// Helper for converting OrderRecord items
+function convertOrderRecordDecimals(order: Order): Order {
+  if (!order.customer_user_id) {
+    return convertProcessedPublicUserOrder(order)
+  } else {
+    return convertProcessedRegisteredUserOrder(order)
+  }
 }
 
 export interface ObjectWithDates<T = any> {
@@ -217,9 +221,9 @@ export class RustyShopAPI {
     // Add request interceptor to handle authentication timing
     this.client.interceptors.request.use(async (config) => {
       // Check if this request needs auth (has Authorization header or uses auth endpoints)
-      const needsAuth = config.url?.startsWith('/a/') || 
-                       (config.headers && 'Authorization' in config.headers);
-      
+      const needsAuth = config.url?.startsWith('/a/') ||
+        (config.headers && 'Authorization' in config.headers);
+
       if (needsAuth && this.auth && !this.auth.hasValidAccessToken()) {
         // Wait for auth to be ready
         await new Promise(resolve => setTimeout(resolve, 500));
@@ -503,8 +507,8 @@ export class RustyShopAPI {
   getStockMovementsByProducts = async (
     product_ids: string[],
     shop_id: string
-  ): Promise<ProductWarehouseStockLevels> => {
-    const response = await this.client.post<ProductWarehouseStockLevels>(
+  ): Promise<[string, WarehouseStockLevel][]> => {
+    const response = await this.client.post<[string, WarehouseStockLevel][]>(
       "/a/stock_movements/by_products",
       {
         product_ids,
@@ -524,7 +528,7 @@ export class RustyShopAPI {
 
     const convertedOrders = response.data.data.map((order) =>
       evaluateObjectWithDates(
-        convertOrderDecimals(order as OrderRegisteredOrPublicUser)
+        convertOrderRecordDecimals(order)
       )
     );
 
@@ -534,8 +538,8 @@ export class RustyShopAPI {
     };
   };
 
-  getOrder = async (orderId: string): Promise<OrderRegisteredOrPublicUser> => {
-    const response = await this.client.get<OrderRegisteredOrPublicUser>(
+  getOrder = async (orderId: string): Promise<Order> => {
+    const response = await this.client.get<Order>(
       `/a/orders/${orderId}`,
       this.getAxiosConfig()
     );
@@ -753,9 +757,9 @@ export class RustyShopAPI {
 
   getShippingRateTemplates = async (
     params: ShopQueryParams
-  ): Promise<ShippingRateTemplatesWithWarehouseIdsResponse> => {
+  ): Promise<TemplatesWithWarehouseIdResponse> => {
     const response =
-      await this.client.get<ShippingRateTemplatesWithWarehouseIdsResponse>(
+      await this.client.get<TemplatesWithWarehouseIdResponse>(
         makeUrl("/a/shipping-rate-templates", params),
         this.getAxiosConfig()
       );
@@ -861,7 +865,7 @@ export class RustyShopAPI {
     limit?: number,
     offset?: number,
     warehouse_id?: string
-  ): Promise<PublicProductsResponseComplete> => {
+  ): Promise<PublicProductsResponse> => {
     const params = new URLSearchParams();
 
     console.debug(
@@ -869,7 +873,7 @@ export class RustyShopAPI {
       params
     );
 
-    const response = await this.client.get<PublicProductsResponseComplete>(
+    const response = await this.client.get<PublicProductsResponse>(
       makeUrl(`/public/${shopId}/products-complete`, {
         limit,
         offset,

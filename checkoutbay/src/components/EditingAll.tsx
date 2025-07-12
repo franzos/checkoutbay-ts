@@ -1,6 +1,6 @@
 import {
   Address,
-  OrderRegisteredOrPublicUser,
+  Order,
   PaymentGateway,
   Product,
   ShippingRateTemplate,
@@ -24,7 +24,7 @@ import { RenderStockMovementsFields } from "./StockMovements/StockMovementFields
 import { RenderPaymentGatewayFields } from "./PaymentGateways/PaymentGatewayFields";
 import { RenderOrder } from "./Orders/Order";
 import { Entity } from "./Entity/Entity";
-import { renderShippingRateTemplateFields } from "./ShippingRateTemplates/ShippingRateTemplateFields";
+import { RenderShippingRateTemplateFields } from "./ShippingRateTemplates/ShippingRateTemplateFields";
 import { renderShopFields } from "./Shop/ShopFields";
 
 export interface EditProductProps {
@@ -135,13 +135,13 @@ export function EditPaymentGateway({
 }
 
 export interface ViewOrderProps {
-  item: OrderRegisteredOrPublicUser;
+  item: Order;
   reload?: () => Promise<void>;
 }
 
 export function ViewOrder({ item, reload }: ViewOrderProps) {
   return (
-    <Entity<OrderRegisteredOrPublicUser>
+    <Entity<Order>
       title="View Order"
       data={item}
       render={RenderOrder}
@@ -169,7 +169,7 @@ export function EditShippingRateTemplate({
       validation={shippingRateTemplateValidation}
       submitFormCb={(data, id) => submitFormCb(id!, data)}
       id={item.id}
-      renderFields={renderShippingRateTemplateFields}
+      renderFields={RenderShippingRateTemplateFields}
       isEdit={true}
       shopId={item.shop_id!}
     />

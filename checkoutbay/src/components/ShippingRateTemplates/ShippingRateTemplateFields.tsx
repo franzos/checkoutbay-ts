@@ -58,7 +58,7 @@ const USMCA_COUNTRIES = ['US', 'CA', 'MX'];
 
 const SEA_COUNTRIES = ['BN', 'KH', 'ID', 'LA', 'MY', 'MM', 'PH', 'SG', 'TH', 'VN'];
 
-export function renderShippingRateTemplateFields({
+export function RenderShippingRateTemplateFields({
   form,
   setParentLoading,
 }: RenderFieldsProps<ShippingRateTemplate>) {
