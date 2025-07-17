@@ -13,6 +13,7 @@ import {
   IconAddressBook,
   IconBrowser,
   IconBuildingWarehouse,
+  IconDiscount,
   IconForms,
   IconHelp,
   IconHome2,
@@ -225,7 +226,7 @@ export function AccountNavigation() {
         <NavLink
           component={Link}
           to={createLanguageURL('/account/payment-gateways')}
-          label={t('navigation.paymentGateways')}
+          label={t('navigation.paymentMethods')}
           leftSection={<IconPaywall size="18" stroke={1.5} />}
         />
         <NavLink
@@ -233,6 +234,12 @@ export function AccountNavigation() {
           to={createLanguageURL('/account/shipping-rate-templates')}
           label={t('navigation.shippingRates')}
           leftSection={<IconPaywall size="18" stroke={1.5} />}
+        />
+        <NavLink
+          component={Link}
+          to={createLanguageURL('/account/discounts')}
+          label={t('navigation.discounts')}
+          leftSection={<IconDiscount size="18" stroke={1.5} />}
         />
       </NavLink>
 

@@ -7,20 +7,31 @@ import {
 } from "@gofranz/checkoutbay-common";
 import {
   Currency,
+  getErrorTitle,
   LOGIN_METHOD,
   LoginChallenge,
   LoginChallengeUserResponse,
   LoginSuccess,
   RustyAuth,
   Session,
-  setLsPrivateKey,
-  setLsPublicKey,
 } from "@gofranz/common";
-import { NEvent, NEVENT_KIND } from "@nostr-ts/common";
-import { loadOrCreateKeypair } from "@nostr-ts/web";
+import { showApiErrorNotification } from "@gofranz/common-components";
+import { notifications } from "@mantine/notifications";
 import * as Sentry from '@sentry/react';
 import { create } from "zustand";
-import { API_BASE_URL } from "./constants";
+import { API_BASE_URL, LOCAL_STORAGE_KEY } from "./constants";
+import type { AxiosError } from "axios";
+
+// Helper function to handle API errors generically
+const handleApiError = (error: AxiosError) => {
+  // Don't show notifications for aborted requests or network timeouts during development
+  if (error.code === 'ECONNABORTED' || error.message === 'Network Error') {
+    return;
+  }
+
+  const title = getErrorTitle(error);
+  showApiErrorNotification(error, notifications, title);
+};
 
 // Helper function to update Sentry user context
 const updateSentryUserContext = (session: Session | undefined) => {
@@ -46,7 +57,7 @@ interface State {
   getSession: () => Session | undefined;
   login: (identifier: string, loginMethod: LOGIN_METHOD) => Promise<LoginChallenge>;
   loginChallenge(loginResponse: LoginChallengeUserResponse): Promise<LoginSuccess>;
-  generateNewAccount: () => Promise<void>;
+  // generateNewAccount: () => Promise<void>;
   logout: () => Promise<void>;
   api: RustyShopAPI;
   shops: Shop[];
@@ -59,7 +70,8 @@ interface State {
 
 const api = new RustyShopAPI({
   baseUrl: API_BASE_URL,
-  auth: new RustyAuth({ baseUrl: API_BASE_URL, useLocalStore: true }),
+  auth: new RustyAuth({ baseUrl: API_BASE_URL, useLocalStore: true, localStorageKey: LOCAL_STORAGE_KEY }),
+  errorHandler: handleApiError,
 });
 
 export const useRustyState = create<State>((set, get) => ({
@@ -156,43 +168,43 @@ export const useRustyState = create<State>((set, get) => ({
     }
     throw new Error('Unsupported challenge response');
   },
-  generateNewAccount: async () => {
-    const keypair = await loadOrCreateKeypair();
-    console.log(`Generated new account with public key: ${keypair.publicKey}`);
-    get().api?.auth?.setSession({
-      isLoggedIn: false,
-      publicKey: keypair.publicKey,
-    });
-    setLsPrivateKey(keypair.privateKey);
-    setLsPublicKey(keypair.publicKey);
-    const loginChallenge = await get().login(keypair.publicKey, LOGIN_METHOD.NOSTR);
+  // generateNewAccount: async () => {
+  //   const keypair = await loadOrCreateKeypair();
+  //   console.log(`Generated new account with public key: ${keypair.publicKey}`);
+  //   get().api?.auth?.setSession({
+  //     isLoggedIn: false,
+  //     publicKey: keypair.publicKey,
+  //   });
+  //   setLsPrivateKey(keypair.privateKey, LOCAL_STORAGE_KEY);
+  //   setLsPublicKey(keypair.publicKey, LOCAL_STORAGE_KEY);
+  //   const loginChallenge = await get().login(keypair.publicKey, LOGIN_METHOD.NOSTR);
 
-    if (loginChallenge.type === 'NOSTR') {
-      const { content } = loginChallenge;
-      // Create the signed nostr event
-      const event = new NEvent({
-        pubkey: keypair.publicKey,
-        kind: NEVENT_KIND.CLIENT_AUTHENTICATION,
-        tags: [
-          ['relay', API_BASE_URL],
-          ['challenge', content.challenge],
-        ],
-        content: '',
-      });
+  //   if (loginChallenge.type === 'NOSTR') {
+  //     const { content } = loginChallenge;
+  //     // Create the signed nostr event
+  //     const event = new NEvent({
+  //       pubkey: keypair.publicKey,
+  //       kind: NEVENT_KIND.CLIENT_AUTHENTICATION,
+  //       tags: [
+  //         ['relay', API_BASE_URL],
+  //         ['challenge', content.challenge],
+  //       ],
+  //       content: '',
+  //     });
 
-      await get().loginChallenge({
-        type: 'NOSTR',
-        content: {
-          id: content.id,
-          response: event.ToObj(),
-        },
-      });
+  //     await get().loginChallenge({
+  //       type: 'NOSTR',
+  //       content: {
+  //         id: content.id,
+  //         response: event.ToObj(),
+  //       },
+  //     });
 
-      // Update Sentry context after successful account generation and login
-      const session = get().getSession();
-      updateSentryUserContext(session);
-    }
-  },
+  //     // Update Sentry context after successful account generation and login
+  //     const session = get().getSession();
+  //     updateSentryUserContext(session);
+  //   }
+  // },
   logout: async () => {
     if (api.auth) {
       await api.auth.logout();

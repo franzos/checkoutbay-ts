@@ -1,23 +1,27 @@
+import { DimensionUnit, NewProduct, UpdateProduct, WeightUnit } from '@gofranz/checkoutbay-common';
 import {
-  TextInput,
-  Textarea,
-  Switch,
-  TagsInput,
-  Stack,
-  Text,
+  Accordion,
+  Group,
+  Image,
   JsonInput,
   NumberInput,
-  Image,
-  Group,
   Select,
-  Accordion,
+  Stack,
+  Switch,
+  TagsInput,
+  Text,
+  TextInput,
+  Textarea,
 } from '@mantine/core';
-import { DimensionUnit, Product, WeightUnit } from '@gofranz/checkoutbay-common';
-import { RenderFieldsProps } from '../Entity/EntityForm';
-import React, { useEffect } from 'react';
-import { initialPhysicalPropertiesValues } from '../CreatingAll';
-import { useTranslation } from 'react-i18next';
+import { UseFormReturnType } from '@mantine/form';
 import Decimal from 'decimal.js';
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { initialPhysicalPropertiesValues } from '../CreatingAll';
+import { RenderFieldsCreateProps } from '../Entity/EntityFormCreate';
+import { RenderFieldsEditProps } from '../Entity/EntityFormEdit';
+
+type FormMarkup = UseFormReturnType<NewProduct, (values: NewProduct) => NewProduct>;
 
 function createSlugFromTitle(title: string): string {
   return title
@@ -28,7 +32,11 @@ function createSlugFromTitle(title: string): string {
     .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
 }
 
-export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
+export function RenderProductFields(props: RenderFieldsCreateProps<NewProduct>): JSX.Element;
+export function RenderProductFields(props: RenderFieldsEditProps<UpdateProduct>): JSX.Element;
+export function RenderProductFields({
+  form,
+}: RenderFieldsCreateProps<NewProduct> | RenderFieldsEditProps<UpdateProduct>): JSX.Element {
   const { t } = useTranslation();
   const [coverImage, setCoverImage] = React.useState<string | undefined>(undefined);
   const [hasPhysicalproperties, setHasPhysicalProperties] = React.useState<boolean>(false);
@@ -48,7 +56,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
   const conditionallySetInitialPhysicalProperties = () => {
     if (!hasPhysicalproperties) {
       console.debug('Setting initial physical properties');
-      form.setFieldValue('physical_properties', initialPhysicalPropertiesValues);
+      (form as FormMarkup).setFieldValue('physical_properties', initialPhysicalPropertiesValues);
       setHasPhysicalProperties(true);
     } else {
       console.debug('Physical properties already set');
@@ -69,11 +77,11 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
         label={t('products.title')}
         placeholder={t('products.titlePlaceholder')}
         withAsterisk
-        {...form.getInputProps('title')}
+        {...(form as FormMarkup).getInputProps('title')}
         onChange={(event) => {
-          form.getInputProps('title').onChange(event);
+          (form as FormMarkup).getInputProps('title').onChange(event);
           const newSlug = createSlugFromTitle(event.currentTarget.value);
-          form.setFieldValue('slug', newSlug);
+          (form as FormMarkup).setFieldValue('slug', newSlug);
         }}
         error={form.errors.title}
       />
@@ -83,9 +91,9 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
       <TextInput
         label={t('products.coverUrl')}
         placeholder={t('products.coverUrlPlaceholder')}
-        {...form.getInputProps('cover_url')}
+        {...(form as FormMarkup).getInputProps('cover_url')}
         onChange={(event) => {
-          form.getInputProps('cover_url').onChange(event);
+          (form as FormMarkup).getInputProps('cover_url').onChange(event);
           setCoverImage(event.currentTarget.value);
         }}
         error={form.errors.cover_url}
@@ -97,7 +105,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
         label={t('products.slug')}
         placeholder={t('products.slugPlaceholder')}
         withAsterisk
-        {...form.getInputProps('slug')}
+        {...(form as FormMarkup).getInputProps('slug')}
         error={form.errors.slug}
       />
 
@@ -106,7 +114,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
       <Textarea
         label={t('products.description')}
         placeholder={t('products.descriptionPlaceholder')}
-        {...form.getInputProps('description')}
+        {...(form as FormMarkup).getInputProps('description')}
         error={form.errors.description}
         minRows={3}
       />
@@ -114,7 +122,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
       <TextInput
         label={t('products.sku')}
         placeholder={t('products.skuPlaceholder')}
-        {...form.getInputProps('sku')}
+        {...(form as FormMarkup).getInputProps('sku')}
         error={form.errors.sku}
       />
 
@@ -124,7 +132,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
         label={t('products.price')}
         placeholder={t('products.pricePlaceholder')}
         withAsterisk
-        {...form.getInputProps('price')}
+        {...(form as FormMarkup).getInputProps('price')}
         value={new Decimal(form.values.price || 0)?.toNumber()}
         error={form.errors.price}
         thousandSeparator=" "
@@ -133,7 +141,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
 
       <Switch
         label={t('products.allowNegativeStock')}
-        {...form.getInputProps('allow_negative_stock')}
+        {...(form as FormMarkup).getInputProps('allow_negative_stock')}
         defaultChecked={form.values.allow_negative_stock}
       />
 
@@ -141,7 +149,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
 
       <Switch
         label={t('products.isLive')}
-        {...form.getInputProps('is_live')}
+        {...(form as FormMarkup).getInputProps('is_live')}
         defaultChecked={form.values.is_live}
       />
 
@@ -149,7 +157,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
 
       <Switch
         label={t('products.requiresShipping')}
-        {...form.getInputProps('requires_shipping')}
+        {...(form as FormMarkup).getInputProps('requires_shipping')}
         defaultChecked={form.values.requires_shipping}
       />
 
@@ -158,14 +166,14 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
       <TagsInput
         label={t('products.categories')}
         placeholder={t('products.categoriesPlaceholder')}
-        {...form.getInputProps('categories')}
+        {...(form as FormMarkup).getInputProps('categories')}
         error={form.errors.categories}
       />
 
       <TagsInput
         label={t('products.tags')}
         placeholder={t('products.tagsPlaceholder')}
-        {...form.getInputProps('tags')}
+        {...(form as FormMarkup).getInputProps('tags')}
         error={form.errors.tags}
       />
 
@@ -182,7 +190,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
               <JsonInput
                 label={t('products.privateData')}
                 placeholder={t('products.privateDataPlaceholder')}
-                {...form.getInputProps('data')}
+                {...(form as FormMarkup).getInputProps('data')}
                 error={form.errors.data}
               />
 
@@ -191,7 +199,7 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
               <JsonInput
                 label={t('products.publicData')}
                 placeholder={t('products.publicDataPlaceholder')}
-                {...form.getInputProps('data_public')}
+                {...(form as FormMarkup).getInputProps('data_public')}
                 error={form.errors.data_public}
               />
 
@@ -216,8 +224,8 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
                   label={t('products.width')}
                   placeholder={t('products.pricePlaceholder')}
                   allowDecimal
-                  key={form.key('physical_properties.width')}
-                  {...form.getInputProps('physical_properties.width')}
+                  key={(form as FormMarkup).key('physical_properties.width')}
+                  {...(form as FormMarkup).getInputProps('physical_properties.width')}
                   onKeyUp={() => {
                     conditionallySetInitialPhysicalProperties();
                   }}
@@ -227,8 +235,8 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
                   label={t('products.height')}
                   placeholder={t('products.pricePlaceholder')}
                   allowDecimal
-                  key={form.key('physical_properties.height')}
-                  {...form.getInputProps('physical_properties.height')}
+                  key={(form as FormMarkup).key('physical_properties.height')}
+                  {...(form as FormMarkup).getInputProps('physical_properties.height')}
                   onKeyUp={() => {
                     conditionallySetInitialPhysicalProperties();
                   }}
@@ -238,8 +246,8 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
                   label={t('products.length')}
                   placeholder={t('products.pricePlaceholder')}
                   allowDecimal
-                  key={form.key('physical_properties.length')}
-                  {...form.getInputProps('physical_properties.length')}
+                  key={(form as FormMarkup).key('physical_properties.length')}
+                  {...(form as FormMarkup).getInputProps('physical_properties.length')}
                   onKeyUp={() => {
                     conditionallySetInitialPhysicalProperties();
                   }}
@@ -250,8 +258,8 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
               <Select
                 label={t('products.dimensionUnit')}
                 data={dimensionUnitOptions}
-                key={form.key('physical_properties.dimension_unit')}
-                {...form.getInputProps('physical_properties.dimension_unit')}
+                key={(form as FormMarkup).key('physical_properties.dimension_unit')}
+                {...(form as FormMarkup).getInputProps('physical_properties.dimension_unit')}
                 onKeyUp={() => {
                   conditionallySetInitialPhysicalProperties();
                 }}
@@ -262,8 +270,8 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
                 label={t('products.weight')}
                 placeholder={t('products.pricePlaceholder')}
                 allowDecimal
-                key={form.key('physical_properties.weight')}
-                {...form.getInputProps('physical_properties.weight')}
+                key={(form as FormMarkup).key('physical_properties.weight')}
+                {...(form as FormMarkup).getInputProps('physical_properties.weight')}
                 onKeyUp={() => {
                   conditionallySetInitialPhysicalProperties();
                 }}
@@ -273,8 +281,8 @@ export function RenderProductFields({ form }: RenderFieldsProps<Product>) {
               <Select
                 label={t('products.weightUnit')}
                 data={weightUnitOptions}
-                key={form.key('physical_properties.weight_unit')}
-                {...form.getInputProps('physical_properties.weight_unit')}
+                key={(form as FormMarkup).key('physical_properties.weight_unit')}
+                {...(form as FormMarkup).getInputProps('physical_properties.weight_unit')}
                 onKeyUp={() => {
                   conditionallySetInitialPhysicalProperties();
                 }}

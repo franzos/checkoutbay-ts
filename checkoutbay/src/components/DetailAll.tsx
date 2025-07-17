@@ -1,16 +1,26 @@
 import {
   Address,
+  Discount,
   Order,
   PaymentGateway,
   Product,
   ShippingRateTemplate,
   Shop,
   StockMovement,
+  UpdateAddres,
+  UpdateDiscount,
+  UpdatePaymentGateway,
+  UpdateProduct,
+  UpdateShippingRateTemplate,
+  UpdateShop,
+  UpdateStockMovement,
+  UpdateWarehouse,
   Warehouse,
 } from "@gofranz/checkoutbay-common";
 import {
   EditAddress,
-  EditPaymentGateway,
+  EditDiscount,
+  EditPaymentMethod,
   EditProduct,
   EditShippingRateTemplate,
   EditShop,
@@ -20,8 +30,8 @@ import {
 } from "./EditingAll";
 
 export interface ProductDetailProps {
-  item: Partial<Product>;
-  submitCb: (id: string, updateProduct: Partial<Product>) => Promise<void>;
+  item: Product;
+  submitCb: (id: string, updateProduct: UpdateProduct) => Promise<void>;
   deleteCb?: (formId: string) => Promise<void>;
 }
 
@@ -34,8 +44,8 @@ export function ProductDetail(props: ProductDetailProps) {
 }
 
 export interface WarehouseDetailProps {
-  item: Partial<Warehouse>;
-  submitCb: (id: string, updateWarehouse: Partial<Warehouse>) => Promise<void>;
+  item: Warehouse;
+  submitCb: (id: string, updateWarehouse: UpdateWarehouse) => Promise<void>;
   deleteCb?: (formId: string) => Promise<void>;
 }
 
@@ -49,7 +59,7 @@ export function WarehouseDetail(props: WarehouseDetailProps) {
 
 export interface AddressDetailProps {
   item: Address;
-  submitCb: (id: string, item: Partial<Address>) => Promise<void>;
+  submitCb: (id: string, item: UpdateAddres) => Promise<void>;
   deleteCb?: (id: string) => Promise<void>;
 }
 
@@ -62,10 +72,10 @@ export function AddressDetail(props: AddressDetailProps) {
 }
 
 export interface StockMovementDetailProps {
-  item: Partial<StockMovement>;
+  item: StockMovement;
   submitCb: (
     id: string,
-    updateStockMovement: Partial<StockMovement>
+    updateStockMovement: UpdateStockMovement
   ) => Promise<void>;
   deleteCb?: (formId: string) => Promise<void>;
 }
@@ -78,19 +88,19 @@ export function StockMovementDetail(props: StockMovementDetailProps) {
   );
 }
 
-export interface PaymentGatewayDetailProps {
+export interface PaymentMethodDetailProps {
   item: PaymentGateway;
   submitCb: (
     id: string,
-    updatePaymentGateway: Partial<PaymentGateway>
+    updatePaymentMethod: UpdatePaymentGateway
   ) => Promise<void>;
   deleteCb?: (formId: string) => Promise<void>;
 }
 
-export function PaymentGatewayDetail(props: PaymentGatewayDetailProps) {
+export function PaymentMethodDetail(props: PaymentMethodDetailProps) {
   return (
     <>
-      <EditPaymentGateway item={props.item} submitFormCb={props.submitCb} />
+      <EditPaymentMethod item={props.item} submitFormCb={props.submitCb} />
     </>
   );
 }
@@ -114,7 +124,7 @@ export interface ShippingRateTemplateDetailProps {
   item: ShippingRateTemplate;
   submitCb: (
     id: string,
-    updateShippingRateTemplate: Partial<ShippingRateTemplate>
+    updateShippingRateTemplate: UpdateShippingRateTemplate
   ) => Promise<void>;
   deleteCb?: (formId: string) => Promise<void>;
 }
@@ -128,8 +138,8 @@ export function ShippingRateTemplateDetail(props: ShippingRateTemplateDetailProp
 }
 
 export interface ShopDetailProps {
-  item: Partial<Shop>;
-  submitCb: (id: string, updateShop: Partial<Shop>) => Promise<void>;
+  item: Shop;
+  submitCb: (id: string, updateShop: UpdateShop) => Promise<void>;
   deleteCb?: (formId: string) => Promise<void>;
 }
 
@@ -137,6 +147,20 @@ export function ShopDetail(props: ShopDetailProps) {
   return (
     <>
       <EditShop item={props.item} submitFormCb={props.submitCb} />
+    </>
+  );
+}
+
+export interface DiscountDetailProps {
+  item: Discount;
+  submitCb: (id: string, updateDiscount: UpdateDiscount) => Promise<void>;
+  deleteCb?: (formId: string) => Promise<void>;
+}
+
+export function DiscountDetail(props: DiscountDetailProps) {
+  return (
+    <>
+      <EditDiscount item={props.item} submitFormCb={props.submitCb} />
     </>
   );
 }

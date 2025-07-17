@@ -1,16 +1,16 @@
 import { Currency } from "@gofranz/common";
 
-export interface CommonTableProps<T, U> {
+export interface CommonTableProps<Entity, Update> {
   pagination: {
     total: number;
     initial: number;
     perPage: number;
   };
-  onChange: (params: { nextPage: number; is_spam?: boolean }) => Promise<T[]>;
-  openRowPage: (form: T) => void;
+  onChange: (params: { nextPage: number; is_spam?: boolean }) => Promise<Entity[]>;
+  openRowPage: (form: Entity) => void;
   updateCb?: (
     id: string,
-    data: U
+    data: Update
   ) => Promise<void>;
   deleteCb?: (id: string) => Promise<void>;
   shopId: string

@@ -1,9 +1,17 @@
-import { Select, Stack, TextInput } from "@mantine/core";
-import { Shop } from "@gofranz/checkoutbay-common";
-import { RenderFieldsProps } from "../Entity/EntityForm";
+import { NewShop, UpdateShop } from "@gofranz/checkoutbay-common";
 import { Currency } from "@gofranz/common";
+import { Select, Stack, TextInput } from "@mantine/core";
+import { RenderFieldsCreateProps } from "../Entity/EntityFormCreate";
+import { RenderFieldsEditProps } from "../Entity/EntityFormEdit";
+import { UseFormReturnType } from "@mantine/form";
 
-export function renderShopFields({ form, isEdit }: RenderFieldsProps<Shop>) {
+type FormMarkup = UseFormReturnType<NewShop, (values: NewShop) => NewShop>;
+
+export function RenderShopFields(props: RenderFieldsCreateProps<NewShop>): JSX.Element;
+export function RenderShopFields(props: RenderFieldsEditProps<UpdateShop>): JSX.Element;
+export function RenderShopFields({
+  form,
+}: RenderFieldsCreateProps<NewShop> | RenderFieldsEditProps<UpdateShop>): JSX.Element {
   const currencyOptions = Object.values(Currency).map((currency) => ({
     value: currency,
     label: currency,
@@ -15,7 +23,7 @@ export function renderShopFields({ form, isEdit }: RenderFieldsProps<Shop>) {
         label="Name"
         placeholder="Shop Name"
         withAsterisk
-        {...form.getInputProps("name")}
+        {...(form as FormMarkup).getInputProps("name")}
         error={form.errors.name}
       />
 
@@ -24,29 +32,9 @@ export function renderShopFields({ form, isEdit }: RenderFieldsProps<Shop>) {
         placeholder="Select a currency"
         withAsterisk
         data={currencyOptions}
-        {...form.getInputProps("default_currency")}
+        {...(form as FormMarkup).getInputProps("default_currency")}
         error={form.errors.default_currency}
       />
-
-      {isEdit && (
-        <>
-          <TextInput
-            label="Created At"
-            placeholder="Creation Date"
-            disabled
-            {...form.getInputProps("created_at")}
-            error={form.errors.created_at}
-          />
-
-          <TextInput
-            label="Updated At"
-            placeholder="Last Update Date"
-            disabled
-            {...form.getInputProps("updated_at")}
-            error={form.errors.updated_at}
-          />
-        </>
-      )}
     </Stack>
   );
 }

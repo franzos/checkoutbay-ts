@@ -22,7 +22,8 @@ import { useRustyState } from '../../state';
 import classes from '../Common/Title.module.css';
 import {
   AccountAddressCreatePage,
-  AccountPaymentGatewayCreatePage,
+  AccountDiscountCreatePage,
+  AccountPaymentMethodCreatePage,
   AccountProductCreatePage,
   AccountShippingRateTemplateCreatePage,
   AccountStockMovementCreatePage,
@@ -30,8 +31,9 @@ import {
 } from '../CreatePageAll';
 import {
   AccountAddressStartPage,
+  AccountDiscountStartPage,
   AccountOrderStartPage,
-  AccountPaymentGatewayStartPage,
+  AccountPaymentMethodStartPage,
   AccountProductStartPage,
   AccountStockMovementStartPage,
   AccountWarehouseStartPage,
@@ -39,8 +41,9 @@ import {
 } from '../StartPageAll';
 import {
   AccountAddressViewPage,
+  AccountDiscountViewPage,
   AccountOrderViewPage,
-  AccountPaymentGatewayViewPage,
+  AccountPaymentMethodViewPage,
   AccountProductViewPage,
   AccountShippingRateTemplateViewPage,
   AccountStockMovementViewPage,
@@ -132,12 +135,12 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
       <Route path="/account/stock-movements" element={<AccountStockMovementStartPage />} />
       <Route path="/account/stock-movements/create" element={<AccountStockMovementCreatePage />} />
       <Route path="/account/stock-movements/:uuid" element={<AccountStockMovementViewPage />} />
-      <Route path="/account/payment-gateways" element={<AccountPaymentGatewayStartPage />} />
+      <Route path="/account/payment-gateways" element={<AccountPaymentMethodStartPage />} />
       <Route
         path="/account/payment-gateways/create"
-        element={<AccountPaymentGatewayCreatePage />}
+        element={<AccountPaymentMethodCreatePage />}
       />
-      <Route path="/account/payment-gateways/:uuid" element={<AccountPaymentGatewayViewPage />} />
+      <Route path="/account/payment-gateways/:uuid" element={<AccountPaymentMethodViewPage />} />
       <Route path="/account/shipping-rate-templates" element={<ShippingRateTemplateStartPage />} />
       <Route
         path="/account/shipping-rate-templates/create"
@@ -149,6 +152,9 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
       />
       <Route path="/account/orders" element={<AccountOrderStartPage />} />
       <Route path="/account/orders/:uuid" element={<AccountOrderViewPage />} />
+      <Route path="/account/discounts" element={<AccountDiscountStartPage />} />
+      <Route path="/account/discounts/create" element={<AccountDiscountCreatePage />} />
+      <Route path="/account/discounts/:uuid" element={<AccountDiscountViewPage />} />
       <Route
         path="/account/profile"
         element={

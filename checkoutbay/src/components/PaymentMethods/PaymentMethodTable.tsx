@@ -5,7 +5,7 @@ import { IconTrash } from '@tabler/icons-react';
 import { PaymentGateway } from '@gofranz/checkoutbay-common';
 import { CommonTableProps } from '../../lib/table';
 
-export function PaymentGatewaysTable(
+export function PaymentMethodsTable(
   props: CommonTableProps<PaymentGateway, Partial<PaymentGateway>>
 ) {
   const [isBusy, setIsBusy] = useState(false);
@@ -46,7 +46,7 @@ export function PaymentGatewaysTable(
   const columns = [
     {
       accessor: 'title',
-      title: 'PaymentGateway',
+      title: 'Payment Method',
       render: (row: PaymentGateway) => (
         <NavLink
           label={
@@ -59,9 +59,9 @@ export function PaymentGatewaysTable(
       ),
     },
     {
-      accessor: 'provider',
+      accessor: 'provider_config',
       title: 'Provider',
-      render: (row: PaymentGateway) => row.provider,
+      render: (row: PaymentGateway) => row.provider_config.type,
     },
     {
       accessor: 'updated_at',
@@ -100,7 +100,7 @@ export function PaymentGatewaysTable(
         onPageChange={(p) => setPage(p)}
         fetching={isBusy}
         loadingText="Loading..."
-        noRecordsText="No payment gateways found"
+        noRecordsText="No payment methods found"
       />
     </Box>
   );

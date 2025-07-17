@@ -5,7 +5,7 @@ import { IconTrash } from '@tabler/icons-react';
 import { Order, formatPrice } from '@gofranz/checkoutbay-common';
 import { CommonTableProps } from '../../lib/table';
 
-export function OrdersTable(props: CommonTableProps<Order, Partial<Order>>) {
+export function OrdersTable(props: CommonTableProps<Order, undefined>) {
   const [isBusy, setIsBusy] = useState(false);
   const [records, setRecords] = useState<Order[] | []>([]);
   const [page, setPage] = useState(1);

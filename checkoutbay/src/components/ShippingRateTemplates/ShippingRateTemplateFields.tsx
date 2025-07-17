@@ -15,14 +15,19 @@ import {
 } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import {
-  ShippingRateTemplate,
+  NewShippingRateTemplate,
+  UpdateShippingRateTemplate,
   ShippingRateCalculationMethod,
   ShippingSpeed,
 } from '@gofranz/checkoutbay-common';
-import { RenderFieldsProps } from '../Entity/EntityForm';
+import { RenderFieldsCreateProps } from '../Entity/EntityFormCreate';
+import { RenderFieldsEditProps } from '../Entity/EntityFormEdit';
 import { Currency } from '@gofranz/common';
 import Decimal from 'decimal.js';
 import { useTranslation } from 'react-i18next';
+import { UseFormReturnType } from '@mantine/form';
+
+type FormMarkup = UseFormReturnType<NewShippingRateTemplate, (values: NewShippingRateTemplate) => NewShippingRateTemplate>;
 
 const EU_COUNTRIES = [
   'AT',
@@ -58,10 +63,13 @@ const USMCA_COUNTRIES = ['US', 'CA', 'MX'];
 
 const SEA_COUNTRIES = ['BN', 'KH', 'ID', 'LA', 'MY', 'MM', 'PH', 'SG', 'TH', 'VN'];
 
+export function RenderShippingRateTemplateFields(props: RenderFieldsCreateProps<NewShippingRateTemplate>): JSX.Element;
+export function RenderShippingRateTemplateFields(props: RenderFieldsEditProps<UpdateShippingRateTemplate>): JSX.Element;
 export function RenderShippingRateTemplateFields({
   form,
   setParentLoading,
-}: RenderFieldsProps<ShippingRateTemplate>) {
+  isEditing
+}: RenderFieldsCreateProps<NewShippingRateTemplate> | RenderFieldsEditProps<UpdateShippingRateTemplate>): JSX.Element {
   const { t } = useTranslation();
   const [countries, setCountries] = useState<Array<{ value: string; label: string }>>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -98,7 +106,7 @@ export function RenderShippingRateTemplateFields({
 
   const addRate = () => {
     const currentRates = form.values.rates || [];
-    form.setFieldValue('rates', [
+    (form as FormMarkup).setFieldValue('rates', [
       ...currentRates,
       {
         id: crypto.randomUUID(),
@@ -112,7 +120,7 @@ export function RenderShippingRateTemplateFields({
   const removeRate = (index: number) => {
     const currentRates = [...(form.values.rates || [])];
     currentRates.splice(index, 1);
-    form.setFieldValue('rates', currentRates);
+    (form as FormMarkup).setFieldValue('rates', currentRates);
   };
 
   const calculationMethodOptions = Object.values(ShippingRateCalculationMethod).map((method) => ({
@@ -151,16 +159,16 @@ export function RenderShippingRateTemplateFields({
     console.log(`Setting preset countries for rate ${index} to ${preset}`);
     switch (preset) {
       case 'eu':
-        form.setFieldValue(`rates.${index}.countries`, EU_COUNTRIES);
+        (form as FormMarkup).setFieldValue(`rates.${index}.countries`, EU_COUNTRIES);
         break;
       case 'usmca':
-        form.setFieldValue(`rates.${index}.countries`, USMCA_COUNTRIES);
+        (form as FormMarkup).setFieldValue(`rates.${index}.countries`, USMCA_COUNTRIES);
         break;
       case 'sea':
-        form.setFieldValue(`rates.${index}.countries`, SEA_COUNTRIES);
+        (form as FormMarkup).setFieldValue(`rates.${index}.countries`, SEA_COUNTRIES);
         break;
       case 'clear':
-        form.setFieldValue(`rates.${index}.countries`, []);
+        (form as FormMarkup).setFieldValue(`rates.${index}.countries`, []);
         break;
     }
   };
@@ -175,142 +183,285 @@ export function RenderShippingRateTemplateFields({
 
   return (
     <Stack gap={3}>
-      <TextInput
-        label={t('shippingRates.title')}
-        placeholder={t('shippingRates.titlePlaceholder')}
-        {...form.getInputProps('title')}
-      />
+      {isEditing ? (
+        <>
+          <TextInput
+            label={t('shippingRates.title')}
+            placeholder={t('shippingRates.titlePlaceholder')}
+            {...form.getInputProps('title')}
+          />
 
-      <TextInput
-        label={t('shippingRates.description')}
-        placeholder={t('shippingRates.descriptionPlaceholder')}
-        {...form.getInputProps('description')}
-      />
+          <TextInput
+            label={t('shippingRates.description')}
+            placeholder={t('shippingRates.descriptionPlaceholder')}
+            {...form.getInputProps('description')}
+          />
 
-      <TextInput
-        label={t('shippingRates.provider')}
-        placeholder={t('shippingRates.providerPlaceholder')}
-        {...form.getInputProps('provider')}
-      />
+          <TextInput
+            label={t('shippingRates.provider')}
+            placeholder={t('shippingRates.providerPlaceholder')}
+            {...form.getInputProps('provider')}
+          />
 
-      <Select
-        label={t('shippingRates.calculationMethod')}
-        placeholder={t('shippingRates.selectCalculationMethod')}
-        data={calculationMethodOptions}
-        withAsterisk
-        {...form.getInputProps('method')}
-        defaultValue={form.values.method}
-      />
+          <Select
+            label={t('shippingRates.calculationMethod')}
+            placeholder={t('shippingRates.selectCalculationMethod')}
+            data={calculationMethodOptions}
+            withAsterisk
+            {...form.getInputProps('method')}
+            defaultValue={form.values.method}
+          />
 
-      <Text size="xs">{t('shippingRates.calculationMethodDescription')}</Text>
+          <Text size="xs">{t('shippingRates.calculationMethodDescription')}</Text>
 
-      <Select
-        label={t('shippingRates.serviceLevel')}
-        placeholder={t('shippingRates.selectServiceLevel')}
-        data={shippingSpeedOptions}
-        withAsterisk
-        {...form.getInputProps('service_level')}
-        defaultValue={form.values.service_level}
-      />
+          <Select
+            label={t('shippingRates.serviceLevel')}
+            placeholder={t('shippingRates.selectServiceLevel')}
+            data={shippingSpeedOptions}
+            withAsterisk
+            {...form.getInputProps('service_level')}
+            defaultValue={form.values.service_level}
+          />
 
-      <TextInput
-        label={t('shippingRates.currency')}
-        placeholder={Currency.EUR}
-        withAsterisk
-        {...form.getInputProps('currency')}
-        disabled
-      />
+          <TextInput
+            label={t('shippingRates.currency')}
+            placeholder={Currency.EUR}
+            withAsterisk
+            {...form.getInputProps('currency')}
+            disabled
+          />
 
-      <Box my="md">
-        <Group justify="space-between" mb="xs">
-          <Text fw={500}>{t('shippingRates.shippingRates')}</Text>
-          <Button onClick={addRate} size="xs">
-            {t('shippingRates.addRate')}
-          </Button>
-        </Group>
+          <Box my="md">
+            <Group justify="space-between" mb="xs">
+              <Text fw={500}>{t('shippingRates.shippingRates')}</Text>
+              <Button onClick={addRate} size="xs">
+                {t('shippingRates.addRate')}
+              </Button>
+            </Group>
 
-        <Stack gap="md">
-          {form.values.rates?.map((rate, index) => (
-            <Paper key={rate.id} withBorder p="md">
-              <Stack gap="sm">
-                <Group justify="space-between">
-                  <Text size="sm" fw={500}>
-                    {t('shippingRates.rateNumber', { number: index + 1 })}
-                  </Text>
-                  <ActionIcon
-                    color="red"
-                    onClick={() => removeRate(index)}
-                    disabled={form.values.rates?.length === 1}
-                  >
-                    <IconTrash size={16} />
-                  </ActionIcon>
-                </Group>
+            <Stack gap="md">
+              {form.values.rates?.map((rate, index) => (
+                <Paper key={rate.id} withBorder p="md">
+                  <Stack gap="sm">
+                    <Group justify="space-between">
+                      <Text size="sm" fw={500}>
+                        {t('shippingRates.rateNumber', { number: index + 1 })}
+                      </Text>
+                      <ActionIcon
+                        color="red"
+                        onClick={() => removeRate(index)}
+                        disabled={form.values.rates?.length === 1}
+                      >
+                        <IconTrash size={16} />
+                      </ActionIcon>
+                    </Group>
 
-                <Text size="sm">{t('shippingRates.presetCountryGroups')}</Text>
-                <Group>
-                  <Button size="xs" variant="light" onClick={() => setPresetCountries(index, 'eu')}>
-                    {t('shippingRates.eu')}
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant="light"
-                    onClick={() => setPresetCountries(index, 'usmca')}
-                  >
-                    {t('shippingRates.usmca')}
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant="light"
-                    onClick={() => setPresetCountries(index, 'sea')}
-                  >
-                    {t('shippingRates.sea')}
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant="subtle"
-                    color="gray"
-                    onClick={() => setPresetCountries(index, 'clear')}
-                  >
-                    {t('shippingRates.clear')}
-                  </Button>
-                </Group>
+                    <Text size="sm">{t('shippingRates.presetCountryGroups')}</Text>
+                    <Group>
+                      <Button size="xs" variant="light" onClick={() => setPresetCountries(index, 'eu')}>
+                        {t('shippingRates.eu')}
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="light"
+                        onClick={() => setPresetCountries(index, 'usmca')}
+                      >
+                        {t('shippingRates.usmca')}
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="light"
+                        onClick={() => setPresetCountries(index, 'sea')}
+                      >
+                        {t('shippingRates.sea')}
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="subtle"
+                        color="gray"
+                        onClick={() => setPresetCountries(index, 'clear')}
+                      >
+                        {t('shippingRates.clear')}
+                      </Button>
+                    </Group>
 
-                {!settingCountries && (
-                  <MultiSelect
-                    label="Countries"
-                    placeholder="Select countries"
-                    data={countries}
-                    searchable
-                    {...form.getInputProps(`rates.${index}.countries`)}
-                  />
-                )}
+                    {!settingCountries && (
+                      <MultiSelect
+                        label="Countries"
+                        placeholder="Select countries"
+                        data={countries}
+                        searchable
+                        {...form.getInputProps(`rates.${index}.countries`)}
+                      />
+                    )}
 
-                <NumberInput
-                  label="Amount"
-                  placeholder="10.00"
-                  min={0}
-                  {...form.getInputProps(`rates.${index}.amount`)}
-                  value={new Decimal(rate.amount).toNumber()}
-                />
+                    <NumberInput
+                      label="Amount"
+                      placeholder="10.00"
+                      min={0}
+                      {...form.getInputProps(`rates.${index}.amount`)}
+                      value={new Decimal(rate.amount).toNumber()}
+                    />
 
-                <NumberInput
-                  label="Free Shipping Above"
-                  placeholder="100.00"
-                  min={0}
-                  {...form.getInputProps(`rates.${index}.free_above_value`)}
-                  value={
-                    rate.free_above_value
-                      ? new Decimal(rate.free_above_value).toNumber()
-                      : undefined
-                  }
-                />
+                    <NumberInput
+                      label="Free Shipping Above"
+                      placeholder="100.00"
+                      min={0}
+                      {...form.getInputProps(`rates.${index}.free_above_value`)}
+                      value={
+                        rate.free_above_value
+                          ? new Decimal(rate.free_above_value).toNumber()
+                          : undefined
+                      }
+                    />
 
-                <Text size="xs">Set to 0 to disable free shipping</Text>
-              </Stack>
-            </Paper>
-          ))}
-        </Stack>
-      </Box>
+                    <Text size="xs">Set to 0 to disable free shipping</Text>
+                  </Stack>
+                </Paper>
+              ))}
+            </Stack>
+          </Box>
+        </>
+      ) : (
+        <>
+          <TextInput
+            label={t('shippingRates.title')}
+            placeholder={t('shippingRates.titlePlaceholder')}
+            {...form.getInputProps('title')}
+          />
+
+          <TextInput
+            label={t('shippingRates.description')}
+            placeholder={t('shippingRates.descriptionPlaceholder')}
+            {...form.getInputProps('description')}
+          />
+
+          <TextInput
+            label={t('shippingRates.provider')}
+            placeholder={t('shippingRates.providerPlaceholder')}
+            {...form.getInputProps('provider')}
+          />
+
+          <Select
+            label={t('shippingRates.calculationMethod')}
+            placeholder={t('shippingRates.selectCalculationMethod')}
+            data={calculationMethodOptions}
+            withAsterisk
+            {...form.getInputProps('method')}
+            defaultValue={form.values.method}
+          />
+
+          <Text size="xs">{t('shippingRates.calculationMethodDescription')}</Text>
+
+          <Select
+            label={t('shippingRates.serviceLevel')}
+            placeholder={t('shippingRates.selectServiceLevel')}
+            data={shippingSpeedOptions}
+            withAsterisk
+            {...form.getInputProps('service_level')}
+            defaultValue={form.values.service_level}
+          />
+
+          <TextInput
+            label={t('shippingRates.currency')}
+            placeholder={Currency.EUR}
+            withAsterisk
+            {...form.getInputProps('currency')}
+            disabled
+          />
+
+          <Box my="md">
+            <Group justify="space-between" mb="xs">
+              <Text fw={500}>{t('shippingRates.shippingRates')}</Text>
+              <Button onClick={addRate} size="xs">
+                {t('shippingRates.addRate')}
+              </Button>
+            </Group>
+
+            <Stack gap="md">
+              {form.values.rates?.map((rate, index) => (
+                <Paper key={rate.id} withBorder p="md">
+                  <Stack gap="sm">
+                    <Group justify="space-between">
+                      <Text size="sm" fw={500}>
+                        {t('shippingRates.rateNumber', { number: index + 1 })}
+                      </Text>
+                      <ActionIcon
+                        color="red"
+                        onClick={() => removeRate(index)}
+                        disabled={form.values.rates?.length === 1}
+                      >
+                        <IconTrash size={16} />
+                      </ActionIcon>
+                    </Group>
+
+                    <Text size="sm">{t('shippingRates.presetCountryGroups')}</Text>
+                    <Group>
+                      <Button size="xs" variant="light" onClick={() => setPresetCountries(index, 'eu')}>
+                        {t('shippingRates.eu')}
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="light"
+                        onClick={() => setPresetCountries(index, 'usmca')}
+                      >
+                        {t('shippingRates.usmca')}
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="light"
+                        onClick={() => setPresetCountries(index, 'sea')}
+                      >
+                        {t('shippingRates.sea')}
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="subtle"
+                        color="gray"
+                        onClick={() => setPresetCountries(index, 'clear')}
+                      >
+                        {t('shippingRates.clear')}
+                      </Button>
+                    </Group>
+
+                    {!settingCountries && (
+                      <MultiSelect
+                        label="Countries"
+                        placeholder="Select countries"
+                        data={countries}
+                        searchable
+                        {...form.getInputProps(`rates.${index}.countries`)}
+                      />
+                    )}
+
+                    <NumberInput
+                      label="Amount"
+                      placeholder="10.00"
+                      min={0}
+                      {...form.getInputProps(`rates.${index}.amount`)}
+                      value={new Decimal(rate.amount).toNumber()}
+                    />
+
+                    <NumberInput
+                      label="Free Shipping Above"
+                      placeholder="100.00"
+                      min={0}
+                      {...form.getInputProps(`rates.${index}.free_above_value`)}
+                      value={
+                        rate.free_above_value
+                          ? new Decimal(rate.free_above_value).toNumber()
+                          : undefined
+                      }
+                    />
+
+                    <Text size="xs">Set to 0 to disable free shipping</Text>
+                  </Stack>
+                </Paper>
+              ))}
+            </Stack>
+          </Box>
+        </>
+      )}
     </Stack>
   );
 }

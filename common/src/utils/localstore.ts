@@ -2,24 +2,24 @@ import { decodeSessionTokens } from '../auth';
 import { LOCAL_STORAGE_KEY } from '../constants';
 import { Session } from '../types';
 
-export function getLsPrivateKey() {
+export function getLsPrivateKey(storageKey: string = LOCAL_STORAGE_KEY) {
   console.debug('getLsPrivateKey');
-  return localStorage.getItem(`${LOCAL_STORAGE_KEY}.privateKey`);
+  return localStorage.getItem(`${storageKey}.privateKey`);
 }
 
-export function setLsPrivateKey(privateKey: string) {
+export function setLsPrivateKey(privateKey: string, storageKey: string = LOCAL_STORAGE_KEY) {
   console.debug('setLsPrivateKey');
-  localStorage.setItem(`${LOCAL_STORAGE_KEY}.privateKey`, privateKey);
+  localStorage.setItem(`${storageKey}.privateKey`, privateKey);
 }
 
-export function getLsPublicKey() {
+export function getLsPublicKey(storageKey: string = LOCAL_STORAGE_KEY) {
   console.debug('getLsPublicKey');
-  return localStorage.getItem(`${LOCAL_STORAGE_KEY}.publicKey`);
+  return localStorage.getItem(`${storageKey}.publicKey`);
 }
 
-export function setLsPublicKey(publicKey: string) {
+export function setLsPublicKey(publicKey: string, storageKey: string = LOCAL_STORAGE_KEY) {
   console.debug('setLsPublicKey');
-  localStorage.setItem(`${LOCAL_STORAGE_KEY}.publicKey`, publicKey);
+  localStorage.setItem(`${storageKey}.publicKey`, publicKey);
 }
 
 export function hasFutureExpiry(expiresAt: number, threshold: number) {
@@ -27,9 +27,9 @@ export function hasFutureExpiry(expiresAt: number, threshold: number) {
   return expiresAt > (now + threshold)
 }
 
-export function getLsSession(): Session | null {
+export function getLsSession(storageKey: string = LOCAL_STORAGE_KEY): Session | null {
   console.debug('getLsSession');
-  const sessionJson = localStorage.getItem(`${LOCAL_STORAGE_KEY}.data`);
+  const sessionJson = localStorage.getItem(`${storageKey}.data`);
   if (sessionJson) {
     let session = JSON.parse(sessionJson);
     if (session.accessTokenExpiresAt && typeof session.accessTokenExpiresAt === 'string') {
@@ -82,12 +82,12 @@ export function getLsSession(): Session | null {
   return null;
 }
 
-export function setLsSession(session: Session) {
+export function setLsSession(session: Session, storageKey: string = LOCAL_STORAGE_KEY) {
   console.debug('setLsSession', session);
-  localStorage.setItem(`${LOCAL_STORAGE_KEY}.data`, JSON.stringify(session));
+  localStorage.setItem(`${storageKey}.data`, JSON.stringify(session));
 }
 
-export function clearLsSession() {
+export function clearLsSession(storageKey: string = LOCAL_STORAGE_KEY) {
   console.debug('clearLsSession');
-  localStorage.removeItem(`${LOCAL_STORAGE_KEY}.data`);
+  localStorage.removeItem(`${storageKey}.data`);
 }

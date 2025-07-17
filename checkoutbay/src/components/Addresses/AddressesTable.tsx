@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { DataTable } from 'mantine-datatable';
 import { Box, NavLink, ActionIcon, Badge, Group, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
-import { Address } from '@gofranz/checkoutbay-common';
+import { Address, UpdateAddres } from '@gofranz/checkoutbay-common';
 import { CommonTableProps } from '../../lib/table';
 
-export function AddressesTable(props: CommonTableProps<Address, Partial<Address>>) {
+export function AddressesTable(props: CommonTableProps<Address, UpdateAddres>) {
   const [isBusy, setIsBusy] = useState(false);
   const [records, setRecords] = useState<Address[] | []>([]);
   const [page, setPage] = useState(1);

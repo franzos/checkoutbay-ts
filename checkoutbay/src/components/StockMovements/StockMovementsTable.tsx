@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { DataTable } from 'mantine-datatable';
-import { Box, NavLink, ActionIcon, Group, Text, Badge } from '@mantine/core';
+import { StockMovement, UpdateStockMovement } from '@gofranz/checkoutbay-common';
+import { ActionIcon, Badge, Box, Group, NavLink, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
-import { StockMovement } from '@gofranz/checkoutbay-common';
+import { DataTable } from 'mantine-datatable';
+import { useEffect, useState } from 'react';
 import { CommonTableProps } from '../../lib/table';
 
 export function StockMovementsTable(
-  props: CommonTableProps<StockMovement, Partial<StockMovement>>
+  props: CommonTableProps<StockMovement, UpdateStockMovement>
 ) {
   const [isBusy, setIsBusy] = useState(false);
   const [records, setRecords] = useState<StockMovement[] | []>([]);

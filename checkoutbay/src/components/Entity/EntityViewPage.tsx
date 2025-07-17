@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-interface GeneralizedViewPageProps<T> {
+interface GeneralizedViewPageProps<Entity, Update> {
   DetailComponent: React.ComponentType<{
-    item: T;
-    submitCb: (id: string, item: Partial<T>) => Promise<void>;
+    item: Entity;
+    submitCb: (id: string, item: Update) => Promise<void>;
     deleteCb: (id: string) => Promise<void>;
     reload?: () => Promise<void>;
   }>;
-  getFunction: (id: string) => Promise<T | undefined>;
-  submitCb?: (id: string, item: Partial<T>) => Promise<void>;
+  getFunction: (id: string) => Promise<Entity | undefined>;
+  submitCb?: (id: string, item: Update) => Promise<void>;
   deleteCb?: (id: string) => Promise<void>;
 }
 
-export function GeneralizedViewPage<T>({
+export function GeneralizedViewPage<Entity, Update>({
   DetailComponent,
   getFunction,
   submitCb,
   deleteCb,
-}: GeneralizedViewPageProps<T>) {
+}: GeneralizedViewPageProps<Entity, Update>) {
   const { uuid } = useParams<{ uuid: string }>();
-  const [item, setItem] = useState<T | undefined>(undefined);
+  const [item, setItem] = useState<Entity | undefined>(undefined);
 
   useEffect(() => {
     const getItem = async () => {

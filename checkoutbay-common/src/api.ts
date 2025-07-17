@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosError } from "axios";
 import Decimal from "decimal.js";
 import {
   CommonQueryParams,
@@ -11,7 +11,7 @@ import {
   RustyVerifiedEmails,
   HttpNewVerifiedEmail,
 } from "@gofranz/common";
-import { Address, AddressesResponse, NewOrderCalculation, NewOrderPaymentSubmission, NewPublicUserOrder, NewRegisteredUserOrder, Order, OrderItem, OrderPayment, OrderRecord, OrdersResponse, PaymentGateway, PaymentGatewaysResponse, ProcessedOrder, ProcessedOrderPreview, ProcessedPublicUserOrder, ProcessedRegisteredUserOrder, Product, PublicFile, PublicProduct, PublicProductsResponse, PublicShippingRate, PublicShop, PublicStock, PublicWarehouse, ShippingRateTemplate, Shop, ShopsResponse, ShopUser, StockMovement, StockMovementsResponse, TaxRate, TaxRatesQuery, TemplatesWithWarehouseIdResponse, Warehouse, WarehousesResponse, WarehouseStockLevel } from "./types";
+import { Address, AddressesResponse, Discount, DiscountsQueryParams, DiscountsResponse, NewAddress, NewDiscount, NewOrderCalculation, NewOrderPaymentSubmission, NewPaymentGateway, NewProduct, NewPublicUserOrder, NewRegisteredUserOrder, NewShippingRateTemplate, NewShop, NewStockMovement, NewWarehouse, Order, OrderItem, OrderPayment, OrderRecord, OrdersResponse, PaymentGateway, PaymentGatewaysResponse, ProcessedOrder, ProcessedOrderPreview, ProcessedPublicUserOrder, ProcessedRegisteredUserOrder, Product, PublicFile, PublicProduct, PublicProductsResponse, PublicShippingRate, PublicShop, PublicStock, PublicWarehouse, ShippingRateTemplate, Shop, ShopsResponse, ShopUser, StockMovement, StockMovementsResponse, TaxRate, TaxRatesQuery, TemplatesWithWarehouseIdResponse, UpdateDiscount, UpdatePaymentGateway, UpdateProduct, UpdateShippingRateTemplate, UpdateShop, UpdateStockMovement, UpdateWarehouse, VoucherCodeValidationRequest, VoucherCodeValidationResponse, Warehouse, WarehousesResponse, WarehouseStockLevel } from "./types";
 
 function convertToDecimal(value: string | number | Decimal): Decimal {
   if (value instanceof Decimal) return value;
@@ -109,7 +109,7 @@ function convertProcessedOrderDecimals(order: any): any {
   } else if ((order as ProcessedRegisteredUserOrder).customer_user_id) {
     return convertProcessedRegisteredUserOrder(order)
   }
-  
+
   // Handle direct ProcessedOrder objects - try to determine type by fields
   if ('customer_user_email' in order) {
     return convertProcessedPublicUserOrder(order);
@@ -181,15 +181,17 @@ export interface RustyShopApiProps {
   baseUrl?: string;
   timeout?: number;
   auth?: RustyAuthSpec;
+  errorHandler?: (error: AxiosError) => void;
 }
 
 export class RustyShopAPI {
   private baseUrl: string;
   private timeout: number;
   private client: AxiosInstance;
+  private errorHandler?: (error: AxiosError) => void;
   auth?: RustyAuthSpec;
 
-  constructor({ baseUrl, timeout, auth }: RustyShopApiProps) {
+  constructor({ baseUrl, timeout, auth, errorHandler }: RustyShopApiProps) {
     if (baseUrl) {
       this.baseUrl = baseUrl;
     } else {
@@ -209,6 +211,8 @@ export class RustyShopAPI {
     } else {
       console.warn("Auth config not set");
     }
+
+    this.errorHandler = errorHandler;
 
     this.client = axios.create({
       baseURL: this.baseUrl,
@@ -230,6 +234,17 @@ export class RustyShopAPI {
       }
       return config;
     });
+
+    // Add response interceptor to handle errors generically
+    this.client.interceptors.response.use(
+      (response) => response, // Pass through successful responses
+      (error: AxiosError) => {
+        if (this.errorHandler) {
+          this.errorHandler(error);
+        }
+        return Promise.reject(error); // Still reject so specific handlers can override
+      }
+    );
   }
 
   getAuthApi = (): RustyAuthSpec => {
@@ -305,7 +320,7 @@ export class RustyShopAPI {
   };
 
   // Address endpoints
-  createAddress = async (addressData: Partial<Address>): Promise<Address> => {
+  createAddress = async (addressData: NewAddress): Promise<Address> => {
     const response = await this.client.post<Address>(
       "/a/addresses",
       addressData,
@@ -353,7 +368,7 @@ export class RustyShopAPI {
 
   // Warehouse endpoints
   createWarehouse = async (
-    warehouseData: Partial<Warehouse>
+    warehouseData: NewWarehouse
   ): Promise<Warehouse> => {
     const response = await this.client.post<Warehouse>(
       "/a/warehouses",
@@ -383,7 +398,7 @@ export class RustyShopAPI {
 
   updateWarehouse = async (
     warehouseId: string,
-    warehouseData: Partial<Warehouse>
+    warehouseData: UpdateWarehouse
   ): Promise<void> => {
     await this.client.patch<Warehouse>(
       `/a/warehouses/${warehouseId}`,
@@ -399,7 +414,7 @@ export class RustyShopAPI {
   };
 
   // Product endpoints
-  createProduct = async (productData: Partial<Product>): Promise<Product> => {
+  createProduct = async (productData: NewProduct): Promise<Product> => {
     const response = await this.client.post<Product>(
       "/a/products",
       productData,
@@ -439,7 +454,7 @@ export class RustyShopAPI {
 
   updateProduct = async (
     productId: string,
-    productData: Partial<Product>
+    productData: UpdateProduct
   ): Promise<void> => {
     await this.client.patch<Product>(
       `/a/products/${productId}`,
@@ -456,7 +471,7 @@ export class RustyShopAPI {
 
   // Stock Movement endpoints
   createStockMovement = async (
-    stockData: Partial<StockMovement>
+    stockData: NewStockMovement
   ): Promise<StockMovement> => {
     const response = await this.client.post<StockMovement>(
       "/a/stock_movements",
@@ -488,7 +503,7 @@ export class RustyShopAPI {
 
   updateStockMovement = async (
     stockMovementId: string,
-    stockData: Partial<StockMovement>
+    stockData: UpdateStockMovement
   ): Promise<void> => {
     await this.client.patch<StockMovement>(
       `/a/stock_movements/${stockMovementId}`,
@@ -631,7 +646,7 @@ export class RustyShopAPI {
 
   // Payment Gateway endpoints
   createPaymentGateway = async (
-    gatewayData: Partial<PaymentGateway>
+    gatewayData: NewPaymentGateway
   ): Promise<PaymentGateway> => {
     const response = await this.client.post<PaymentGateway>(
       "/a/payment_gateways",
@@ -661,7 +676,7 @@ export class RustyShopAPI {
 
   updatePaymentGateway = async (
     gatewayId: string,
-    gatewayData: Partial<PaymentGateway>
+    gatewayData: UpdatePaymentGateway
   ): Promise<void> => {
     await this.client.patch<PaymentGateway>(
       `/a/payment_gateways/${gatewayId}`,
@@ -677,7 +692,7 @@ export class RustyShopAPI {
     );
   };
 
-  createShop = async (shopData: Partial<Shop>): Promise<Shop> => {
+  createShop = async (shopData: NewShop): Promise<Shop> => {
     const response = await this.client.post<Shop>(
       "/a/shops",
       shopData,
@@ -704,7 +719,7 @@ export class RustyShopAPI {
 
   updateShop = async (
     shopId: string,
-    shopData: Partial<Shop>
+    shopData: UpdateShop
   ): Promise<void> => {
     await this.client.patch(
       `/a/shops/${shopId}`,
@@ -745,7 +760,7 @@ export class RustyShopAPI {
   };
 
   createShippingRateTemplate = async (
-    templateData: Partial<ShippingRateTemplate>
+    templateData: NewShippingRateTemplate
   ): Promise<ShippingRateTemplate> => {
     const response = await this.client.post<ShippingRateTemplate>(
       "/a/shipping-rate-templates",
@@ -791,7 +806,7 @@ export class RustyShopAPI {
 
   updateShippingRateTemplate = async (
     templateId: string,
-    templateData: Partial<ShippingRateTemplate>
+    templateData: UpdateShippingRateTemplate
   ): Promise<void> => {
     await this.client.patch<ShippingRateTemplate>(
       `/a/shipping-rate-templates/${templateId}`,
@@ -958,5 +973,62 @@ export class RustyShopAPI {
         })),
       })),
     ];
+  };
+
+  // Discount endpoints
+  createDiscount = async (data: NewDiscount): Promise<Discount> => {
+    const response = await this.client.post<Discount>(
+      '/a/discounts',
+      data,
+      this.getAxiosConfig()
+    );
+    return response.data;
+  };
+
+  getDiscounts = async (params: DiscountsQueryParams): Promise<DiscountsResponse> => {
+    const response = await this.client.get<DiscountsResponse>(
+      makeUrl('/a/discounts', params),
+      this.getAxiosConfig()
+    );
+    return response.data;
+  };
+
+  getDiscount = async (discountId: string): Promise<Discount> => {
+    const response = await this.client.get<Discount>(
+      `/a/discounts/${discountId}`,
+      this.getAxiosConfig()
+    );
+    return response.data;
+  };
+
+  updateDiscount = async (discountId: string, data: UpdateDiscount): Promise<void> => {
+    await this.client.patch<void>(
+      `/a/discounts/${discountId}`,
+      data,
+      this.getAxiosConfig()
+    );
+  };
+
+  deleteDiscount = async (discountId: string): Promise<void> => {
+    await this.client.delete(
+      `/a/discounts/${discountId}`,
+      this.getAxiosConfig()
+    );
+  };
+
+  validateVoucherCode = async (data: VoucherCodeValidationRequest): Promise<VoucherCodeValidationResponse> => {
+    const response = await this.client.post<VoucherCodeValidationResponse>(
+      '/public/discounts/validate-voucher',
+      data
+    );
+    return response.data;
+  };
+
+  getProductDiscounts = async (productId: string, shopId: string): Promise<Discount[]> => {
+    const response = await this.client.get<Discount[]>(
+      makeUrl(`/a/products/${productId}/discounts`, { shop_id: shopId }),
+      this.getAxiosConfig()
+    );
+    return response.data;
   };
 }

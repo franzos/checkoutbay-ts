@@ -1,20 +1,28 @@
-import { useRustyState } from "../../state";
-import { NumberInput, Select, TextInput, Loader, Stack, Box, Text } from "@mantine/core";
-import { useTranslation } from 'react-i18next';
 import {
+  NewStockMovement,
   Product,
-  StockMovement,
   StockMovementReason,
+  UpdateStockMovement,
   Warehouse,
 } from "@gofranz/checkoutbay-common";
-import { useState, useEffect } from "react";
-import { RenderFieldsProps } from "../Entity/EntityForm";
+import { Box, Loader, NumberInput, Select, Stack, Text, TextInput } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
+import { useRustyState } from "../../state";
+import { RenderFieldsCreateProps } from "../Entity/EntityFormCreate";
+import { RenderFieldsEditProps } from "../Entity/EntityFormEdit";
 
+type FormMarkup = UseFormReturnType<NewStockMovement, (values: NewStockMovement) => NewStockMovement>;
+
+export function RenderStockMovementsFields(props: RenderFieldsCreateProps<NewStockMovement>): JSX.Element;
+export function RenderStockMovementsFields(props: RenderFieldsEditProps<UpdateStockMovement>): JSX.Element;
 export function RenderStockMovementsFields({
   form,
   setParentLoading,
-  shopId
-}: RenderFieldsProps<StockMovement>) {
+  shopId,
+  isEditing
+}: RenderFieldsCreateProps<NewStockMovement> | RenderFieldsEditProps<UpdateStockMovement>): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,17 +71,18 @@ export function RenderStockMovementsFields({
   );
 
   if (isLoading) {
-    return <Box><Loader m="lg"/></Box>;
+    return <Box><Loader m="lg" /></Box>;
   }
 
   return (
     <Stack gap={3}>
+
       <Select
         label={t('stockMovements.reason')}
         placeholder={t('stockMovements.selectReason')}
         withAsterisk
         data={stockMovementReasonOptions}
-        {...form.getInputProps("reason")}
+        {...(form as FormMarkup).getInputProps("reason")}
         defaultValue={form.values.reason}
       />
 
@@ -83,40 +92,45 @@ export function RenderStockMovementsFields({
         label={t('stockMovements.quantity')}
         placeholder={t('stockMovements.quantityPlaceholder')}
         withAsterisk
-        {...form.getInputProps("quantity")}
+        {...(form as FormMarkup).getInputProps("quantity")}
         thousandSeparator=" "
         allowDecimal={true}
       />
 
       <Text size="xs">{t('stockMovements.quantityDescription')}</Text>
 
-      <Select
-        label={t('stockMovements.product')}
-        placeholder={t('stockMovements.selectProduct')}
-        withAsterisk
-        data={productOptions}
-        {...form.getInputProps("product_id")}
-        defaultValue={form.values.product_id}
-      />
+      {!isEditing && (
+        <>
+          <Select
+            label={t('stockMovements.product')}
+            placeholder={t('stockMovements.selectProduct')}
+            withAsterisk
+            data={productOptions}
+            {...(form as FormMarkup).getInputProps("product_id")}
+            defaultValue={form.values.product_id}
+          />
 
-      <Select
-        label={t('stockMovements.warehouse')}
-        placeholder={t('stockMovements.selectWarehouse')}
-        withAsterisk
-        data={warehouseOptions}
-        {...form.getInputProps("warehouse_id")}
-        defaultValue={form.values.warehouse_id}
-      />
+          <Select
+            label={t('stockMovements.warehouse')}
+            placeholder={t('stockMovements.selectWarehouse')}
+            withAsterisk
+            data={warehouseOptions}
+            {...(form as FormMarkup).getInputProps("warehouse_id")}
+            defaultValue={form.values.warehouse_id}
+          />
+        </>
+      )}
 
       <Text size="xs">{t('stockMovements.warehouseTransferNote')}</Text>
 
       <TextInput
         label={t('stockMovements.reference')}
         placeholder={t('stockMovements.referencePlaceholder')}
-        {...form.getInputProps("reference")}
+        {...(form as FormMarkup).getInputProps("reference")}
       />
 
       <Text size="xs">{t('stockMovements.referenceDescription')}</Text>
+
     </Stack>
   );
 }

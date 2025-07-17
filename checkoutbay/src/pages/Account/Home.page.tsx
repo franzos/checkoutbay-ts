@@ -214,7 +214,7 @@ export function AccountHomePage() {
                 fullWidth
                 disabled={!isShopSelected}
               >
-                {completionStatus.addStripeDetails ? 'View Payment Gateways' : 'Set Up Payments'}
+                {completionStatus.addStripeDetails ? t('account.viewPaymentMethods') : t('account.setUpPayments')}
               </Button>
             </HoverCard.Dropdown>
           </HoverCard>
@@ -619,10 +619,10 @@ export function AccountHomePage() {
             <IconPaywall size={32} color={theme.colors.primary[6]} />
           </Center>
           <Title order={4} ta="center">
-            {t('account.paymentGatewaysTitle')}
+            {t('account.paymentMethodsTitle')}
           </Title>
           <Text size="sm" ta="center" c="dimmed">
-            {t('account.paymentGatewaysDescription')}
+            {t('account.paymentMethodsDescription')}
           </Text>
           <Button
             component="a"
@@ -632,7 +632,7 @@ export function AccountHomePage() {
             fullWidth
             disabled={!isShopSelected}
           >
-            {t('account.goToPaymentGateways')}
+            {t('account.goToPaymentMethods')}
           </Button>
         </Stack>
       </Card>

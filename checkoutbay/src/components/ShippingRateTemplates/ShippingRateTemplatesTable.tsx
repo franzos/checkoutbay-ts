@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { DataTable } from 'mantine-datatable';
-import { Box, NavLink, ActionIcon, Group, Text, Badge, Stack } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
 import {
+  ShippingRateCalculationMethod,
   ShippingRateTemplate,
   ShippingSpeed,
-  ShippingRateCalculationMethod,
   formatPrice,
 } from '@gofranz/checkoutbay-common';
-import { CommonTableProps } from '../../lib/table';
+import { ActionIcon, Badge, Box, Group, NavLink, Stack, Text } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
 import Decimal from 'decimal.js';
+import { DataTable } from 'mantine-datatable';
+import { useEffect, useState } from 'react';
+import { CommonTableProps } from '../../lib/table';
 
 export function ShippingRateTemplatesTable(
   props: CommonTableProps<ShippingRateTemplate, Partial<ShippingRateTemplate>>

@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { DataTable } from 'mantine-datatable';
-import { Box, NavLink, ActionIcon, Badge, Group, Text } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
 import { Warehouse } from '@gofranz/checkoutbay-common';
+import { ActionIcon, Badge, Box, Group, NavLink, Text } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
+import { DataTable } from 'mantine-datatable';
+import { useEffect, useState } from 'react';
 import { CommonTableProps } from '../../lib/table';
 
 export function WarehousesTable(props: CommonTableProps<Warehouse, Partial<Warehouse>>) {

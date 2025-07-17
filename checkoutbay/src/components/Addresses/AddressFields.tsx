@@ -1,18 +1,27 @@
-import { Address } from "@gofranz/checkoutbay-common";
+import { NewAddress, UpdateAddres } from "@gofranz/checkoutbay-common";
 import {
-  TextInput,
-  Switch,
-  Select,
+  Box,
   Loader,
+  Select,
   Stack,
-  Box
+  Switch,
+  TextInput
 } from "@mantine/core";
-import { Country, Subdivision } from "rust_iso3166-ts";
-import { useState, useEffect } from "react";
+import { UseFormReturnType } from "@mantine/form";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RenderFieldsProps } from "../Entity/EntityForm";
+import { Country, Subdivision } from "rust_iso3166-ts";
+import { RenderFieldsCreateProps } from "../Entity/EntityFormCreate";
+import { RenderFieldsEditProps } from "../Entity/EntityFormEdit";
 
-export function RenderAddressFields({ form, setParentLoading }: RenderFieldsProps<Address>) {
+type FormMarkup = UseFormReturnType<NewAddress, (values: NewAddress) => NewAddress>;
+
+export function RenderAddressFields(props: RenderFieldsCreateProps<NewAddress>): JSX.Element;
+export function RenderAddressFields(props: RenderFieldsEditProps<UpdateAddres>): JSX.Element;
+export function RenderAddressFields({
+  form,
+  setParentLoading,
+}: RenderFieldsCreateProps<NewAddress> | RenderFieldsEditProps<UpdateAddres>): JSX.Element {
   const [countries, setCountries] = useState<Array<{ value: string; label: string }>>([]);
   const [states, setStates] = useState<Array<{ value: string; label: string }>>([]);
   const [stateDisabled, setStateDisabled] = useState(true);
@@ -71,7 +80,7 @@ export function RenderAddressFields({ form, setParentLoading }: RenderFieldsProp
       setStates([]);
       setStateDisabled(true);
       if (form.values.state) {
-        form.setFieldValue("state", "");
+        (form as FormMarkup).setFieldValue("state", "");
       }
     } else {
       setStates(
@@ -103,7 +112,7 @@ export function RenderAddressFields({ form, setParentLoading }: RenderFieldsProp
       <TextInput
         label={t('addresses.recipientName')}
         placeholder={t('addresses.recipientNamePlaceholder')}
-        {...form.getInputProps("recipient_name")}
+        {...(form as FormMarkup).getInputProps("recipient_name")}
         error={form.errors.recipient_name}
       />
 
@@ -111,14 +120,14 @@ export function RenderAddressFields({ form, setParentLoading }: RenderFieldsProp
         label={t('addresses.street')}
         placeholder={t('addresses.streetPlaceholder')}
         withAsterisk
-        {...form.getInputProps("street")}
+        {...(form as FormMarkup).getInputProps("street")}
         error={form.errors.street}
       />
 
       <TextInput
         label={t('addresses.street2')}
         placeholder={t('addresses.street2Placeholder')}
-        {...form.getInputProps("street2")}
+        {...(form as FormMarkup).getInputProps("street2")}
         error={form.errors.street2}
       />
 
@@ -126,24 +135,24 @@ export function RenderAddressFields({ form, setParentLoading }: RenderFieldsProp
         label={t('addresses.city')}
         placeholder={t('addresses.cityPlaceholder')}
         withAsterisk
-        {...form.getInputProps("city")}
+        {...(form as FormMarkup).getInputProps("city")}
         error={form.errors.city}
       />
-      
+
       <Select
         label={t('addresses.country')}
         placeholder={t('addresses.selectCountry')}
         data={countries}
         withAsterisk
-        {...form.getInputProps("country")}
+        {...(form as FormMarkup).getInputProps("country")}
         defaultValue={form.values.country}
         error={form.errors.country}
         searchable
         onChange={(value) => {
           if (value) {
-            form.setFieldValue("country", value);
+            (form as FormMarkup).setFieldValue("country", value);
           }
-          form.setFieldValue("state", undefined);
+          (form as FormMarkup).setFieldValue("state", null);
           onCountryChange(value);
         }}
       />
@@ -152,7 +161,7 @@ export function RenderAddressFields({ form, setParentLoading }: RenderFieldsProp
         label={t('addresses.stateProvinceRegion')}
         placeholder={t('addresses.selectState')}
         data={states}
-        {...form.getInputProps("state")}
+        {...(form as FormMarkup).getInputProps("state")}
         defaultValue={form.values.state}
         disabled={stateDisabled}
         error={form.errors.state}
@@ -163,34 +172,34 @@ export function RenderAddressFields({ form, setParentLoading }: RenderFieldsProp
         label={t('addresses.zip')}
         placeholder={t('addresses.zipPlaceholder')}
         withAsterisk
-        {...form.getInputProps("zip")}
+        {...(form as FormMarkup).getInputProps("zip")}
         error={form.errors.zip}
       />
 
       <TextInput
         label={t('addresses.phone')}
         placeholder={t('addresses.phonePlaceholder')}
-        {...form.getInputProps("phone")}
+        {...(form as FormMarkup).getInputProps("phone")}
         error={form.errors.phone}
       />
 
       <TextInput
         label={t('addresses.vatNumber')}
         placeholder={t('addresses.vatNumberPlaceholder')}
-        {...form.getInputProps("vat_number")}
+        {...(form as FormMarkup).getInputProps("vat_number")}
         error={form.errors.vat_number}
       />
 
       <TextInput
         label={t('addresses.companyName')}
         placeholder={t('addresses.companyNamePlaceholder')}
-        {...form.getInputProps("company_name")}
+        {...(form as FormMarkup).getInputProps("company_name")}
         error={form.errors.company_name}
       />
 
       <Switch
         label={t('addresses.isDefault')}
-        {...form.getInputProps("is_default")}
+        {...(form as FormMarkup).getInputProps("is_default")}
         defaultChecked={form.values.is_default}
       />
     </Stack>

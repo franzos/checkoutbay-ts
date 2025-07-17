@@ -1,21 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 import { useLanguageAwareRouting } from '@gofranz/common-components';
 
-interface GeneralizedCreatePageProps<T> {
-  CreateComponent: React.ComponentType<{ submitFormCb: (item: Partial<T>) => Promise<void> }>;
-  createFunction: (item: Partial<T>) => Promise<T>;
-  redirectPath: (item: T) => string;
+interface GeneralizedCreatePageProps<Entity, Create> {
+  CreateComponent: React.ComponentType<{ submitFormCb: (item: Create) => Promise<void> }>;
+  createFunction: (item: Create) => Promise<Entity>;
+  redirectPath: (item: Entity) => string;
 }
 
-export function GeneralizedCreatePage<T>({
+export function GeneralizedCreatePage<Entity, Create>({
   CreateComponent,
   createFunction,
   redirectPath,
-}: GeneralizedCreatePageProps<T>) {
+}: GeneralizedCreatePageProps<Entity, Create>) {
   const nav = useNavigate();
   const { createLanguageURL } = useLanguageAwareRouting();
 
-  const submit = async (newItem: Partial<T>) => {
+  const submit = async (newItem: Create) => {
     const item = await createFunction(newItem);
     nav(createLanguageURL(redirectPath(item)));
   };

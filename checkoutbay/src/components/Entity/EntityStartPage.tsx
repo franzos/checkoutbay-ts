@@ -6,12 +6,12 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShopQueryParams } from '@gofranz/checkoutbay-common';
 
-interface GeneralizedStartPageProps<T, Q> {
-  TableComponent: React.ComponentType<any>;
-  getFunction: (params: Q) => Promise<{ total: number; data: T[] }>;
+interface GeneralizedStartPageProps<Entity, Query, Update> {
+  TableComponent: React.ComponentType<CommonTableProps<Entity, Update>>;
+  getFunction: (params: Query) => Promise<{ total: number; data: Entity[] }>;
   createPath?: string;
-  openPath: (item: T) => string;
-  updateCb?: (id: string, item: Partial<T>) => Promise<void>;
+  openPath: (item: Entity) => string;
+  updateCb?: (id: string, item: Update) => Promise<void>;
   deleteCb?: (id: string) => Promise<void>;
   buttonText: string;
   headerText: string;
@@ -19,7 +19,7 @@ interface GeneralizedStartPageProps<T, Q> {
   shopCurrency: Currency;
 }
 
-export function GeneralizedStartPage<T, Q>({
+export function GeneralizedStartPage<Entity, Query, Update>({
   TableComponent,
   getFunction,
   createPath,
@@ -30,12 +30,12 @@ export function GeneralizedStartPage<T, Q>({
   headerText,
   shopId,
   shopCurrency,
-}: GeneralizedStartPageProps<T, Q>) {
+}: GeneralizedStartPageProps<Entity, Query, Update>) {
   const nav = useNavigate();
   const { createLanguageURL } = useLanguageAwareRouting();
 
   // Unified pagination using the common hook
-  const fetchData = useCallback(async (params: { nextPage: number; [key: string]: any }) => {
+  const fetchData = useCallback(async (params: { nextPage: number;[key: string]: unknown }) => {
     if (!shopId) {
       return { data: [], total: 0 };
     }
@@ -46,7 +46,7 @@ export function GeneralizedStartPage<T, Q>({
       limit: 10,
       shop_id: shopId,
       ...otherParams
-    } as ShopQueryParams & Q;
+    } as ShopQueryParams & Query;
     
     const res = await getFunction(apiParams);
     return {
@@ -65,7 +65,7 @@ export function GeneralizedStartPage<T, Q>({
   }, [nav, createPath, createLanguageURL]);
 
   const openItem = useCallback(
-    (item: T) => {
+    (item: Entity) => {
       nav(createLanguageURL(openPath(item)));
     },
     [nav, openPath, createLanguageURL]
@@ -92,7 +92,7 @@ export function GeneralizedStartPage<T, Q>({
 
   const totalPages = Math.ceil(pagination.total / pagination.perPage);
 
-  const tableProps: CommonTableProps<T, Partial<T>> = {
+  const tableProps: CommonTableProps<Entity, Update> = {
     pagination: {
       total: pagination.total,
       initial: 1,

@@ -16,6 +16,7 @@ import {
   getLsSession,
   hasFutureExpiry,
   makeAuthHeaders,
+  setLsPrivateKey,
   setLsSession,
 } from "./utils";
 
@@ -23,6 +24,7 @@ export interface RustyAuthApiProps {
   baseUrl?: string;
   timeout?: number;
   useLocalStore?: boolean;
+  localStorageKey?: string;
 }
 
 export const decodeSessionTokens = (cr: {
@@ -76,6 +78,7 @@ export class RustyAuth implements RustyAuthSpec {
   private baseUrl: string;
   private timeout: number;
   private useLocalStore: boolean = false;
+  private localStorageKey: string;
   private client: AxiosInstance;
 
   private session: Session;
@@ -83,10 +86,15 @@ export class RustyAuth implements RustyAuthSpec {
   private maxRefreshAttempts: number = 3;
   private lastRefreshAttempt: number = 0;
 
-  constructor({ baseUrl, timeout, useLocalStore }: RustyAuthApiProps) {
+  constructor({ baseUrl, timeout, useLocalStore, localStorageKey }: RustyAuthApiProps) {
     this.baseUrl = baseUrl || "https://api.checkoutbay.com/v1";
     this.timeout = timeout || 5000;
     this.useLocalStore = useLocalStore || false;
+    if (localStorageKey) {
+      this.localStorageKey = localStorageKey;
+    } else {
+      throw new Error("localStorageKey is required");
+    }
 
     this.client = axios.create({
       baseURL: this.baseUrl,
@@ -104,7 +112,7 @@ export class RustyAuth implements RustyAuthSpec {
 
     if (this.useLocalStore) {
       console.info("[api] => Using local storage for session management");
-      const storedSession = getLsSession();
+      const storedSession = getLsSession(this.localStorageKey);
       if (storedSession) {
         this.session = storedSession;
         console.debug("[api] => Loaded session from local storage", this.session);
@@ -124,13 +132,13 @@ export class RustyAuth implements RustyAuthSpec {
     this.refreshAttempts = 0;
     this.lastRefreshAttempt = 0;
     if (this.useLocalStore) {
-      setLsSession(session);
+      setLsSession(session, this.localStorageKey);
     }
   }
 
   clearSession(): void {
     if (this.useLocalStore) {
-      clearLsSession();
+      clearLsSession(this.localStorageKey);
     }
     this.session = { isLoggedIn: false };
     // Reset refresh tracking on session clear

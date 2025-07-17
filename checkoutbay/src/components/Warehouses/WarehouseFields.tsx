@@ -1,9 +1,13 @@
-import { useRustyState } from "../../state";
-import { Select, Switch, TextInput, Loader, Stack, Box, Text, MultiSelect, Group, Badge } from "@mantine/core";
-import { Address, Warehouse, ShippingRateTemplate } from "@gofranz/checkoutbay-common";
-import { useState, useEffect } from "react";
+import { Address, NewWarehouse, ShippingRateTemplate, UpdateWarehouse } from "@gofranz/checkoutbay-common";
+import { Badge, Box, Group, Loader, MultiSelect, Select, Stack, Switch, Text, TextInput } from "@mantine/core";
+import { UseFormReturnType } from "@mantine/form";
+import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { RenderFieldsProps } from "../Entity/EntityForm";
+import { useRustyState } from "../../state";
+import { RenderFieldsCreateProps } from "../Entity/EntityFormCreate";
+import { RenderFieldsEditProps } from "../Entity/EntityFormEdit";
+
+type FormMarkup = UseFormReturnType<NewWarehouse, (values: NewWarehouse) => NewWarehouse>;
 
 function createSlugFromTitle(title: string): string {
   return title
@@ -14,11 +18,15 @@ function createSlugFromTitle(title: string): string {
     .replace(/-+/g, '-');     // Replace multiple hyphens with single hyphen
 }
 
-export function RenderWarehouseFields({ 
-    form,
-    setParentLoading,
-    shopId
-  }: RenderFieldsProps<Warehouse>) {
+export function RenderWarehouseFields(props: RenderFieldsCreateProps<NewWarehouse>): JSX.Element;
+export function RenderWarehouseFields(props: RenderFieldsEditProps<UpdateWarehouse>): JSX.Element;
+export function RenderWarehouseFields({
+  form,
+  setParentLoading,
+  shopId,
+  entityId,
+  isEditing
+}: RenderFieldsCreateProps<NewWarehouse> | RenderFieldsEditProps<UpdateWarehouse>): JSX.Element {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [shippingTemplates, setShippingTemplates] = useState<ShippingRateTemplate[]>([]);
   const [selectedTemplates, setSelectedTemplates] = useState<string[]>([]);
@@ -49,12 +57,12 @@ export function RenderWarehouseFields({
         setShippingTemplates(templatesResponse.data);
 
         // If editing existing warehouse, fetch its shipping templates
-        if (form.values.id) {
+        if (isEditing === true) {
           const publicRates = await api.getShippingRateTemplates({
             shop_id: shopId,
           });
           const warehouseTemplateIds = publicRates.data
-            .filter(rate => rate.warehouse_ids.includes(form.values.id as string))
+            .filter(rate => rate.warehouse_ids.includes(entityId))
             .map(rate => rate.id);
           setSelectedTemplates(warehouseTemplateIds);
         }
@@ -65,10 +73,10 @@ export function RenderWarehouseFields({
       }
     };
     loadData();
-  }, [api, shopId, form.values.id]);
+  }, [api, shopId, entityId]);
 
   const handleTemplateChange = async (values: string[]) => {
-    if (!form.values.id) {
+    if (!entityId) {
       // For new warehouses, just track the selection - relationships will be created after warehouse creation
       setSelectedTemplates(values);
       return;
@@ -82,14 +90,14 @@ export function RenderWarehouseFields({
       // Handle removals
       for (const templateId of currentTemplates) {
         if (!newTemplates.has(templateId)) {
-          await api.removeTemplateFromWarehouse(templateId, form.values.id);
+          await api.removeTemplateFromWarehouse(templateId, entityId);
         }
       }
 
       // Handle additions
       for (const templateId of newTemplates) {
         if (!currentTemplates.has(templateId)) {
-          await api.relateTemplateToWarehouse(templateId, form.values.id);
+          await api.relateTemplateToWarehouse(templateId, entityId);
         }
       }
 
@@ -109,7 +117,7 @@ export function RenderWarehouseFields({
   const shippingTemplateOptions = shippingTemplates.reduce<{ group: string; items: { value: string; label: string; }[]; }[]>((acc, template) => {
     const group = template.method || 'Other';
     const existingGroup = acc.find(g => g.group === group);
-    
+
     const item = {
       value: template.id as string,
       label: template.title || `${template.provider} - ${template.service_level}`,
@@ -128,28 +136,30 @@ export function RenderWarehouseFields({
   }, []);
 
   if (isLoading) {
-    return <Box><Loader m="lg"/></Box>;
+    return <Box><Loader m="lg" /></Box>;
   }
 
   return (
     <Stack gap={4} pos="relative">
       <TextInput
-        label={t('warehouses.title')}
-        placeholder={t('warehouses.titlePlaceholder')}
-        withAsterisk
-        {...form.getInputProps("title")}
-        onChange={(event) => {
-          form.getInputProps("title").onChange(event);
-          const newSlug = createSlugFromTitle(event.currentTarget.value);
-          form.setFieldValue("code", newSlug);
-        }}
-        error={form.errors.title}
-      />
+            label={t('warehouses.title')}
+            placeholder={t('warehouses.titlePlaceholder')}
+            withAsterisk
+        {...(form as FormMarkup).getInputProps("title")}
+            onChange={(event) => {
+              (form as FormMarkup).getInputProps("title").onChange(event);
+              const newSlug = createSlugFromTitle(event.currentTarget.value);
+              if (!isEditing) {
+                (form as UseFormReturnType<NewWarehouse>).setFieldValue("code", newSlug);
+              }
+            }}
+            error={form.errors.title}
+          />
 
       <TextInput
         label={t('warehouses.code')}
         placeholder={t('warehouses.codeDefault')}
-        {...form.getInputProps("code")}
+        {...(form as FormMarkup).getInputProps("code")}
         error={form.errors.code}
       />
 
@@ -160,7 +170,7 @@ export function RenderWarehouseFields({
         placeholder={t('warehouses.selectAddress')}
         withAsterisk
         data={addressOptions}
-        {...form.getInputProps("address_id")}
+        {...(form as FormMarkup).getInputProps("address_id")}
         defaultValue={form.values.address_id}
         error={form.errors.address_id}
       />
@@ -182,7 +192,7 @@ export function RenderWarehouseFields({
           {selectedTemplates.map((templateId) => {
             const template = shippingTemplates.find(t => t.id === templateId);
             return template && (
-              <Badge 
+              <Badge
                 key={templateId}
                 color={template.service_level === 'express' ? 'green' : 'blue'}
               >
@@ -195,9 +205,9 @@ export function RenderWarehouseFields({
 
       <Switch
         label={t('warehouses.isActive')}
-        {...form.getInputProps("is_active")}
-        defaultChecked={form.values.is_active}
-      />
+        {...(form as FormMarkup).getInputProps("is_active")}
+              defaultChecked={form.values.is_active}
+            />
 
       <Text size="xs">{t('warehouses.isActiveDescription')}</Text>
     </Stack>
