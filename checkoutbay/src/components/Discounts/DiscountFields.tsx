@@ -1,4 +1,5 @@
 import { DiscountType, DiscountValueType, NewDiscount, Product, UpdateDiscount } from '@gofranz/checkoutbay-common';
+import { RenderFieldsCreateProps, RenderFieldsEditProps } from '@gofranz/common-components';
 import {
   Accordion,
   ActionIcon,
@@ -20,8 +21,6 @@ import Decimal from 'decimal.js';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useRustyState } from '../../state';
-import { RenderFieldsCreateProps } from '../Entity/EntityFormCreate';
-import { RenderFieldsEditProps } from '../Entity/EntityFormEdit';
 
 type FormMarkup = UseFormReturnType<NewDiscount, (values: NewDiscount) => NewDiscount>;
 
@@ -29,7 +28,7 @@ export function RenderDiscountFields(props: RenderFieldsCreateProps<NewDiscount>
 export function RenderDiscountFields(props: RenderFieldsEditProps<UpdateDiscount>): JSX.Element;
 export function RenderDiscountFields({
   form,
-  shopId,
+  primaryEntityId,
   entityId,
   isEditing
 }: RenderFieldsCreateProps<NewDiscount> | RenderFieldsEditProps<UpdateDiscount>): JSX.Element {
@@ -46,7 +45,7 @@ export function RenderDiscountFields({
       setLoading(true);
       try {
         const api = useRustyState.getState().api;
-        const response = await api.getProducts({ shop_id: shopId, limit: 1000, offset: 0 });
+        const response = await api.getProducts({ shop_id: primaryEntityId, limit: 1000, offset: 0 });
         setProducts(response.data);
       } catch (error) {
         console.error('Failed to load products:', error);

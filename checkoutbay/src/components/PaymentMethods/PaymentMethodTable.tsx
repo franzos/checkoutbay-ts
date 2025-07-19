@@ -1,4 +1,4 @@
-import { PaymentGateway } from '@gofranz/checkoutbay-common';
+import { PaymentGateway, UpdatePaymentGateway } from '@gofranz/checkoutbay-common';
 import { CommonTableProps } from '@gofranz/common-components';
 import { ActionIcon, Box, Group, NavLink, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
@@ -6,7 +6,7 @@ import { DataTable } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 
 export function PaymentMethodsTable(
-  props: CommonTableProps<PaymentGateway, Partial<PaymentGateway>>
+  props: CommonTableProps<PaymentGateway, UpdatePaymentGateway>
 ) {
   const [isBusy, setIsBusy] = useState(false);
   const [records, setRecords] = useState<PaymentGateway[] | []>([]);

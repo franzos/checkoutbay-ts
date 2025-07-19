@@ -1,8 +1,8 @@
-import { showWarningNotification } from '@gofranz/common-components';
 import { Button, Text, Title } from '@mantine/core';
 import { FormValidateInput, useForm, UseFormReturnType } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
+import { showWarningNotification } from '../../index';
 import { RenderFieldsGeneralProps } from './EntityFormGeneral';
 
 export interface RenderFieldsEditProps<Edit> extends RenderFieldsGeneralProps {
@@ -20,7 +20,7 @@ export interface EntityFormEditProps<Edit> {
   validation: FormValidateInput<Edit> | ((values: Edit) => FormValidateInput<Edit>);
   submitFormCb: (id: string, data: Edit) => Promise<void>;
   renderFields: (props: RenderFieldsEditProps<Edit>) => React.ReactNode;
-  shopId: string;
+  primaryEntityId: string;
 }
 
 export function EntityFormEdit<Edit>({
@@ -31,7 +31,7 @@ export function EntityFormEdit<Edit>({
   submitFormCb,
   id,
   renderFields,
-  shopId
+  primaryEntityId
 }: EntityFormEditProps<Edit>) {
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState('');
@@ -139,7 +139,7 @@ export function EntityFormEdit<Edit>({
           form: form as UseFormReturnType<Edit>,
           submittedValues: submittedValues as Edit | null,
           setParentLoading: setLoading,
-          shopId,
+          primaryEntityId,
           entityId: id,
           isEditing: true
         })}

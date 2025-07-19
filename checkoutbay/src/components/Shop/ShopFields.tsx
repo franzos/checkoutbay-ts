@@ -1,8 +1,7 @@
 import { NewShop, UpdateShop } from "@gofranz/checkoutbay-common";
 import { Currency } from "@gofranz/common";
+import { RenderFieldsCreateProps, RenderFieldsEditProps } from "@gofranz/common-components";
 import { Select, Stack, TextInput } from "@mantine/core";
-import { RenderFieldsCreateProps } from "../Entity/EntityFormCreate";
-import { RenderFieldsEditProps } from "../Entity/EntityFormEdit";
 import { UseFormReturnType } from "@mantine/form";
 
 type FormMarkup = UseFormReturnType<NewShop, (values: NewShop) => NewShop>;

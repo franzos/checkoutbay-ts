@@ -32,10 +32,6 @@
   },
   "include": [
     "src",
-    "../checkoutbay/src/components/Entity/EntityStartPage.tsx",
-    "../checkoutbay/src/components/Entity/EntityFormCreate.tsx",
-    "../checkoutbay/src/components/Entity/EntityFormEdit.tsx",
-    "../checkoutbay/src/components/Entity/EntityFormGeneral.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

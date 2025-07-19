@@ -1,4 +1,5 @@
 import { NewAddress, UpdateAddres } from "@gofranz/checkoutbay-common";
+import { RenderFieldsCreateProps, RenderFieldsEditProps } from "@gofranz/common-components";
 import {
   Box,
   Loader,
@@ -11,8 +12,6 @@ import { UseFormReturnType } from "@mantine/form";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Country, Subdivision } from "rust_iso3166-ts";
-import { RenderFieldsCreateProps } from "../Entity/EntityFormCreate";
-import { RenderFieldsEditProps } from "../Entity/EntityFormEdit";
 
 type FormMarkup = UseFormReturnType<NewAddress, (values: NewAddress) => NewAddress>;
 

@@ -1,8 +1,8 @@
-import { showWarningNotification } from '@gofranz/common-components';
 import { Button, Text, Title } from '@mantine/core';
 import { FormValidateInput, useForm, UseFormReturnType } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
+import { showWarningNotification } from '../../index';
 import { RenderFieldsGeneralProps } from './EntityFormGeneral';
 
 export interface RenderFieldsCreateProps<Create> extends RenderFieldsGeneralProps {
@@ -18,7 +18,8 @@ export interface EntityFormCreateProps<Create> {
   validation: FormValidateInput<Create> | ((values: Create) => FormValidateInput<Create>);
   submitFormCb: (data: Create) => Promise<void>;
   renderFields: (props: RenderFieldsCreateProps<Create>) => React.ReactNode;
-  shopId: string;
+    // For ex. Shop ID, Business ID, Site ID, etc.
+    primaryEntityId: string;
 }
 
 export function EntityFormCreate<Create>({
@@ -28,7 +29,7 @@ export function EntityFormCreate<Create>({
   validation,
   submitFormCb,
   renderFields,
-  shopId,
+    primaryEntityId,
 }: EntityFormCreateProps<Create>) {
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState('');
@@ -129,7 +130,7 @@ export function EntityFormCreate<Create>({
           form: form as UseFormReturnType<Create>,
           submittedValues: submittedValues as Create | null,
           setParentLoading: setLoading,
-          shopId,
+            primaryEntityId,
           entityId: undefined, // Not needed for creation
           isEditing: false
         })}

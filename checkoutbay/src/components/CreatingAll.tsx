@@ -20,6 +20,7 @@ import {
   WeightUnit,
 } from '@gofranz/checkoutbay-common';
 import { Currency } from '@gofranz/common';
+import { EntityFormCreate } from '@gofranz/common-components';
 import { FormValidateInput } from '@mantine/form';
 import { Decimal } from 'decimal.js';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useRustyState } from '../state';
 import { RenderAddressFields } from './Addresses/AddressFields';
 import { RenderDiscountFields } from './Discounts/DiscountFields';
-import { EntityFormCreate } from './Entity/EntityFormCreate';
 import { RenderPaymentMethodFields } from './PaymentMethods/PaymentMethodFields';
 import { RenderProductFields } from './Products/ProductFields';
 import { RenderShippingRateTemplateFields } from './ShippingRateTemplates/ShippingRateTemplateFields';

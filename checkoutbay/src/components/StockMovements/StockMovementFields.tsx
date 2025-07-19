@@ -5,13 +5,12 @@ import {
   UpdateStockMovement,
   Warehouse,
 } from "@gofranz/checkoutbay-common";
+import { RenderFieldsCreateProps, RenderFieldsEditProps } from "@gofranz/common-components";
 import { Box, Loader, NumberInput, Select, Stack, Text, TextInput } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { useRustyState } from "../../state";
-import { RenderFieldsCreateProps } from "../Entity/EntityFormCreate";
-import { RenderFieldsEditProps } from "../Entity/EntityFormEdit";
 
 type FormMarkup = UseFormReturnType<NewStockMovement, (values: NewStockMovement) => NewStockMovement>;
 
@@ -20,7 +19,7 @@ export function RenderStockMovementsFields(props: RenderFieldsEditProps<UpdateSt
 export function RenderStockMovementsFields({
   form,
   setParentLoading,
-  shopId,
+  primaryEntityId,
   isEditing
 }: RenderFieldsCreateProps<NewStockMovement> | RenderFieldsEditProps<UpdateStockMovement>): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
@@ -39,8 +38,8 @@ export function RenderStockMovementsFields({
       loading(true);
       try {
         const [productsResponse, warehousesResponse] = await Promise.all([
-          api.getProducts({ shop_id: shopId }),
-          api.getWarehouses({ shop_id: shopId }),
+          api.getProducts({ shop_id: primaryEntityId }),
+          api.getWarehouses({ shop_id: primaryEntityId }),
         ]);
         setProducts(productsResponse.data);
         setWarehouses(warehousesResponse.data);

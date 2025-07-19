@@ -1,4 +1,4 @@
-import { formatPrice, Product, WarehouseStockLevel } from '@gofranz/checkoutbay-common';
+import { formatPrice, Product, UpdateProduct, WarehouseStockLevel } from '@gofranz/checkoutbay-common';
 import { CommonTableProps } from '@gofranz/common-components';
 import { ActionIcon, Badge, Box, Group, HoverCard, Image, NavLink, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
@@ -10,7 +10,7 @@ interface StockByProduct {
   [productId: string]: WarehouseStockLevel[];
 }
 
-export function ProductsTable(props: CommonTableProps<Product, Partial<Product>>) {
+export function ProductsTable(props: CommonTableProps<Product, UpdateProduct>) {
   const [isBusy, setIsBusy] = useState(false);
   const [records, setRecords] = useState<Product[] | []>([]);
   const [page, setPage] = useState(1);

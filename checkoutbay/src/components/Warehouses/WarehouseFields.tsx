@@ -1,11 +1,10 @@
 import { Address, NewWarehouse, ShippingRateTemplate, UpdateWarehouse } from "@gofranz/checkoutbay-common";
+import { RenderFieldsCreateProps, RenderFieldsEditProps } from "@gofranz/common-components";
 import { Badge, Box, Group, Loader, MultiSelect, Select, Stack, Switch, Text, TextInput } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
 import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { useRustyState } from "../../state";
-import { RenderFieldsCreateProps } from "../Entity/EntityFormCreate";
-import { RenderFieldsEditProps } from "../Entity/EntityFormEdit";
 
 type FormMarkup = UseFormReturnType<NewWarehouse, (values: NewWarehouse) => NewWarehouse>;
 
@@ -23,7 +22,7 @@ export function RenderWarehouseFields(props: RenderFieldsEditProps<UpdateWarehou
 export function RenderWarehouseFields({
   form,
   setParentLoading,
-  shopId,
+  primaryEntityId,
   entityId,
   isEditing
 }: RenderFieldsCreateProps<NewWarehouse> | RenderFieldsEditProps<UpdateWarehouse>): JSX.Element {
@@ -46,10 +45,10 @@ export function RenderWarehouseFields({
       try {
         const [addressesResponse, templatesResponse] = await Promise.all([
           api.getAddresses({
-            shop_id: shopId,
+            shop_id: primaryEntityId,
           }),
           api.getShippingRateTemplates({
-            shop_id: shopId,
+            shop_id: primaryEntityId,
           })
         ]);
         console.log(`Addresses:`, addressesResponse.data);
@@ -59,7 +58,7 @@ export function RenderWarehouseFields({
         // If editing existing warehouse, fetch its shipping templates
         if (isEditing === true) {
           const publicRates = await api.getShippingRateTemplates({
-            shop_id: shopId,
+            shop_id: primaryEntityId,
           });
           const warehouseTemplateIds = publicRates.data
             .filter(rate => rate.warehouse_ids.includes(entityId))
@@ -73,7 +72,7 @@ export function RenderWarehouseFields({
       }
     };
     loadData();
-  }, [api, shopId, entityId]);
+  }, [api, primaryEntityId, entityId]);
 
   const handleTemplateChange = async (values: string[]) => {
     if (!entityId) {

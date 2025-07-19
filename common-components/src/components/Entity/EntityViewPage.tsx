@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+export enum ViewPageMode {
+  View = "view",
+  Edit = "edit",
+  AltView = "altView",
+  AltView2 = "altView2",
+  AltView3 = "altView3",
+}
+
 interface GeneralizedViewPageProps<Entity, Update> {
   DetailComponent: React.ComponentType<{
     item: Entity;
@@ -11,6 +19,7 @@ interface GeneralizedViewPageProps<Entity, Update> {
   getFunction: (id: string) => Promise<Entity | undefined>;
   submitCb?: (id: string, item: Update) => Promise<void>;
   deleteCb?: (id: string) => Promise<void>;
+  initialViewMode?: ViewPageMode;
 }
 
 export function GeneralizedViewPage<Entity, Update>({

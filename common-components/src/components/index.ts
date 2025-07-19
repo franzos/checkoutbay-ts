@@ -11,9 +11,14 @@ export type { VerifiedEmailDetailProps } from './VerifiedEmail/Detail';
 export type { NewsProps } from './Common/News';
 export { LargeTitle } from './Common/Title';
 export { LargeTitleWithText } from './Common/TitleWithText';
-export { GeneralizedCreatePage } from './Entity/EntityCreatePage';
-export { GeneralizedViewPage } from './Entity/EntityViewPage';
 export { Entity } from './Entity/Entity';
 export type { RenderEntityProps, EntityProps } from './Entity/Entity';
+export { GeneralizedCreatePage } from './Entity/EntityCreatePage';
+export type { GeneralizedCreatePageProps } from './Entity/EntityCreatePage';
+export { EntityFormCreate } from './Entity/EntityFormCreate';
+export type { RenderFieldsCreateProps, EntityFormCreateProps } from './Entity/EntityFormCreate';
+export { EntityFormEdit } from './Entity/EntityFormEdit';
+export type { RenderFieldsEditProps, EntityFormEditProps, } from './Entity/EntityFormEdit';
+export { GeneralizedViewPage, ViewPageMode } from './Entity/EntityViewPage';
 export * from './Entity/table';
 // CSS modules are imported directly by components, no need to export

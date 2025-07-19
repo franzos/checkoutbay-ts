@@ -15,13 +15,12 @@ import {
   USBankDetails
 } from '@gofranz/checkoutbay-common';
 import { Currency } from '@gofranz/common';
+import { RenderFieldsCreateProps, RenderFieldsEditProps } from '@gofranz/common-components';
 import { Anchor, Button, Group, PasswordInput, Select, Stack, Switch, Text, Textarea, TextInput } from '@mantine/core';
 import { UseFormReturnType } from '@mantine/form';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
-import { RenderFieldsCreateProps } from '../Entity/EntityFormCreate';
-import { RenderFieldsEditProps } from '../Entity/EntityFormEdit';
 
 type FormMarkup = UseFormReturnType<NewPaymentGateway, (values: NewPaymentGateway) => NewPaymentGateway>;
 

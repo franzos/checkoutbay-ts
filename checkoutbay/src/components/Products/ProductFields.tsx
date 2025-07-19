@@ -1,4 +1,5 @@
 import { DimensionUnit, NewProduct, UpdateProduct, WeightUnit } from '@gofranz/checkoutbay-common';
+import { RenderFieldsCreateProps, RenderFieldsEditProps } from '@gofranz/common-components';
 import {
   Accordion,
   Group,
@@ -18,8 +19,6 @@ import Decimal from 'decimal.js';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { initialPhysicalPropertiesValues } from '../CreatingAll';
-import { RenderFieldsCreateProps } from '../Entity/EntityFormCreate';
-import { RenderFieldsEditProps } from '../Entity/EntityFormEdit';
 
 type FormMarkup = UseFormReturnType<NewProduct, (values: NewProduct) => NewProduct>;
 

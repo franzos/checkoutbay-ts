@@ -2,6 +2,7 @@ import {
   ShippingRateCalculationMethod,
   ShippingRateTemplate,
   ShippingSpeed,
+  UpdateShippingRateTemplate,
   formatPrice,
 } from '@gofranz/checkoutbay-common';
 import { CommonTableProps } from '@gofranz/common-components';
@@ -12,7 +13,7 @@ import { DataTable } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
 
 export function ShippingRateTemplatesTable(
-  props: CommonTableProps<ShippingRateTemplate, Partial<ShippingRateTemplate>>
+  props: CommonTableProps<ShippingRateTemplate, UpdateShippingRateTemplate>
 ) {
   const [isBusy, setIsBusy] = useState(false);
   const [records, setRecords] = useState<ShippingRateTemplate[] | []>([]);

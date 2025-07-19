@@ -1,11 +1,11 @@
-import { Warehouse } from '@gofranz/checkoutbay-common';
+import { UpdateWarehouse, Warehouse } from '@gofranz/checkoutbay-common';
+import { CommonTableProps } from '@gofranz/common-components';
 import { ActionIcon, Badge, Box, Group, NavLink, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { DataTable } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
-import { CommonTableProps } from '../../../../common-components/src/components/Entity/table';
 
-export function WarehousesTable(props: CommonTableProps<Warehouse, Partial<Warehouse>>) {
+export function WarehousesTable(props: CommonTableProps<Warehouse, UpdateWarehouse>) {
   const [isBusy, setIsBusy] = useState(false);
   const [records, setRecords] = useState<Warehouse[] | []>([]);
   const [page, setPage] = useState(1);

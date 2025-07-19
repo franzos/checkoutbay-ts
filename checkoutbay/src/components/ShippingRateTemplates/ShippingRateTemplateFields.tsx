@@ -5,6 +5,7 @@ import {
   UpdateShippingRateTemplate,
 } from '@gofranz/checkoutbay-common';
 import { Currency } from '@gofranz/common';
+import { RenderFieldsCreateProps, RenderFieldsEditProps } from '@gofranz/common-components';
 import {
   ActionIcon,
   Box,
@@ -24,8 +25,6 @@ import { IconTrash } from '@tabler/icons-react';
 import Decimal from 'decimal.js';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RenderFieldsCreateProps } from '../Entity/EntityFormCreate';
-import { RenderFieldsEditProps } from '../Entity/EntityFormEdit';
 
 type FormMarkup = UseFormReturnType<NewShippingRateTemplate, (values: NewShippingRateTemplate) => NewShippingRateTemplate>;
 

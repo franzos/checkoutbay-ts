@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useLanguageAwareRouting } from '../../hooks';
 
-interface GeneralizedCreatePageProps<Entity, Create> {
+export interface GeneralizedCreatePageProps<Entity, Create> {
   CreateComponent: React.ComponentType<{ submitFormCb: (item: Create) => Promise<void> }>;
   createFunction: (item: Create) => Promise<Entity>;
   redirectPath: (item: Entity) => string;

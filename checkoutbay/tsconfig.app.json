@@ -29,5 +29,8 @@
   },
   "include": [
     "src",
+    "../common-components/src/components/Entity/EntityFormGeneral.ts",
+    "../common-components/src/components/Entity/EntityFormCreate.tsx",
+    "../common-components/src/components/Entity/EntityFormEdit.tsx"
   ]
 }

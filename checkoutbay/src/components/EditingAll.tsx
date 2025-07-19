@@ -21,12 +21,11 @@ import {
   UpdateWarehouse,
   Warehouse,
 } from "@gofranz/checkoutbay-common";
-import { Entity } from "@gofranz/common-components";
+import { Entity, EntityFormEdit } from "@gofranz/common-components";
 import { FormValidateInput } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { RenderAddressFields } from "./Addresses/AddressFields";
 import { RenderDiscountFields } from "./Discounts/DiscountFields";
-import { EntityFormEdit } from "./Entity/EntityFormEdit";
 import { RenderOrder } from "./Orders/Order";
 import { RenderPaymentMethodFields } from "./PaymentMethods/PaymentMethodFields";
 import { RenderProductFields } from "./Products/ProductFields";
@@ -56,7 +55,7 @@ export function EditProduct({ item, submitFormCb }: EditProductProps) {
       submitFormCb={submitFormCb}
       id={item.id}
       renderFields={RenderProductFields}
-      shopId={item.shop_id}
+      primaryEntityId={item.shop_id}
     />
   );
 }
@@ -80,7 +79,7 @@ export function EditWarehouse({ item, submitFormCb }: EditWarehouseProps) {
       submitFormCb={submitFormCb}
       id={item.id}
       renderFields={RenderWarehouseFields}
-      shopId={item.shop_id}
+      primaryEntityId={item.shop_id}
     />
   );
 }
@@ -110,7 +109,7 @@ export function EditAddress({ item, submitFormCb }: EditAddressProps) {
       id={item.id}
       renderFields={RenderAddressFields}
       // TODO
-      shopId={item.shop_id as string}
+      primaryEntityId={item.shop_id as string}
     />
   );
 }
@@ -137,7 +136,7 @@ export function EditStockMovement({
       submitFormCb={submitFormCb}
       id={item.id}
       renderFields={RenderStockMovementsFields}
-      shopId={item.shop_id}
+      primaryEntityId={item.shop_id}
     />
   );
 }
@@ -170,7 +169,7 @@ export function EditPaymentMethod({
       submitFormCb={submitFormCb}
       id={item.id}
       renderFields={RenderPaymentMethodFields}
-      shopId={item.shop_id}
+      primaryEntityId={item.shop_id}
     />
   );
 }
@@ -224,7 +223,7 @@ export function EditShippingRateTemplate({
       submitFormCb={submitFormCb}
       id={item.id}
       renderFields={RenderShippingRateTemplateFields}
-      shopId={item.shop_id}
+      primaryEntityId={item.shop_id}
     />
   );
 }
@@ -247,7 +246,7 @@ export function EditShop({ item, submitFormCb }: EditShopProps) {
       submitFormCb={submitFormCb}
       id={item.id}
       renderFields={RenderShopFields}
-      shopId={item.id}
+      primaryEntityId={item.id}
     />
   );
 }
@@ -319,7 +318,7 @@ export function EditDiscount({ item, submitFormCb }: EditDiscountProps) {
       submitFormCb={submitFormCb}
       id={item.id}
       renderFields={RenderDiscountFields}
-      shopId={item.shop_id}
+      primaryEntityId={item.shop_id}
     />
   );
 }
