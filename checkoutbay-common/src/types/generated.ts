@@ -174,6 +174,61 @@ export interface DiscountProduct {
 	created_at: string;
 }
 
+export interface DiscountProductsQueryParams {
+	limit: number;
+	offset: number;
+}
+
+export enum WeightUnit {
+	Grams = "grams",
+	Kilograms = "kilograms",
+	Pounds = "pounds",
+	Ounces = "ounces",
+}
+
+export enum DimensionUnit {
+	Millimeters = "millimeters",
+	Centimeters = "centimeters",
+	Meters = "meters",
+	Inches = "inches",
+	Feet = "feet",
+}
+
+export interface PhysicalProperties {
+	width?: number;
+	height?: number;
+	length?: number;
+	weight?: number;
+	weight_unit: WeightUnit;
+	dimension_unit: DimensionUnit;
+}
+
+export interface Product {
+	id: string;
+	title: string;
+	cover_url?: string;
+	slug: string;
+	description: string;
+	sku?: string;
+	price: Decimal | number;
+	data?: string;
+	data_public?: string;
+	physical_properties?: PhysicalProperties;
+	allow_negative_stock: boolean;
+	is_live: boolean;
+	requires_shipping: boolean;
+	categories: string[];
+	tags: string[];
+	shop_id: string;
+	created_at: string;
+	updated_at: string;
+}
+
+export interface DiscountProductsResponse {
+	data: Product[];
+	total: number;
+}
+
 export interface DiscountsQueryParams {
 	shop_id: string;
 	limit: number;
@@ -273,30 +328,6 @@ export interface NewPaymentGateway {
 	provider_config: PaymentGatewayConfig;
 	is_test_mode: boolean;
 	shop_id: string;
-}
-
-export enum WeightUnit {
-	Grams = "grams",
-	Kilograms = "kilograms",
-	Pounds = "pounds",
-	Ounces = "ounces",
-}
-
-export enum DimensionUnit {
-	Millimeters = "millimeters",
-	Centimeters = "centimeters",
-	Meters = "meters",
-	Inches = "inches",
-	Feet = "feet",
-}
-
-export interface PhysicalProperties {
-	width?: number;
-	height?: number;
-	length?: number;
-	weight?: number;
-	weight_unit: WeightUnit;
-	dimension_unit: DimensionUnit;
 }
 
 export interface NewProduct {
@@ -556,27 +587,6 @@ export interface ProcessedOrderBase {
 	discount_applications: PendingDiscountApplication[];
 }
 
-export interface Product {
-	id: string;
-	title: string;
-	cover_url?: string;
-	slug: string;
-	description: string;
-	sku?: string;
-	price: Decimal | number;
-	data?: string;
-	data_public?: string;
-	physical_properties?: PhysicalProperties;
-	allow_negative_stock: boolean;
-	is_live: boolean;
-	requires_shipping: boolean;
-	categories: string[];
-	tags: string[];
-	shop_id: string;
-	created_at: string;
-	updated_at: string;
-}
-
 export interface ProductsByCategoryQueryParams {
 	shop_id: string;
 	limit: number;
@@ -814,7 +824,7 @@ export interface UpdateAddres {
 	company_name?: string;
 	is_default?: boolean;
 	kind?: AddressType;
-	updated_at?: NaiveDateTime;
+	updated_at: string;
 }
 
 export interface UpdateDiscount {
@@ -833,7 +843,7 @@ export interface UpdatePaymentGateway {
 	title?: string;
 	provider_config?: PaymentGatewayConfig;
 	is_test_mode?: boolean;
-	updated_at?: NaiveDateTime;
+	updated_at: string;
 }
 
 export interface UpdatePaymentStatus {
@@ -856,7 +866,7 @@ export interface UpdateProduct {
 	requires_shipping?: boolean;
 	categories?: string[];
 	tags?: string[];
-	updated_at?: NaiveDateTime;
+	updated_at: string;
 }
 
 export interface UpdateShippingRateTemplate {
@@ -865,7 +875,7 @@ export interface UpdateShippingRateTemplate {
 	rates?: ShippingRates;
 	method?: ShippingRateCalculationMethod;
 	service_level?: ShippingSpeed;
-	updated_at?: NaiveDateTime;
+	updated_at: string;
 }
 
 export interface UpdateShop {
@@ -883,7 +893,7 @@ export interface UpdateWarehouse {
 	code?: string;
 	address_id?: string;
 	is_active?: boolean;
-	updated_at?: NaiveDateTime;
+	updated_at: string;
 }
 
 export interface VolumeTier {

@@ -1,9 +1,9 @@
 import { StockMovement, UpdateStockMovement } from '@gofranz/checkoutbay-common';
+import { CommonTableProps } from '@gofranz/common-components';
 import { ActionIcon, Badge, Box, Group, NavLink, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { DataTable } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
-import { CommonTableProps } from '../../lib/table';
 
 export function StockMovementsTable(
   props: CommonTableProps<StockMovement, UpdateStockMovement>

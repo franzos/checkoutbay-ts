@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useLanguageAwareRouting } from '@gofranz/common-components';
+import { useLanguageAwareRouting } from '../../hooks';
 
 interface GeneralizedCreatePageProps<Entity, Create> {
   CreateComponent: React.ComponentType<{ submitFormCb: (item: Create) => Promise<void> }>;

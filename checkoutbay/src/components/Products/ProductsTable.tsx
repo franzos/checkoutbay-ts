@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { DataTable } from 'mantine-datatable';
-import { Box, NavLink, ActionIcon, Badge, Group, Text, HoverCard, Image } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
 import { formatPrice, Product, WarehouseStockLevel } from '@gofranz/checkoutbay-common';
-import { CommonTableProps } from '../../lib/table';
+import { CommonTableProps } from '@gofranz/common-components';
+import { ActionIcon, Badge, Box, Group, HoverCard, Image, NavLink, Text } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
+import { DataTable } from 'mantine-datatable';
+import { useEffect, useState } from 'react';
 import { useRustyState } from '../../state';
 
 interface StockByProduct {

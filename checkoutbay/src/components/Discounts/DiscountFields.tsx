@@ -6,7 +6,6 @@ import {
   Button,
   Grid,
   Group,
-  MultiSelect,
   NumberInput,
   Select,
   Stack,
@@ -31,11 +30,15 @@ export function RenderDiscountFields(props: RenderFieldsEditProps<UpdateDiscount
 export function RenderDiscountFields({
   form,
   shopId,
+  entityId,
   isEditing
 }: RenderFieldsCreateProps<NewDiscount> | RenderFieldsEditProps<UpdateDiscount>): JSX.Element {
-  const { t } = useTranslation();
+  const { } = useTranslation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<string>('');
+  const [productActionLoading, setProductActionLoading] = useState<string>('');
 
   // Load products for selection
   useEffect(() => {
@@ -52,7 +55,32 @@ export function RenderDiscountFields({
       }
     };
     loadProducts();
-  }, []);
+  }, [shopId]);
+
+  // Load existing discount products in edit mode
+  useEffect(() => {
+    const loadDiscountProducts = async () => {
+      if (isEditing && entityId) {
+        try {
+          const api = useRustyState.getState().api;
+          const response = await api.getDiscountProducts(entityId, { limit: 1000, offset: 0 });
+          setSelectedProducts(response.data);
+        } catch (error) {
+          console.error('Failed to load discount products:', error);
+        }
+      }
+    };
+    loadDiscountProducts();
+  }, [isEditing, entityId]);
+
+  // Initialize selected products from form in create mode
+  useEffect(() => {
+    if (!isEditing && form.values.product_ids) {
+      const selectedIds = form.values.product_ids;
+      const selectedProds = products.filter(p => selectedIds.includes(p.id));
+      setSelectedProducts(selectedProds);
+    }
+  }, [isEditing, form.values.product_ids, products]);
 
   const discountTypeOptions = Object.values(DiscountType)
 
@@ -62,6 +90,62 @@ export function RenderDiscountFields({
     value: product.id,
     label: product.title,
   }));
+
+  // Filter out already selected products from dropdown
+  const availableProductOptions = productOptions.filter(
+    (option) => !selectedProducts.some((selected) => selected.id === option.value)
+  );
+
+  // Handle product selection
+  const handleProductSelect = async (productId: string | null) => {
+    if (!productId) return;
+    
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    if (isEditing && entityId) {
+      // Editing mode - immediate API call
+      setProductActionLoading(productId);
+      try {
+        const api = useRustyState.getState().api;
+        await api.addProductToDiscount(entityId, productId);
+        setSelectedProducts(prev => [...prev, product]);
+      } catch (error) {
+        console.error('Failed to add product to discount:', error);
+      } finally {
+        setProductActionLoading('');
+      }
+    } else {
+      // Creation mode - update local state and form
+      const newProducts = [...selectedProducts, product];
+      setSelectedProducts(newProducts);
+      (form as FormMarkup).setFieldValue('product_ids', newProducts.map(p => p.id));
+    }
+    
+    setSelectedProductId('');
+  };
+
+  // Handle product removal
+  const handleProductRemove = async (productId: string) => {
+    if (isEditing && entityId) {
+      // Editing mode - immediate API call
+      setProductActionLoading(productId);
+      try {
+        const api = useRustyState.getState().api;
+        await api.removeProductFromDiscount(entityId, productId);
+        setSelectedProducts(prev => prev.filter(p => p.id !== productId));
+      } catch (error) {
+        console.error('Failed to remove product from discount:', error);
+      } finally {
+        setProductActionLoading('');
+      }
+    } else {
+      // Creation mode - update local state and form
+      const newProducts = selectedProducts.filter(p => p.id !== productId);
+      setSelectedProducts(newProducts);
+      (form as FormMarkup).setFieldValue('product_ids', newProducts.map(p => p.id));
+    }
+  };
 
   const addVolumeTier = () => {
     const currentTiers = form.values.config?.type === 'VolumeDiscount'
@@ -98,7 +182,7 @@ export function RenderDiscountFields({
 
   // Handle discount type change to set up config
   const handleDiscountTypeChange = (value: string | null) => {
-    (form as FormMarkup).setFieldValue('discount_type', value);
+    (form as FormMarkup).setFieldValue('discount_type', value as DiscountType);
 
     // Set up default config based on type
     if (value === DiscountType.VoucherCode) {
@@ -174,7 +258,7 @@ export function RenderDiscountFields({
             placeholder="Enter discount value"
             withAsterisk
             value={typeof form.values.value === 'number' ? form.values.value : new Decimal(form.values.value || 0)?.toNumber()}
-            onChange={(value) => (form as FormMarkup).setFieldValue('value', value || 0)}
+            onChange={(value) => (form as FormMarkup).setFieldValue('value', Number(value) || 0)}
             error={form.errors.value}
             allowDecimal={true}
             min={0}
@@ -208,7 +292,7 @@ export function RenderDiscountFields({
             form.values.minimum_spend_amount :
             new Decimal(form.values.minimum_spend_amount)?.toNumber()) :
           undefined}
-        onChange={(value) => (form as FormMarkup).setFieldValue('minimum_spend_amount', value || undefined)}
+        onChange={(value) => (form as FormMarkup).setFieldValue('minimum_spend_amount', value !== undefined ? Number(value) : undefined)}
         error={form.errors.minimum_spend_amount}
         allowDecimal={true}
         min={0}
@@ -219,9 +303,8 @@ export function RenderDiscountFields({
           label="Start Date"
           placeholder="Select start date"
           withAsterisk
-          {...(form as FormMarkup).getInputProps('start_date')}
           value={form.values.start_date ? new Date(form.values.start_date) : null}
-          onChange={(date) => (form as FormMarkup).setFieldValue('start_date', date?.toISOString() || '')}
+          onChange={(date) => (form as FormMarkup).setFieldValue('start_date', date ? (date as unknown as Date).toISOString() : '')}
           error={form.errors.start_date}
         />
 
@@ -229,23 +312,46 @@ export function RenderDiscountFields({
           label="End Date"
           placeholder="Select end date"
           withAsterisk
-          {...(form as FormMarkup).getInputProps('end_date')}
           value={form.values.end_date ? new Date(form.values.end_date) : null}
-          onChange={(date) => (form as FormMarkup).setFieldValue('end_date', date?.toISOString() || '')}
+          onChange={(date) => (form as FormMarkup).setFieldValue('end_date', date ? (date as unknown as Date).toISOString() : '')}
           error={form.errors.end_date}
         />
       </Group>
 
-      <MultiSelect
-        label="Applicable Products"
-        placeholder="Select products (leave empty for all products)"
-        data={productOptions}
-        {...(form as FormMarkup).getInputProps('product_ids')}
-        error={form.errors.product_ids}
-        disabled={loading}
+      <Select
+        label="Add Products"
+        placeholder="Select a product to add"
+        data={availableProductOptions}
+        value={selectedProductId}
+        onChange={handleProductSelect}
+        disabled={loading || productActionLoading !== ''}
         searchable
         clearable
       />
+
+      {selectedProducts.length > 0 && (
+        <Stack gap={2}>
+          <Text size="sm" fw={500}>Selected Products:</Text>
+          {selectedProducts.map((product) => (
+            <Grid key={product.id} align="center">
+              <Grid.Col span={9}>
+                <Group>
+                  <ActionIcon
+                    color="red"
+                    onClick={() => handleProductRemove(product.id)}
+                    loading={productActionLoading === product.id}
+                    variant="filled"
+                    aria-label="Delete"
+                  >
+                    <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                  </ActionIcon>
+                  <Text>{product.title}</Text>
+                </Group>
+              </Grid.Col>
+            </Grid>
+          ))}
+        </Stack>
+      )}
 
       {/* Conditional Configuration Fields */}
       {form.values.discount_type === DiscountType.VoucherCode && (
@@ -281,14 +387,14 @@ export function RenderDiscountFields({
                   label="Usage Limit"
                   placeholder="Enter usage limit (optional)"
                   min={1}
-                  value={form.values.config?.type === 'VoucherCode' ? form.values.config.content.usage_limit : undefined}
+                  value={form.values.config?.type === 'VoucherCode' ? Number(form.values.config.content.usage_limit) : undefined}
                   onChange={(value) => {
                     if (form.values.config?.type === 'VoucherCode') {
                       (form as FormMarkup).setFieldValue('config', {
                         ...form.values.config,
                         content: {
                           ...form.values.config.content,
-                          usage_limit: value || undefined,
+                          usage_limit: Number(value) || undefined,
                         },
                       });
                     }
@@ -340,7 +446,7 @@ export function RenderDiscountFields({
                           onChange={(value) => {
                             if (form.values.config?.type === 'VolumeDiscount') {
                               const newTiers = [...form.values.config.content.tiers];
-                              newTiers[index] = { ...tier, min_quantity: value || 1 };
+                              newTiers[index] = { ...tier, min_quantity: Number(value) || 1 };
                               (form as FormMarkup).setFieldValue('config', {
                                 ...form.values.config,
                                 content: { tiers: newTiers },
@@ -358,7 +464,7 @@ export function RenderDiscountFields({
                           onChange={(value) => {
                             if (form.values.config?.type === 'VolumeDiscount') {
                               const newTiers = [...form.values.config.content.tiers];
-                              newTiers[index] = { ...tier, max_quantity: value || tier.min_quantity };
+                              newTiers[index] = { ...tier, max_quantity: Number(value) || tier.min_quantity };
                               (form as FormMarkup).setFieldValue('config', {
                                 ...form.values.config,
                                 content: { tiers: newTiers },
@@ -379,7 +485,7 @@ export function RenderDiscountFields({
                           onChange={(value) => {
                             if (form.values.config?.type === 'VolumeDiscount') {
                               const newTiers = [...form.values.config.content.tiers];
-                              newTiers[index] = { ...tier, tier_value: value || 0 };
+                              newTiers[index] = { ...tier, tier_value: Number(value) || 0 };
                               (form as FormMarkup).setFieldValue('config', {
                                 ...form.values.config,
                                 content: { tiers: newTiers },

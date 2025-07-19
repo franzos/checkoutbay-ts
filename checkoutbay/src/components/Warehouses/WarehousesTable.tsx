@@ -3,7 +3,7 @@ import { ActionIcon, Badge, Box, Group, NavLink, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { DataTable } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
-import { CommonTableProps } from '../../lib/table';
+import { CommonTableProps } from '../../../../common-components/src/components/Entity/table';
 
 export function WarehousesTable(props: CommonTableProps<Warehouse, Partial<Warehouse>>) {
   const [isBusy, setIsBusy] = useState(false);

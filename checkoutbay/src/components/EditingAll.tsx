@@ -21,11 +21,11 @@ import {
   UpdateWarehouse,
   Warehouse,
 } from "@gofranz/checkoutbay-common";
+import { Entity } from "@gofranz/common-components";
 import { FormValidateInput } from "@mantine/form";
 import { useTranslation } from "react-i18next";
 import { RenderAddressFields } from "./Addresses/AddressFields";
 import { RenderDiscountFields } from "./Discounts/DiscountFields";
-import { Entity } from "./Entity/Entity";
 import { EntityFormEdit } from "./Entity/EntityFormEdit";
 import { RenderOrder } from "./Orders/Order";
 import { RenderPaymentMethodFields } from "./PaymentMethods/PaymentMethodFields";

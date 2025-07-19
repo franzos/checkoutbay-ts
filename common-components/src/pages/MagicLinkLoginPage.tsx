@@ -68,9 +68,6 @@ export function MagicLinkLoginPage(props: MagicLinkLoginPageProps) {
       const urlParamChallenge = hashParams.get('challenge');
       const urlParamId = hashParams.get('id');
 
-      console.log('urlParamChallenge', urlParamChallenge);
-      console.log('urlParamId', urlParamId);
-
       const loginErrors = [];
       if (urlParamId && urlParamChallenge) {
         await submitChallenge(urlParamId, urlParamChallenge);

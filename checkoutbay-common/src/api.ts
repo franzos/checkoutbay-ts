@@ -11,7 +11,7 @@ import {
   RustyVerifiedEmails,
   HttpNewVerifiedEmail,
 } from "@gofranz/common";
-import { Address, AddressesResponse, Discount, DiscountsQueryParams, DiscountsResponse, NewAddress, NewDiscount, NewOrderCalculation, NewOrderPaymentSubmission, NewPaymentGateway, NewProduct, NewPublicUserOrder, NewRegisteredUserOrder, NewShippingRateTemplate, NewShop, NewStockMovement, NewWarehouse, Order, OrderItem, OrderPayment, OrderRecord, OrdersResponse, PaymentGateway, PaymentGatewaysResponse, ProcessedOrder, ProcessedOrderPreview, ProcessedPublicUserOrder, ProcessedRegisteredUserOrder, Product, PublicFile, PublicProduct, PublicProductsResponse, PublicShippingRate, PublicShop, PublicStock, PublicWarehouse, ShippingRateTemplate, Shop, ShopsResponse, ShopUser, StockMovement, StockMovementsResponse, TaxRate, TaxRatesQuery, TemplatesWithWarehouseIdResponse, UpdateDiscount, UpdatePaymentGateway, UpdateProduct, UpdateShippingRateTemplate, UpdateShop, UpdateStockMovement, UpdateWarehouse, VoucherCodeValidationRequest, VoucherCodeValidationResponse, Warehouse, WarehousesResponse, WarehouseStockLevel } from "./types";
+import { Address, AddressesResponse, Discount, DiscountProductsQueryParams, DiscountProductsResponse, DiscountsQueryParams, DiscountsResponse, NewAddress, NewDiscount, NewOrderCalculation, NewOrderPaymentSubmission, NewPaymentGateway, NewProduct, NewPublicUserOrder, NewRegisteredUserOrder, NewShippingRateTemplate, NewShop, NewStockMovement, NewWarehouse, Order, OrderItem, OrderPayment, OrderRecord, OrdersResponse, PaymentGateway, PaymentGatewaysResponse, ProcessedOrder, ProcessedOrderPreview, ProcessedPublicUserOrder, ProcessedRegisteredUserOrder, Product, PublicFile, PublicProduct, PublicProductsResponse, PublicShippingRate, PublicShop, PublicStock, PublicWarehouse, ShippingRateTemplate, Shop, ShopsResponse, ShopUser, StockMovement, StockMovementsResponse, TaxRate, TaxRatesQuery, TemplatesWithWarehouseIdResponse, UpdateDiscount, UpdatePaymentGateway, UpdateProduct, UpdateShippingRateTemplate, UpdateShop, UpdateStockMovement, UpdateWarehouse, VoucherCodeValidationRequest, VoucherCodeValidationResponse, Warehouse, WarehousesResponse, WarehouseStockLevel } from "./types";
 
 function convertToDecimal(value: string | number | Decimal): Decimal {
   if (value instanceof Decimal) return value;
@@ -222,15 +222,19 @@ export class RustyShopAPI {
       },
     });
 
-    // Add request interceptor to handle authentication timing
+    // Add request interceptor to automatically handle authentication
     this.client.interceptors.request.use(async (config) => {
-      // Check if this request needs auth (has Authorization header or uses auth endpoints)
-      const needsAuth = config.url?.startsWith('/a/') ||
-        (config.headers && 'Authorization' in config.headers);
+      // Check if this request needs auth (uses auth endpoints)
+      const needsAuth = config.url?.startsWith('/a/');
 
-      if (needsAuth && this.auth && !this.auth.hasValidAccessToken()) {
-        // Wait for auth to be ready
-        await new Promise(resolve => setTimeout(resolve, 500));
+      if (needsAuth && this.auth) {
+        if (!this.auth.hasValidAccessToken()) {
+          await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for auth to be ready
+        }
+        const token = this.auth.getAccessToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
       }
       return config;
     });
@@ -268,14 +272,6 @@ export class RustyShopAPI {
 
   private getAccessToken = () => {
     return this.getAuthApi().getAccessToken();
-  };
-
-  private getAuthHeaders = () => {
-    return makeAuthHeaders(this.getAccessToken());
-  };
-
-  private getAxiosConfig = () => {
-    return { headers: this.getAuthHeaders(), timeout: this.timeout };
   };
 
   getAccountBalance = async () => {
@@ -324,7 +320,6 @@ export class RustyShopAPI {
     const response = await this.client.post<Address>(
       "/a/addresses",
       addressData,
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -333,18 +328,14 @@ export class RustyShopAPI {
     params: ShopQueryParams
   ): Promise<AddressesResponse> => {
     const response = await this.client.get<AddressesResponse>(
-      makeUrl("/a/addresses", params),
-      {
-        headers: this.getAuthHeaders(),
-      }
+      makeUrl("/a/addresses", params)
     );
     return response.data;
   };
 
   getAddress = async (addressId: string): Promise<Address> => {
     const response = await this.client.get<Address>(
-      `/a/addresses/${addressId}`,
-      this.getAxiosConfig()
+      `/a/addresses/${addressId}`
     );
     return response.data;
   };
@@ -355,15 +346,12 @@ export class RustyShopAPI {
   ): Promise<void> => {
     await this.client.patch<Address>(
       `/a/addresses/${addressId}`,
-      addressData,
-      this.getAxiosConfig()
+      addressData
     );
   };
 
   deleteAddress = async (addressId: string): Promise<void> => {
-    await this.client.delete(`/a/addresses/${addressId}`, {
-      headers: this.getAuthHeaders(),
-    });
+    await this.client.delete(`/a/addresses/${addressId}`);
   };
 
   // Warehouse endpoints
@@ -373,7 +361,6 @@ export class RustyShopAPI {
     const response = await this.client.post<Warehouse>(
       "/a/warehouses",
       warehouseData,
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -383,7 +370,6 @@ export class RustyShopAPI {
   ): Promise<WarehousesResponse> => {
     const response = await this.client.get<WarehousesResponse>(
       makeUrl("/a/warehouses", params),
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -391,7 +377,6 @@ export class RustyShopAPI {
   getWarehouse = async (warehouseId: string): Promise<Warehouse> => {
     const response = await this.client.get<Warehouse>(
       `/a/warehouses/${warehouseId}`,
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -403,13 +388,12 @@ export class RustyShopAPI {
     await this.client.patch<Warehouse>(
       `/a/warehouses/${warehouseId}`,
       warehouseData,
-      this.getAxiosConfig()
     );
   };
 
   deleteWarehouse = async (warehouseId: string): Promise<void> => {
     await this.client.delete(`/a/warehouses/${warehouseId}`, {
-      headers: this.getAuthHeaders(),
+      timeout: this.timeout
     });
   };
 
@@ -418,7 +402,6 @@ export class RustyShopAPI {
     const response = await this.client.post<Product>(
       "/a/products",
       productData,
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -428,9 +411,6 @@ export class RustyShopAPI {
   ): Promise<import('./types/index').GenericListResponse<Product>> => {
     const { data } = await this.client.get<{ data: import('./types/generated').Product[], total: number }>(
       makeUrl("/a/products", params),
-      {
-        headers: this.getAuthHeaders(),
-      }
     );
     return {
       ...data,
@@ -444,7 +424,6 @@ export class RustyShopAPI {
   getProduct = async (productId: string): Promise<Product> => {
     const response = await this.client.get<Product>(
       `/a/products/${productId}`,
-      this.getAxiosConfig()
     );
     return {
       ...response.data,
@@ -459,13 +438,12 @@ export class RustyShopAPI {
     await this.client.patch<Product>(
       `/a/products/${productId}`,
       productData,
-      this.getAxiosConfig()
     );
   };
 
   deleteProduct = async (productId: string): Promise<void> => {
     await this.client.delete(`/a/products/${productId}`, {
-      headers: this.getAuthHeaders(),
+      timeout: this.timeout
     });
   };
 
@@ -476,7 +454,6 @@ export class RustyShopAPI {
     const response = await this.client.post<StockMovement>(
       "/a/stock_movements",
       stockData,
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -486,7 +463,6 @@ export class RustyShopAPI {
   ): Promise<StockMovementsResponse> => {
     const response = await this.client.get<StockMovementsResponse>(
       makeUrl("/a/stock_movements", params),
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -496,7 +472,6 @@ export class RustyShopAPI {
   ): Promise<StockMovement> => {
     const response = await this.client.get<StockMovement>(
       `/a/stock_movements/${stockMovementId}`,
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -508,14 +483,12 @@ export class RustyShopAPI {
     await this.client.patch<StockMovement>(
       `/a/stock_movements/${stockMovementId}`,
       stockData,
-      this.getAxiosConfig()
     );
   };
 
   deleteStockMovement = async (stockMovementId: string): Promise<void> => {
     await this.client.delete(
       `/a/stock_movements/${stockMovementId}`,
-      this.getAxiosConfig()
     );
   };
 
@@ -529,7 +502,6 @@ export class RustyShopAPI {
         product_ids,
         shop_id,
       },
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -538,7 +510,6 @@ export class RustyShopAPI {
   getOrders = async (params: ShopQueryParams): Promise<OrdersResponse> => {
     const response = await this.client.get<OrdersResponse>(
       makeUrl("/a/orders", params),
-      this.getAxiosConfig()
     );
 
     const convertedOrders = response.data.data.map((order) =>
@@ -556,7 +527,6 @@ export class RustyShopAPI {
   getOrder = async (orderId: string): Promise<Order> => {
     const response = await this.client.get<Order>(
       `/a/orders/${orderId}`,
-      this.getAxiosConfig()
     );
 
     return evaluateObjectWithDates(convertOrderDecimals(response.data));
@@ -565,7 +535,6 @@ export class RustyShopAPI {
   getOrderItems = async (orderId: string): Promise<OrderItem[]> => {
     const response = await this.client.get<OrderItem[]>(
       `/a/orders/${orderId}/items`,
-      this.getAxiosConfig()
     );
     return response.data.map(convertOrderItemDecimals);
   };
@@ -573,24 +542,18 @@ export class RustyShopAPI {
   markOrderAsPaid = async (orderId: string): Promise<void> => {
     await this.client.post<void>(
       `/a/orders/${orderId}/paid`,
-      {},
-      this.getAxiosConfig()
     );
   };
 
   markOrderAsShipped = async (orderId: string): Promise<void> => {
     await this.client.post<void>(
       `/a/orders/${orderId}/shipped`,
-      {},
-      this.getAxiosConfig()
     );
   };
 
   markOrderAsDelivered = async (orderId: string): Promise<void> => {
     await this.client.post<void>(
       `/a/orders/${orderId}/delivered`,
-      {},
-      this.getAxiosConfig()
     );
   };
 
@@ -598,7 +561,6 @@ export class RustyShopAPI {
     const response = await this.client.get<string>(
       `/a/orders/${orderId}/invoice`,
       {
-        ...this.getAxiosConfig(),
         responseType: "blob",
       }
     );
@@ -617,7 +579,7 @@ export class RustyShopAPI {
   };
 
   createOrder = async (orderData: NewRegisteredUserOrder): Promise<void> => {
-    await this.client.post<Order>("/a/order", orderData, this.getAxiosConfig());
+    await this.client.post<Order>("/a/order", orderData);
   };
 
   createPublicOrder = async (orderData: NewPublicUserOrder): Promise<void> => {
@@ -651,7 +613,6 @@ export class RustyShopAPI {
     const response = await this.client.post<PaymentGateway>(
       "/a/payment_gateways",
       gatewayData,
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -661,7 +622,6 @@ export class RustyShopAPI {
   ): Promise<PaymentGatewaysResponse> => {
     const response = await this.client.get<PaymentGatewaysResponse>(
       makeUrl("/a/payment_gateways", params),
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -669,7 +629,6 @@ export class RustyShopAPI {
   getPaymentGateway = async (gatewayId: string): Promise<PaymentGateway> => {
     const response = await this.client.get<PaymentGateway>(
       `/a/payment_gateways/${gatewayId}`,
-      this.getAxiosConfig()
     );
     return response.data;
   };
@@ -681,38 +640,33 @@ export class RustyShopAPI {
     await this.client.patch<PaymentGateway>(
       `/a/payment_gateways/${gatewayId}`,
       gatewayData,
-      this.getAxiosConfig()
     );
   };
 
   deletePaymentGateway = async (gatewayId: string): Promise<void> => {
     await this.client.delete(
       `/a/payment_gateways/${gatewayId}`,
-      this.getAxiosConfig()
     );
   };
 
   createShop = async (shopData: NewShop): Promise<Shop> => {
     const response = await this.client.post<Shop>(
       "/a/shops",
-      shopData,
-      this.getAxiosConfig()
+      shopData
     );
     return response.data;
   };
 
   getShops = async (): Promise<ShopsResponse> => {
     const response = await this.client.get<ShopsResponse>(
-      "/a/shops",
-      this.getAxiosConfig()
+      "/a/shops"
     );
     return response.data;
   };
 
   getShop = async (shopId: string): Promise<Shop> => {
     const response = await this.client.get<Shop>(
-      `/a/shops/${shopId}`,
-      this.getAxiosConfig()
+      `/a/shops/${shopId}`
     );
     return response.data;
   };
@@ -723,20 +677,18 @@ export class RustyShopAPI {
   ): Promise<void> => {
     await this.client.patch(
       `/a/shops/${shopId}`,
-      shopData,
-      this.getAxiosConfig()
+      shopData
     );
   };
 
   deleteShop = async (shopId: string): Promise<void> => {
-    await this.client.delete(`/a/shops/${shopId}`, this.getAxiosConfig());
+    await this.client.delete(`/a/shops/${shopId}`);
   };
 
   addShopUser = async (shopId: string, data: ShopUser): Promise<void> => {
     await this.client.post(
       `/a/shops/${shopId}/users`,
-      data,
-      this.getAxiosConfig()
+      data
     );
   };
 
@@ -747,15 +699,13 @@ export class RustyShopAPI {
   ): Promise<void> => {
     await this.client.patch(
       `/a/shops/${shopId}/users/${userId}/role`,
-      { role },
-      this.getAxiosConfig()
+      { role }
     );
   };
 
   removeShopUser = async (shopId: string, userId: string): Promise<void> => {
     await this.client.delete(
-      `/a/shops/${shopId}/users/${userId}`,
-      this.getAxiosConfig()
+      `/a/shops/${shopId}/users/${userId}`
     );
   };
 
@@ -764,8 +714,7 @@ export class RustyShopAPI {
   ): Promise<ShippingRateTemplate> => {
     const response = await this.client.post<ShippingRateTemplate>(
       "/a/shipping-rate-templates",
-      templateData,
-      this.getAxiosConfig()
+      templateData
     );
     return response.data;
   };
@@ -775,8 +724,7 @@ export class RustyShopAPI {
   ): Promise<TemplatesWithWarehouseIdResponse> => {
     const response =
       await this.client.get<TemplatesWithWarehouseIdResponse>(
-        makeUrl("/a/shipping-rate-templates", params),
-        this.getAxiosConfig()
+        makeUrl("/a/shipping-rate-templates", params)
       );
 
     return {
@@ -798,8 +746,7 @@ export class RustyShopAPI {
     templateId: string
   ): Promise<ShippingRateTemplate> => {
     const response = await this.client.get<ShippingRateTemplate>(
-      `/a/shipping-rate-templates/${templateId}`,
-      this.getAxiosConfig()
+      `/a/shipping-rate-templates/${templateId}`
     );
     return response.data;
   };
@@ -810,15 +757,13 @@ export class RustyShopAPI {
   ): Promise<void> => {
     await this.client.patch<ShippingRateTemplate>(
       `/a/shipping-rate-templates/${templateId}`,
-      templateData,
-      this.getAxiosConfig()
+      templateData
     );
   };
 
   deleteShippingRateTemplate = async (templateId: string): Promise<void> => {
     await this.client.delete(
-      `/a/shipping-rate-templates/${templateId}`,
-      this.getAxiosConfig()
+      `/a/shipping-rate-templates/${templateId}`
     );
   };
 
@@ -828,8 +773,6 @@ export class RustyShopAPI {
   ): Promise<void> => {
     await this.client.post(
       `/a/shipping-rate-templates/${templateId}/warehouses/${warehouseId}`,
-      {},
-      this.getAxiosConfig()
     );
   };
 
@@ -838,8 +781,7 @@ export class RustyShopAPI {
     warehouseId: string
   ): Promise<void> => {
     await this.client.delete(
-      `/a/shipping-rate-templates/${templateId}/warehouses/${warehouseId}`,
-      this.getAxiosConfig()
+      `/a/shipping-rate-templates/${templateId}/warehouses/${warehouseId}`
     );
   };
 
@@ -979,24 +921,21 @@ export class RustyShopAPI {
   createDiscount = async (data: NewDiscount): Promise<Discount> => {
     const response = await this.client.post<Discount>(
       '/a/discounts',
-      data,
-      this.getAxiosConfig()
+      data
     );
     return response.data;
   };
 
   getDiscounts = async (params: DiscountsQueryParams): Promise<DiscountsResponse> => {
     const response = await this.client.get<DiscountsResponse>(
-      makeUrl('/a/discounts', params),
-      this.getAxiosConfig()
+      makeUrl('/a/discounts', params)
     );
     return response.data;
   };
 
   getDiscount = async (discountId: string): Promise<Discount> => {
     const response = await this.client.get<Discount>(
-      `/a/discounts/${discountId}`,
-      this.getAxiosConfig()
+      `/a/discounts/${discountId}`
     );
     return response.data;
   };
@@ -1004,15 +943,13 @@ export class RustyShopAPI {
   updateDiscount = async (discountId: string, data: UpdateDiscount): Promise<void> => {
     await this.client.patch<void>(
       `/a/discounts/${discountId}`,
-      data,
-      this.getAxiosConfig()
+      data
     );
   };
 
   deleteDiscount = async (discountId: string): Promise<void> => {
     await this.client.delete(
-      `/a/discounts/${discountId}`,
-      this.getAxiosConfig()
+      `/a/discounts/${discountId}`
     );
   };
 
@@ -1026,9 +963,43 @@ export class RustyShopAPI {
 
   getProductDiscounts = async (productId: string, shopId: string): Promise<Discount[]> => {
     const response = await this.client.get<Discount[]>(
-      makeUrl(`/a/products/${productId}/discounts`, { shop_id: shopId }),
-      this.getAxiosConfig()
+      makeUrl(`/a/products/${productId}/discounts`, { shop_id: shopId })
     );
     return response.data;
+  };
+
+  // Discount Product Management endpoints
+  getDiscountProducts = async (
+    discountId: string,
+    params?: DiscountProductsQueryParams
+  ): Promise<DiscountProductsResponse> => {
+    const response = await this.client.get<DiscountProductsResponse>(
+      makeUrl(`/a/discounts/${discountId}/products`, params)
+    );
+    return {
+      ...response.data,
+      data: response.data.data.map((product) => ({
+        ...product,
+        price: convertToDecimal(product.price),
+      })),
+    };
+  };
+
+  addProductToDiscount = async (
+    discountId: string,
+    productId: string
+  ): Promise<void> => {
+    await this.client.post(
+      `/a/discounts/${discountId}/products/${productId}`
+    );
+  };
+
+  removeProductFromDiscount = async (
+    discountId: string,
+    productId: string
+  ): Promise<void> => {
+    await this.client.delete(
+      `/a/discounts/${discountId}/products/${productId}`
+    );
   };
 }

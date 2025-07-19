@@ -1,31 +1,31 @@
-import { useCallback, useEffect, useState } from 'react';
 import {
-  TextInput,
-  Select,
-  Stack,
+  NewShippingRateTemplate,
+  ShippingRateCalculationMethod,
+  ShippingSpeed,
+  UpdateShippingRateTemplate,
+} from '@gofranz/checkoutbay-common';
+import { Currency } from '@gofranz/common';
+import {
+  ActionIcon,
   Box,
+  Button,
+  Group,
   Loader,
   MultiSelect,
   NumberInput,
-  Button,
   Paper,
-  Group,
-  ActionIcon,
+  Select,
+  Stack,
   Text,
+  TextInput,
 } from '@mantine/core';
+import { UseFormReturnType } from '@mantine/form';
 import { IconTrash } from '@tabler/icons-react';
-import {
-  NewShippingRateTemplate,
-  UpdateShippingRateTemplate,
-  ShippingRateCalculationMethod,
-  ShippingSpeed,
-} from '@gofranz/checkoutbay-common';
+import Decimal from 'decimal.js';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RenderFieldsCreateProps } from '../Entity/EntityFormCreate';
 import { RenderFieldsEditProps } from '../Entity/EntityFormEdit';
-import { Currency } from '@gofranz/common';
-import Decimal from 'decimal.js';
-import { useTranslation } from 'react-i18next';
-import { UseFormReturnType } from '@mantine/form';
 
 type FormMarkup = UseFormReturnType<NewShippingRateTemplate, (values: NewShippingRateTemplate) => NewShippingRateTemplate>;
 
@@ -156,7 +156,6 @@ export function RenderShippingRateTemplateFields({
 
   const setPresetCountries = (index: number, preset: string) => {
     setSettingCountries(true);
-    console.log(`Setting preset countries for rate ${index} to ${preset}`);
     switch (preset) {
       case 'eu':
         (form as FormMarkup).setFieldValue(`rates.${index}.countries`, EU_COUNTRIES);

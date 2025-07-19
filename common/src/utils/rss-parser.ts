@@ -34,7 +34,6 @@ export function parseRSS(xml: string): {
 
   const result = parser.parse(xml);
 
-  console.log(result)
   // Transform the feed entries to handle category terms
   if (result.feed?.entry) {
     result.feed.entry = result.feed.entry.map((entry: any) => ({
@@ -54,8 +53,6 @@ export function parseRSS(xml: string): {
         : entry.title,
     }));
   }
-
-  console.log(result.feed)
 
   return result;
 }

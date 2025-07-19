@@ -1,4 +1,5 @@
 import { Address, Discount, PaymentGateway, Product, ShippingRateTemplate, Shop, StockMovement, UpdateAddres, UpdateDiscount, UpdatePaymentGateway, UpdateProduct, UpdateShippingRateTemplate, UpdateShop, UpdateStockMovement, UpdateWarehouse, Warehouse } from "@gofranz/checkoutbay-common";
+import { GeneralizedViewPage } from "@gofranz/common-components";
 import { Text } from "@mantine/core";
 import { useRustyState } from "../state";
 import {
@@ -12,7 +13,6 @@ import {
   StockMovementDetail,
   WarehouseDetail,
 } from "./DetailAll";
-import { GeneralizedViewPage } from "./Entity/EntityViewPage";
 
 export function AccountProductViewPage() {
   return (

@@ -22,11 +22,6 @@ export function Entity<T>({
   render,
   reload,
 }: EntityProps<T>) {
-  // const [isBusy, setIsBusy] = useState(false);
-  // const setLoading = (loading: boolean) => {
-  //   setIsBusy(loading);
-  // }
-
   return (
     <>
       <Title order={3}>{title}</Title>

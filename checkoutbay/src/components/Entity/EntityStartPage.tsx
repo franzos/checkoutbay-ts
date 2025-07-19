@@ -1,10 +1,9 @@
-import { CommonTableProps } from '../../lib/table';
-import { Button, Flex, Group, Pagination, Text } from '@mantine/core';
+import { ShopQueryParams } from '@gofranz/checkoutbay-common';
 import { Currency } from '@gofranz/common';
-import { useLanguageAwareRouting, usePagination } from '@gofranz/common-components';
+import { CommonTableProps, useLanguageAwareRouting, usePagination } from '@gofranz/common-components';
+import { Button, Flex, Group, Pagination, Text } from '@mantine/core';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShopQueryParams } from '@gofranz/checkoutbay-common';
 
 interface GeneralizedStartPageProps<Entity, Query, Update> {
   TableComponent: React.ComponentType<CommonTableProps<Entity, Update>>;

@@ -86,7 +86,6 @@ export const useRustyState = create<State>((set, get) => ({
     updateSentryUserContext(session);
   },
   getSession: (): Session | undefined => {
-    console.log('state: getSession()');
     if (api.auth) {
       return api.auth.getSession();
     }
@@ -220,7 +219,6 @@ export const useRustyState = create<State>((set, get) => ({
   loadShops: async () => {
     try {
       const { data } = await api.getShops();
-      console.log("Loaded shops", data);
       set({ shops: data });
     } catch (e) {
       console.error("Failed to load shops", e);

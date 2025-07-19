@@ -1,35 +1,35 @@
 import {
-  Text,
-  Stack,
-  Loader,
-  Box,
+  formatPrice,
+  InlineAddress,
+  Order,
+  OrderItem,
+  OrderSource,
+  OrderStatus,
+  Product,
+  Warehouse
+} from "@gofranz/checkoutbay-common";
+import { RenderEntityProps } from "@gofranz/common-components";
+import {
   Alert,
   Badge,
+  Box,
+  Button,
   Card,
   Divider,
   Grid,
   Group,
-  Button,
+  Loader,
+  Stack,
+  Text,
 } from "@mantine/core";
-import {
-  OrderSource,
-  OrderItem,
-  formatPrice,
-  Product,
-  Warehouse,
-  InlineAddress,
-  OrderStatus,
-  Order
-} from "@gofranz/checkoutbay-common";
-import { useState, useEffect } from "react";
-import { useRustyState } from "../../state";
 import {
   IconAlertCircle,
   IconReceipt,
   IconTruck,
   IconUser,
 } from "@tabler/icons-react";
-import { RenderEntityProps } from "../Entity/Entity";
+import { useEffect, useState } from "react";
+import { useRustyState } from "../../state";
 
 export function RenderOrder({
   data,
@@ -114,7 +114,6 @@ export function RenderOrder({
     } finally {
       setIsLoading(false);
     }
-    console.log("Reloaded");
   }
 
   const markAsPaid = async () => {

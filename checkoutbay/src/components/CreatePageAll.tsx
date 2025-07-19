@@ -14,6 +14,7 @@ import {
   StockMovement,
   Warehouse,
 } from "@gofranz/checkoutbay-common";
+import { GeneralizedCreatePage } from "@gofranz/common-components";
 import { useRustyState } from "../state";
 import {
   CreateAddress,
@@ -24,7 +25,6 @@ import {
   CreateStockMovement,
   CreateWarehouse,
 } from "./CreatingAll";
-import { GeneralizedCreatePage } from "./Entity/EntityCreatePage";
 
 export function AccountProductCreatePage() {
   return (

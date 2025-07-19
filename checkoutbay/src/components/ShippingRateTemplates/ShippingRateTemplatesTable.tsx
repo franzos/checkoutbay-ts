@@ -4,12 +4,12 @@ import {
   ShippingSpeed,
   formatPrice,
 } from '@gofranz/checkoutbay-common';
+import { CommonTableProps } from '@gofranz/common-components';
 import { ActionIcon, Badge, Box, Group, NavLink, Stack, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import Decimal from 'decimal.js';
 import { DataTable } from 'mantine-datatable';
 import { useEffect, useState } from 'react';
-import { CommonTableProps } from '../../lib/table';
 
 export function ShippingRateTemplatesTable(
   props: CommonTableProps<ShippingRateTemplate, Partial<ShippingRateTemplate>>

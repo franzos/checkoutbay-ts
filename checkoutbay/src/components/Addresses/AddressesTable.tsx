@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { DataTable } from 'mantine-datatable';
-import { Box, NavLink, ActionIcon, Badge, Group, Text } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
 import { Address, UpdateAddres } from '@gofranz/checkoutbay-common';
-import { CommonTableProps } from '../../lib/table';
+import { CommonTableProps } from '@gofranz/common-components';
+import { ActionIcon, Badge, Box, Group, NavLink, Text } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
+import { DataTable } from 'mantine-datatable';
+import { useEffect, useState } from 'react';
 
 export function AddressesTable(props: CommonTableProps<Address, UpdateAddres>) {
   const [isBusy, setIsBusy] = useState(false);
