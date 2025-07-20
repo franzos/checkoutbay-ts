@@ -1,4 +1,4 @@
-import { DimensionUnit, NewProduct, UpdateProduct, WeightUnit } from '@gofranz/checkoutbay-common';
+import { DimensionUnit, NewProduct, UpdateProduct, WeightUnit, NewProductPhysicalPropertiesDefault } from '@gofranz/checkoutbay-common';
 import { RenderFieldsCreateProps, RenderFieldsEditProps } from '@gofranz/common-components';
 import {
   Accordion,
@@ -18,7 +18,6 @@ import { UseFormReturnType } from '@mantine/form';
 import Decimal from 'decimal.js';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { initialPhysicalPropertiesValues } from '../CreatingAll';
 
 type FormMarkup = UseFormReturnType<NewProduct, (values: NewProduct) => NewProduct>;
 
@@ -55,7 +54,7 @@ export function RenderProductFields({
   const conditionallySetInitialPhysicalProperties = () => {
     if (!hasPhysicalproperties) {
       console.debug('Setting initial physical properties');
-      (form as FormMarkup).setFieldValue('physical_properties', initialPhysicalPropertiesValues);
+      (form as FormMarkup).setFieldValue('physical_properties', NewProductPhysicalPropertiesDefault);
       setHasPhysicalProperties(true);
     } else {
       console.debug('Physical properties already set');

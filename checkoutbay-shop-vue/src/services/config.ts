@@ -1,4 +1,4 @@
-import { RustyShopAPI } from '@gofranz/checkoutbay-common'
+import { CheckoutbayApi } from '@gofranz/checkoutbay-common'
 import { API_BASE_URL, SHOP_ID } from '../constants'
 
 function isUUID(urlShopId: string): boolean {
@@ -35,7 +35,7 @@ export const getShopId = () => {
 const baseUrl = API_BASE_URL || 'https://api.checkoutbay.com/v1'
 console.log('Using API base URL:', baseUrl)
 
-export const api = new RustyShopAPI({
+export const api = new CheckoutbayApi({
   baseUrl,
   timeout: 10000
 })

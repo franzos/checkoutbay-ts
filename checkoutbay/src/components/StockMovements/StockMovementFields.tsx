@@ -38,8 +38,8 @@ export function RenderStockMovementsFields({
       loading(true);
       try {
         const [productsResponse, warehousesResponse] = await Promise.all([
-          api.getProducts({ shop_id: primaryEntityId }),
-          api.getWarehouses({ shop_id: primaryEntityId }),
+          api.getProducts({ primaryEntityId }),
+          api.getWarehouses({ primaryEntityId }),
         ]);
         setProducts(productsResponse.data);
         setWarehouses(warehousesResponse.data);

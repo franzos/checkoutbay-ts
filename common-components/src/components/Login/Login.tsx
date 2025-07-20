@@ -230,10 +230,10 @@ export function Login(props: LoginProps) {
     setActiveStep(1);
     try {
       const googleChallenge = await props.login({
-        type: "Google",
+        type: LOGIN_METHOD.GOOGLE,
         content: {}
       });
-      if (!googleChallenge || googleChallenge.type !== "Google") {
+      if (!googleChallenge || googleChallenge.type !== LOGIN_METHOD.GOOGLE) {
         setHasError(t("login.googleNoChallenge"));
         return;
       }
@@ -254,12 +254,12 @@ export function Login(props: LoginProps) {
     setActiveStep(1);
     try {
       const emailMagicLinkChallenge = await props.login({
-        type: "EmailMagicLink",
+        type: LOGIN_METHOD.EMAIL_MAGIC_LINK,
         content: {
           email: email
         }
       });
-      if (!emailMagicLinkChallenge || emailMagicLinkChallenge.type !== "EmailMagicLink") {
+      if (!emailMagicLinkChallenge || emailMagicLinkChallenge.type !== LOGIN_METHOD.EMAIL_MAGIC_LINK) {
         setHasError(t("login.emailNoChallenge"));
         return;
       }
@@ -276,13 +276,13 @@ export function Login(props: LoginProps) {
     setIsBusy(true);
     setHasError(null);
     try {
-      if (!loginResponse || loginResponse.type !== "EmailMagicLink") {
+      if (!loginResponse || loginResponse.type !== LOGIN_METHOD.EMAIL_MAGIC_LINK) {
         setHasError(t("login.emailNoChallenge"));
         return;
       }
       
       const challengeResponse = await props.loginChallenge({
-        type: "EmailMagicLink",
+        type: LOGIN_METHOD.EMAIL_MAGIC_LINK,
         content: {
           id: (loginResponse.content as any).id,
           challenge: response.trim(),

@@ -28,7 +28,7 @@ export function ProductsTable(props: CommonTableProps<Product, UpdateProduct>) {
         // Fetch stock levels for loaded products
         const api = useRustyState.getState().api;
         const productIds = records.map((product) => product.id);
-        const stockData = await api.getStockMovementsByProducts(productIds, props.shopId);
+        const stockData = await api.getStockMovementsByProducts({ primaryEntityId: props.primaryEntityId }, productIds);
 
         // Group stock levels by product ID
         const groupedStock = stockData.reduce<StockByProduct>((acc, [productId, stockLevel]) => {
@@ -50,15 +50,18 @@ export function ProductsTable(props: CommonTableProps<Product, UpdateProduct>) {
     doIt();
   }, [page]);
 
-  const deleteCb = async (id: string) => {
+  const deleteCb = async (entityId: string) => {
     if (!props.deleteCb) {
       alert('Delete callback is not defined');
       return;
     }
     setIsBusy(true);
-    await props.deleteCb(id);
+    await props.deleteCb({
+      primaryEntityId: props.primaryEntityId,
+      entityId,
+    });
     setRecords((prev) => {
-      return prev.filter((m) => m.id !== id);
+      return prev.filter((m) => m.id !== entityId);
     });
     setIsBusy(false);
   };

@@ -19,7 +19,6 @@ import { UseFormReturnType } from '@mantine/form';
 import { IconInfoCircle, IconPlus, IconTrash } from '@tabler/icons-react';
 import Decimal from 'decimal.js';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useRustyState } from '../../state';
 
 type FormMarkup = UseFormReturnType<NewDiscount, (values: NewDiscount) => NewDiscount>;
@@ -32,7 +31,6 @@ export function RenderDiscountFields({
   entityId,
   isEditing
 }: RenderFieldsCreateProps<NewDiscount> | RenderFieldsEditProps<UpdateDiscount>): JSX.Element {
-  const { } = useTranslation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
@@ -45,7 +43,7 @@ export function RenderDiscountFields({
       setLoading(true);
       try {
         const api = useRustyState.getState().api;
-        const response = await api.getProducts({ shop_id: primaryEntityId, limit: 1000, offset: 0 });
+        const response = await api.getProducts({ primaryEntityId }, { limit: 1000, offset: 0 });
         setProducts(response.data);
       } catch (error) {
         console.error('Failed to load products:', error);
@@ -54,7 +52,7 @@ export function RenderDiscountFields({
       }
     };
     loadProducts();
-  }, [shopId]);
+  }, [primaryEntityId]);
 
   // Load existing discount products in edit mode
   useEffect(() => {
@@ -62,7 +60,7 @@ export function RenderDiscountFields({
       if (isEditing && entityId) {
         try {
           const api = useRustyState.getState().api;
-          const response = await api.getDiscountProducts(entityId, { limit: 1000, offset: 0 });
+          const response = await api.getDiscountProducts({ primaryEntityId, entityId }, { limit: 1000, offset: 0 });
           setSelectedProducts(response.data);
         } catch (error) {
           console.error('Failed to load discount products:', error);
@@ -107,7 +105,7 @@ export function RenderDiscountFields({
       setProductActionLoading(productId);
       try {
         const api = useRustyState.getState().api;
-        await api.addProductToDiscount(entityId, productId);
+        await api.addProductToDiscount({ primaryEntityId, entityId }, productId);
         setSelectedProducts(prev => [...prev, product]);
       } catch (error) {
         console.error('Failed to add product to discount:', error);
@@ -131,7 +129,7 @@ export function RenderDiscountFields({
       setProductActionLoading(productId);
       try {
         const api = useRustyState.getState().api;
-        await api.removeProductFromDiscount(entityId, productId);
+        await api.removeProductFromDiscount({ primaryEntityId, entityId }, productId);
         setSelectedProducts(prev => prev.filter(p => p.id !== productId));
       } catch (error) {
         console.error('Failed to remove product from discount:', error);
@@ -250,7 +248,7 @@ export function RenderDiscountFields({
         error={form.errors.discount_type}
       />
 
-      {form.values.discount_type !== DiscountType.VolumeDiscount && (
+      {(!isEditing && form.values.discount_type !== DiscountType.VolumeDiscount) && (
         <Group grow>
           <NumberInput
             label="Discount Value"
@@ -274,7 +272,7 @@ export function RenderDiscountFields({
         </Group>
       )}
 
-      {form.values.discount_type === DiscountType.VolumeDiscount && (
+      {(!isEditing && form.values.discount_type === DiscountType.VolumeDiscount) && (
         <Alert color="blue" icon={<IconInfoCircle size={16} />}>
           <Text size="sm">
             <strong>Volume Discount:</strong> Discount percentages are configured in the volume tiers below.
@@ -353,7 +351,7 @@ export function RenderDiscountFields({
       )}
 
       {/* Conditional Configuration Fields */}
-      {form.values.discount_type === DiscountType.VoucherCode && (
+      {(!isEditing && form.values.discount_type === DiscountType.VoucherCode) && (
         <Accordion variant="contained">
           <Accordion.Item value="voucher-config">
             <Accordion.Control>
@@ -422,7 +420,7 @@ export function RenderDiscountFields({
         </Accordion>
       )}
 
-      {form.values.discount_type === DiscountType.VolumeDiscount && (
+      {(!isEditing && form.values.discount_type === DiscountType.VolumeDiscount) && (
         <Accordion variant="contained">
           <Accordion.Item value="volume-config">
             <Accordion.Control>

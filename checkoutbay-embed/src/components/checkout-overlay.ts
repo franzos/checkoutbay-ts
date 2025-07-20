@@ -3,6 +3,7 @@
  * Handles address collection and payment initiation
  */
 
+import Decimal from 'decimal.js';
 import type { Cart } from '../core/cart.js';
 import { Storage } from '../core/storage.js';
 import { getAvailableCountriesForShipping, getCountrySubdivisions } from '../utils/countries.js';
@@ -528,7 +529,7 @@ export class CheckoutOverlay {
       // Item price (total for this item)
       const itemPrice = createElement('div', 'cb-summary-item-price');
       if (item.product?.price) {
-        const totalPrice = item.product.price.mul(item.quantity);
+        const totalPrice = Decimal(item.product.price).mul(item.quantity);
         itemPrice.innerHTML = this.cart.formatPrice(totalPrice.toString());
       }
       

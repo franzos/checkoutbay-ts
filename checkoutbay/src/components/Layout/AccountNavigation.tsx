@@ -187,7 +187,7 @@ export function AccountNavigation() {
 
       <NavLink
         component={Link}
-        to={createLanguageURL('/account/orders')}
+        to={createLanguageURL(`/account/${selectedShop}/orders`)}
         label={t('navigation.orders')}
         leftSection={<IconInputCheck size="18" stroke={1.5} />}
       />
@@ -201,43 +201,43 @@ export function AccountNavigation() {
       >
         <NavLink
           component={Link}
-          to={createLanguageURL('/account/products')}
+          to={createLanguageURL(`/account/${selectedShop}/products`)}
           label={t('navigation.products')}
           leftSection={<IconForms size="18" stroke={1.5} />}
         />
         <NavLink
           component={Link}
-          to={createLanguageURL('/account/addresses')}
+          to={createLanguageURL(`/account/${selectedShop}/addresses`)}
           label={t('navigation.addresses')}
           leftSection={<IconAddressBook size="18" stroke={1.5} />}
         />
         <NavLink
           component={Link}
-          to={createLanguageURL('/account/warehouses')}
+          to={createLanguageURL(`/account/${selectedShop}/warehouses`)}
           label={t('navigation.warehouses')}
           leftSection={<IconBuildingWarehouse size="18" stroke={1.5} />}
         />
         <NavLink
           component={Link}
-          to={createLanguageURL('/account/stock-movements')}
+          to={createLanguageURL(`/account/${selectedShop}/stock-movements`)}
           label={t('navigation.stockMovements')}
           leftSection={<IconPackage size="18" stroke={1.5} />}
         />
         <NavLink
           component={Link}
-          to={createLanguageURL('/account/payment-gateways')}
+          to={createLanguageURL(`/account/${selectedShop}/payment-methods`)}
           label={t('navigation.paymentMethods')}
           leftSection={<IconPaywall size="18" stroke={1.5} />}
         />
         <NavLink
           component={Link}
-          to={createLanguageURL('/account/shipping-rate-templates')}
+          to={createLanguageURL(`/account/${selectedShop}/shipping-rate-templates`)}
           label={t('navigation.shippingRates')}
           leftSection={<IconPaywall size="18" stroke={1.5} />}
         />
         <NavLink
           component={Link}
-          to={createLanguageURL('/account/discounts')}
+          to={createLanguageURL(`/account/${selectedShop}/discounts`)}
           label={t('navigation.discounts')}
           leftSection={<IconDiscount size="18" stroke={1.5} />}
         />
@@ -245,7 +245,7 @@ export function AccountNavigation() {
 
       <NavLink
         component={Link}
-        to={createLanguageURL('/account/profile')}
+        to={createLanguageURL(`/account/profile`)}
         label={t('glob_navigation.profile')}
         leftSection={<IconUser size="18" stroke={1.5} />}
       />
@@ -259,14 +259,14 @@ export function AccountNavigation() {
 
       <NavLink
         component={Link}
-        to={createLanguageURL('/account/integration')}
+        to={createLanguageURL(`/account/${selectedShop}/integration`)}
         label={t('navigation.integration')}
         leftSection={<IconBrowser size="18" stroke={1.5} />}
       />
 
       <NavLink
         component={Link}
-        to={createLanguageURL('/account/support')}
+        to={createLanguageURL(`/account/${selectedShop}/support`)}
         label={t('glob_navigation.support')}
         leftSection={<IconHelp size="18" stroke={1.5} />}
       />

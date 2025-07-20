@@ -45,10 +45,10 @@ export function RenderWarehouseFields({
       try {
         const [addressesResponse, templatesResponse] = await Promise.all([
           api.getAddresses({
-            shop_id: primaryEntityId,
+            primaryEntityId,
           }),
           api.getShippingRateTemplates({
-            shop_id: primaryEntityId,
+            primaryEntityId,
           })
         ]);
         console.log(`Addresses:`, addressesResponse.data);
@@ -58,7 +58,7 @@ export function RenderWarehouseFields({
         // If editing existing warehouse, fetch its shipping templates
         if (isEditing === true) {
           const publicRates = await api.getShippingRateTemplates({
-            shop_id: primaryEntityId,
+            primaryEntityId,
           });
           const warehouseTemplateIds = publicRates.data
             .filter(rate => rate.warehouse_ids.includes(entityId))
@@ -89,14 +89,20 @@ export function RenderWarehouseFields({
       // Handle removals
       for (const templateId of currentTemplates) {
         if (!newTemplates.has(templateId)) {
-          await api.removeTemplateFromWarehouse(templateId, entityId);
+          await api.removeTemplateFromWarehouse({
+            primaryEntityId,
+            entityId,
+          }, templateId);
         }
       }
 
       // Handle additions
       for (const templateId of newTemplates) {
         if (!currentTemplates.has(templateId)) {
-          await api.relateTemplateToWarehouse(templateId, entityId);
+          await api.relateTemplateToWarehouse({
+            primaryEntityId,
+            entityId,
+          }, templateId);
         }
       }
 

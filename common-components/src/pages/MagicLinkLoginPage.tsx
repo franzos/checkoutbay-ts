@@ -8,7 +8,7 @@ import {
   alpha,
   useMantineColorScheme,
 } from '@mantine/core';
-import { LoginChallengeUserResponse, LoginSuccess } from '@gofranz/common';
+import { LOGIN_METHOD, LoginChallengeUserResponse, LoginSuccess } from '@gofranz/common';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -42,7 +42,7 @@ export function MagicLinkLoginPage(props: MagicLinkLoginPageProps) {
     setIsBusy(true);
     try {
       await loginChallenge({
-        type: "EmailMagicLink",
+        type: LOGIN_METHOD.EMAIL_MAGIC_LINK,
         content: {
           id,
           challenge,

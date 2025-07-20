@@ -63,8 +63,14 @@ export function RenderOrder({
     try {
       // Fetch all data in parallel
       const [itemsResponse, warehouseResponse] = await Promise.all([
-        api.getOrderItems(data.id),
-        api.getWarehouse(data.warehouse_id),
+        api.getOrderItems({
+          primaryEntityId: data.shop_id,
+          entityId: data.id,
+        }),
+        api.getWarehouse({
+          primaryEntityId: data.shop_id,
+          entityId: data.warehouse_id,
+        }),
       ]);
 
       setOrderItems(itemsResponse || []);
@@ -73,8 +79,14 @@ export function RenderOrder({
       // Only fetch addresses for registered user orders
       if (data.source === OrderSource.RegisteredUser && data.shipping_address_id && data.billing_address_id) {
         const [shippingAddressResponse, billingAddressResponse] = await Promise.all([
-          api.getAddress(data.shipping_address_id),
-          api.getAddress(data.billing_address_id),
+          api.getAddress({
+            primaryEntityId: data.shop_id,
+            entityId: data.shipping_address_id,
+          }),
+          api.getAddress({
+            primaryEntityId: data.shop_id,
+            entityId: data.billing_address_id,
+          }),
         ]);
         
         setShippingAddress(shippingAddressResponse);
@@ -89,7 +101,10 @@ export function RenderOrder({
         ...new Set(itemsResponse.map((item) => item.product_id)),
       ];
       const productDetails = await Promise.all(
-        uniqueProductIds.map((productId) => api.getProduct(productId))
+        uniqueProductIds.map((productId) => api.getProduct({
+          primaryEntityId: data.shop_id,
+          entityId: productId,
+        }))
       );
 
       // Create a map of product ID to product details
@@ -119,7 +134,10 @@ export function RenderOrder({
   const markAsPaid = async () => {
     try {
       setIsLoading(true);
-      await api.markOrderAsPaid(data.id);
+      await api.markOrderAsPaid({
+        entityId: data.id,
+        primaryEntityId: data.shop_id,
+      });
       if (reload) await safeReload();
     } catch (error) {
       console.error("Failed to mark order as paid:", error);
@@ -132,7 +150,10 @@ export function RenderOrder({
   const markAsShipped = async () => {
     try {
       setIsLoading(true);
-      await api.markOrderAsShipped(data.id);
+      await api.markOrderAsShipped({
+        entityId: data.id,
+        primaryEntityId: data.shop_id,
+      });
       if (reload) await safeReload();
     } catch (error) {
       console.error("Failed to mark order as shipped:", error);
@@ -145,7 +166,10 @@ export function RenderOrder({
   const markOrderAsDelivered = async () => {
     try {
       setIsLoading(true);
-      await api.markOrderAsDelivered(data.id);
+      await api.markOrderAsDelivered({
+        entityId: data.id,
+        primaryEntityId: data.shop_id,
+      });
       if (reload) await safeReload();
     } catch (error) {
       console.error("Failed to mark order as delivered:", error);
@@ -158,7 +182,10 @@ export function RenderOrder({
   const getOrderInvoice = async () => {
     try {
       setIsLoading(true)
-      const response = await api.getOrderInvoice(data.id);
+      const response = await api.getOrderInvoice({
+        entityId: data.id,
+        primaryEntityId: data.shop_id,
+      });
       const blob = new Blob([response], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
 

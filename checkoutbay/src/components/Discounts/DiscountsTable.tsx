@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { DataTable } from 'mantine-datatable';
-import { Box, NavLink, ActionIcon, Badge, Group, Text } from '@mantine/core';
+import { Discount, DiscountValueType, formatPrice, UpdateDiscount } from '@gofranz/checkoutbay-common';
+import { CommonTableProps } from '@gofranz/common-components';
+import { ActionIcon, Badge, Box, Group, NavLink, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
-import { formatPrice, Discount, DiscountValueType, UpdateDiscount } from '@gofranz/checkoutbay-common';
-import { CommonTableProps } from '../../lib/table';
+import { DataTable } from 'mantine-datatable';
+import { useEffect, useState } from 'react';
 
 export function DiscountsTable(props: CommonTableProps<Discount, UpdateDiscount>) {
   const [isBusy, setIsBusy] = useState(false);
@@ -28,15 +28,18 @@ export function DiscountsTable(props: CommonTableProps<Discount, UpdateDiscount>
     doIt();
   }, [page]);
 
-  const deleteCb = async (id: string) => {
+  const deleteCb = async (entityId: string) => {
     if (!props.deleteCb) {
       alert('Delete callback is not defined');
       return;
     }
     setIsBusy(true);
-    await props.deleteCb(id);
+    await props.deleteCb({
+      primaryEntityId: props.primaryEntityId,
+      entityId,
+    });
     setRecords((prev) => {
-      return prev.filter((m) => m.id !== id);
+      return prev.filter((m) => m.id !== entityId);
     });
     setIsBusy(false);
   };

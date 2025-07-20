@@ -1,4 +1,4 @@
-import { Session } from '@gofranz/common';
+import { LOGIN_METHOD, Session } from '@gofranz/common';
 import {
   LoginCallbackPage,
   LoginPage,
@@ -83,11 +83,11 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
           <LoginPage
             login={async (loginRequest) => {
               const state = useRustyState.getState();
-              if (loginRequest.type === 'NOSTR') {
+              if (loginRequest.type === LOGIN_METHOD.NOSTR) {
                 return await state.api.auth!.login(loginRequest);
-              } else if (loginRequest.type === 'EmailMagicLink') {
+              } else if (loginRequest.type === LOGIN_METHOD.EMAIL_MAGIC_LINK) {
                 return await state.api.auth!.login(loginRequest);
-              } else if (loginRequest.type === 'Google') {
+              } else if (loginRequest.type === LOGIN_METHOD.GOOGLE) {
                 return await state.api.auth!.login(loginRequest);
               }
               throw new Error('Unsupported login method');
@@ -122,39 +122,39 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/docs" element={<DocsPage />} />
       <Route path="/account" element={<AccountHomePage />} />
-      <Route path="/account/integration" element={<AccountIntegrationPage />} />
-      <Route path="/account/products" element={<AccountProductStartPage />} />
-      <Route path="/account/products/create" element={<AccountProductCreatePage />} />
-      <Route path="/account/products/:uuid" element={<AccountProductViewPage />} />
-      <Route path="/account/warehouses" element={<AccountWarehouseStartPage />} />
-      <Route path="/account/warehouses/create" element={<AccountWarehouseCreatePage />} />
-      <Route path="/account/warehouses/:uuid" element={<AccountWarehouseViewPage />} />
-      <Route path="/account/addresses" element={<AccountAddressStartPage />} />
-      <Route path="/account/addresses/create" element={<AccountAddressCreatePage />} />
-      <Route path="/account/addresses/:uuid" element={<AccountAddressViewPage />} />
-      <Route path="/account/stock-movements" element={<AccountStockMovementStartPage />} />
-      <Route path="/account/stock-movements/create" element={<AccountStockMovementCreatePage />} />
-      <Route path="/account/stock-movements/:uuid" element={<AccountStockMovementViewPage />} />
-      <Route path="/account/payment-gateways" element={<AccountPaymentMethodStartPage />} />
+      <Route path="/account/:primary_entity_id/integration" element={<AccountIntegrationPage />} />
+      <Route path="/account/:primary_entity_id/products" element={<AccountProductStartPage />} />
+      <Route path="/account/:primary_entity_id/products/create" element={<AccountProductCreatePage />} />
+      <Route path="/account/:primary_entity_id/products/:entity_id" element={<AccountProductViewPage />} />
+      <Route path="/account/:primary_entity_id/warehouses" element={<AccountWarehouseStartPage />} />
+      <Route path="/account/:primary_entity_id/warehouses/create" element={<AccountWarehouseCreatePage />} />
+      <Route path="/account/:primary_entity_id/warehouses/:entity_id" element={<AccountWarehouseViewPage />} />
+      <Route path="/account/:primary_entity_id/addresses" element={<AccountAddressStartPage />} />
+      <Route path="/account/:primary_entity_id/addresses/create" element={<AccountAddressCreatePage />} />
+      <Route path="/account/:primary_entity_id/addresses/:entity_id" element={<AccountAddressViewPage />} />
+      <Route path="/account/:primary_entity_id/stock-movements" element={<AccountStockMovementStartPage />} />
+      <Route path="/account/:primary_entity_id/stock-movements/create" element={<AccountStockMovementCreatePage />} />
+      <Route path="/account/:primary_entity_id/stock-movements/:entity_id" element={<AccountStockMovementViewPage />} />
+      <Route path="/account/:primary_entity_id/payment-methods" element={<AccountPaymentMethodStartPage />} />
       <Route
-        path="/account/payment-gateways/create"
+        path="/account/:primary_entity_id/payment-methods/create"
         element={<AccountPaymentMethodCreatePage />}
       />
-      <Route path="/account/payment-gateways/:uuid" element={<AccountPaymentMethodViewPage />} />
-      <Route path="/account/shipping-rate-templates" element={<ShippingRateTemplateStartPage />} />
+      <Route path="/account/:primary_entity_id/payment-methods/:entity_id" element={<AccountPaymentMethodViewPage />} />
+      <Route path="/account/:primary_entity_id/shipping-rate-templates" element={<ShippingRateTemplateStartPage />} />
       <Route
-        path="/account/shipping-rate-templates/create"
+        path="/account/:primary_entity_id/shipping-rate-templates/create"
         element={<AccountShippingRateTemplateCreatePage />}
       />
       <Route
-        path="/account/shipping-rate-templates/:uuid"
+        path="/account/:primary_entity_id/shipping-rate-templates/:entity_id"
         element={<AccountShippingRateTemplateViewPage />}
       />
-      <Route path="/account/orders" element={<AccountOrderStartPage />} />
-      <Route path="/account/orders/:uuid" element={<AccountOrderViewPage />} />
-      <Route path="/account/discounts" element={<AccountDiscountStartPage />} />
-      <Route path="/account/discounts/create" element={<AccountDiscountCreatePage />} />
-      <Route path="/account/discounts/:uuid" element={<AccountDiscountViewPage />} />
+      <Route path="/account/:primary_entity_id/orders" element={<AccountOrderStartPage />} />
+      <Route path="/account/:primary_entity_id/orders/:entity_id" element={<AccountOrderViewPage />} />
+      <Route path="/account/:primary_entity_id/discounts" element={<AccountDiscountStartPage />} />
+      <Route path="/account/:primary_entity_id/discounts/create" element={<AccountDiscountCreatePage />} />
+      <Route path="/account/:primary_entity_id/discounts/:entity_id" element={<AccountDiscountViewPage />} />
       <Route
         path="/account/profile"
         element={
@@ -164,9 +164,9 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
           />
         }
       />
-      <Route path="/account/shop" element={<ShopViewPage />} />
+      <Route path="/account/:primary_entity_id/shop" element={<ShopViewPage />} />
       <Route
-        path="/account/support"
+        path="/account/:primary_entity_id/support"
         element={<SupportPage session={useRustyState.getState().api?.auth?.getSession()} />}
       />
     </Routes>

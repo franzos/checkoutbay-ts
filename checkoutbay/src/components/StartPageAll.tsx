@@ -1,13 +1,18 @@
 import {
   Address,
+  AddressesQueryParams,
   Discount,
   DiscountsQueryParams,
   Order,
+  OrdersQueryParams,
   PaymentGateway,
+  PaymentGatewaysQueryParams,
   Product,
+  ProductsQueryParams,
   ShippingRateTemplate,
-  ShopQueryParams,
   StockMovement,
+  StockMovementsQueryParams,
+  TemplatesQueryParams,
   UpdateAddres,
   UpdateDiscount,
   UpdatePaymentGateway,
@@ -16,6 +21,7 @@ import {
   UpdateStockMovement,
   UpdateWarehouse,
   Warehouse,
+  WarehousesQueryParams,
 } from "@gofranz/checkoutbay-common";
 import { useTranslation } from 'react-i18next';
 import { useRustyState } from "../state";
@@ -36,16 +42,16 @@ export function AccountProductStartPage() {
   const shopCurrency = useRustyState.getState().shopCurrency();
 
   return (
-    <GeneralizedStartPage<Product, ShopQueryParams, UpdateProduct>
+    <GeneralizedStartPage<Product, ProductsQueryParams, UpdateProduct>
       TableComponent={ProductsTable}
       getFunction={api.getProducts}
-      createPath="/account/products/create"
-      openPath={(entity) => `/account/products/${entity.id}`}
+      createPath={`/account/${shopId}/products/create`}
+      openPath={(entity) => `/account/${entity.shop_id}products/${entity.id}`}
       updateCb={api.updateProduct}
       deleteCb={api.deleteProduct}
       buttonText={t('entities.newProduct')}
       headerText={t('entities.newProductDescription')}
-      shopId={shopId}
+      primaryEntityId={shopId}
       shopCurrency={shopCurrency}
     />
   );
@@ -58,16 +64,16 @@ export function AccountWarehouseStartPage() {
   const shopCurrency = useRustyState.getState().shopCurrency();
 
   return (
-    <GeneralizedStartPage<Warehouse, ShopQueryParams, UpdateWarehouse>
+    <GeneralizedStartPage<Warehouse, WarehousesQueryParams, UpdateWarehouse>
       TableComponent={WarehousesTable}
       getFunction={api.getWarehouses}
-      createPath="/account/warehouses/create"
-      openPath={(entity) => `/account/warehouses/${entity.id}`}
+      createPath={`/account/${shopId}/warehouses/create`}
+      openPath={(entity) => `/account/${entity.shop_id}/warehouses/${entity.id}`}
       updateCb={api.updateWarehouse}
       deleteCb={api.deleteWarehouse}
       buttonText={t('entities.newWarehouse')}
       headerText={t('entities.newWarehouseDescription')}
-      shopId={shopId}
+      primaryEntityId={shopId}
       shopCurrency={shopCurrency}
     />
   );
@@ -80,16 +86,16 @@ export function AccountAddressStartPage() {
   const shopCurrency = useRustyState.getState().shopCurrency();
 
   return (
-    <GeneralizedStartPage<Address, ShopQueryParams, UpdateAddres>
+    <GeneralizedStartPage<Address, AddressesQueryParams, UpdateAddres>
       TableComponent={AddressesTable}
       getFunction={api.getAddresses}
-      createPath="/account/addresses/create"
-      openPath={(entity) => `/account/addresses/${entity.id}`}
+      createPath={`/account/${shopId}/addresses/create`}
+      openPath={(entity) => `/account/${entity.shop_id}/addresses/${entity.id}`}
       updateCb={api.updateAddress}
       deleteCb={api.deleteAddress}
       buttonText={t('entities.newAddress')}
       headerText={t('entities.newAddressDescription')}
-      shopId={shopId}
+      primaryEntityId={shopId}
       shopCurrency={shopCurrency}
     />
   );
@@ -102,16 +108,16 @@ export function AccountStockMovementStartPage() {
   const shopCurrency = useRustyState.getState().shopCurrency();
 
   return (
-    <GeneralizedStartPage<StockMovement, ShopQueryParams, UpdateStockMovement>
+    <GeneralizedStartPage<StockMovement, StockMovementsQueryParams, UpdateStockMovement>
       TableComponent={StockMovementsTable}
       getFunction={api.getStockMovements}
-      createPath="/account/stock-movements/create"
-      openPath={(entity) => `/account/stock-movements/${entity.id}`}
+      createPath={`/account/${shopId}/stock-movements/create`}
+      openPath={(entity) => `/account/${entity.shop_id}/stock-movements/${entity.id}`}
       updateCb={api.updateStockMovement}
       deleteCb={api.deleteStockMovement}
       buttonText={t('entities.newStockMovement')}
       headerText={t('entities.newStockMovementDescription')}
-      shopId={shopId}
+      primaryEntityId={shopId}
       shopCurrency={shopCurrency}
     />
   );
@@ -124,16 +130,16 @@ export function AccountPaymentMethodStartPage() {
   const shopCurrency = useRustyState.getState().shopCurrency();
 
   return (
-    <GeneralizedStartPage<PaymentGateway, ShopQueryParams, UpdatePaymentGateway>
+    <GeneralizedStartPage<PaymentGateway, PaymentGatewaysQueryParams, UpdatePaymentGateway>
       TableComponent={PaymentMethodsTable}
       getFunction={api.getPaymentGateways}
-      createPath="/account/payment-gateways/create"
-      openPath={(entity) => `/account/payment-gateways/${entity.id}`}
+      createPath={`/account/${shopId}/payment-methods/create`}
+      openPath={(entity) => `/account/${entity.shop_id}/payment-methods/${entity.id}`}
       updateCb={api.updatePaymentGateway}
       deleteCb={api.deletePaymentGateway}
       buttonText={t('entities.newPaymentMethod')}
       headerText={t('entities.newPaymentMethodDescription')}
-      shopId={shopId}
+      primaryEntityId={shopId}
       shopCurrency={shopCurrency}
     />
   );
@@ -146,17 +152,17 @@ export function AccountOrderStartPage() {
   const shopCurrency = useRustyState.getState().shopCurrency();
 
   return (
-    <GeneralizedStartPage<Order, ShopQueryParams, undefined>
+    <GeneralizedStartPage<Order, OrdersQueryParams, undefined>
       TableComponent={OrdersTable}
       getFunction={api.getOrders}
       // createPath="/account/orders/create"
-      openPath={(entity) => `/account/orders/${entity.id}`}
+      openPath={(entity) => `/account/${entity.shop_id}/orders/${entity.id}`}
       // changeCb={api.getAddresses}
       // updateCb={api.updateOrder}
       // deleteCb={api.deleteOrder}
       buttonText={t('entities.newOrder')}
       headerText={t('entities.newOrderDescription')}
-      shopId={shopId}
+      primaryEntityId={shopId}
       shopCurrency={shopCurrency}
     />
   );
@@ -169,16 +175,16 @@ export function ShippingRateTemplateStartPage() {
   const shopCurrency = useRustyState.getState().shopCurrency();
 
   return (
-    <GeneralizedStartPage<ShippingRateTemplate, ShopQueryParams, UpdateShippingRateTemplate>
+    <GeneralizedStartPage<ShippingRateTemplate, TemplatesQueryParams, UpdateShippingRateTemplate>
       TableComponent={ShippingRateTemplatesTable}
       getFunction={api.getShippingRateTemplates}
-      createPath="/account/shipping-rate-templates/create"
-      openPath={(entity) => `/account/shipping-rate-templates/${entity.id}`}
+      createPath={`/account/${shopId}/shipping-rate-templates/create`}
+      openPath={(entity) => `/account/${entity.shop_id}/shipping-rate-templates/${entity.id}`}
       updateCb={api.updateShippingRateTemplate}
       deleteCb={api.deleteShippingRateTemplate}
       buttonText={t('entities.newShippingRateTemplate')}
       headerText={t('entities.newShippingRateTemplateDescription')}
-      shopId={shopId}
+      primaryEntityId={shopId}
       shopCurrency={shopCurrency}
     />
   );
@@ -193,13 +199,13 @@ export function AccountDiscountStartPage() {
     <GeneralizedStartPage<Discount, DiscountsQueryParams, UpdateDiscount>
       TableComponent={DiscountsTable}
       getFunction={api.getDiscounts}
-      createPath="/account/discounts/create"
-      openPath={(entity) => `/account/discounts/${entity.id}`}
+      createPath={`/account/${shopId}/discounts/create`}
+      openPath={(entity) => `/account/${entity.shop_id}/discounts/${entity.id}`}
       updateCb={api.updateDiscount}
       deleteCb={api.deleteDiscount}
       buttonText="New Discount"
       headerText="Create and manage discounts for your store"
-      shopId={shopId}
+      primaryEntityId={shopId}
       shopCurrency={shopCurrency}
     />
   );

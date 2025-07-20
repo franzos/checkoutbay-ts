@@ -5,18 +5,16 @@ import {
   LoginRequest,
   LoginChallenge,
   RenewalRequest,
-  NostrLoginRequest,
-  MagicLinkLoginReqest,
-  GoogleLoginRequest,
   LoginChallengeUserResponse,
+  LOGIN_METHOD,
 } from "./types";
 import { Session } from "./types/session";
 import {
   clearLsSession,
+  getLsLoginSession,
   getLsSession,
   hasFutureExpiry,
   makeAuthHeaders,
-  setLsPrivateKey,
   setLsSession,
 } from "./utils";
 
@@ -199,18 +197,34 @@ export class RustyAuth implements RustyAuthSpec {
   }
 
   async login(loginRequest: LoginRequest): Promise<LoginChallenge> {
-    // Get referral code from localStorage if available
     const referralCode = localStorage.getItem('pendingReferralCode');
-    
-    // Add referral code to the request if it exists
+
     if (referralCode) {
-      if ('NOSTR' in loginRequest) {
-        (loginRequest.NOSTR as NostrLoginRequest).referral_code = referralCode;
-      } else if ('EmailMagicLink' in loginRequest) {
-        (loginRequest.EmailMagicLink as MagicLinkLoginReqest).referral_code = referralCode;
-      } else if ('Google' in loginRequest) {
-        (loginRequest.Google as GoogleLoginRequest).referral_code = referralCode;
-      }
+      loginRequest.content.referral_code = referralCode;
+    }
+
+    switch (loginRequest.type) {
+      case LOGIN_METHOD.NOSTR:
+        this.setSession({
+          isLoggedIn: false,
+          publicKey: loginRequest.content.public_key,
+          method: LOGIN_METHOD.NOSTR,
+        });
+        break;
+      case LOGIN_METHOD.EMAIL_MAGIC_LINK:
+        this.setSession({
+          isLoggedIn: false,
+          method: LOGIN_METHOD.EMAIL_MAGIC_LINK,
+        });
+        break;
+      case LOGIN_METHOD.GOOGLE:
+        this.setSession({
+          isLoggedIn: false,
+          method: LOGIN_METHOD.GOOGLE,
+        });
+        break;
+      default:
+        throw new Error(`Unsupported login method: ${loginRequest.type}`);
     }
 
     const { data } = await this.client.post<LoginChallenge>(
@@ -234,10 +248,21 @@ export class RustyAuth implements RustyAuthSpec {
       ...decodeSessionTokens(data),
       method: props.type,
     } as Session;
-    if (props.type === "NOSTR") {
-      // TODO: TYPES!
-      newSession.publicKey = (props.content as any)?.public_key;
+
+    if (props.type === LOGIN_METHOD.NOSTR) {
+      console.log("NOSTR login detected: Looking for public key in local storage");
+      if (this.useLocalStore) {
+        console.debug("Using local storage for session management");
+        const savedSession = getLsLoginSession(this.localStorageKey);
+        if (savedSession?.publicKey) {
+          console.debug("Found public key in local storage, setting it in session");
+          newSession.publicKey = savedSession.publicKey;
+        } else {
+          console.warn(`No public key found in local storage for NOSTR login (${JSON.stringify(savedSession)})`);
+        }
+      }
     }
+
     this.setSession(newSession);
     return data;
   }

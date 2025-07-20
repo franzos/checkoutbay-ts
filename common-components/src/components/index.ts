@@ -20,5 +20,6 @@ export type { RenderFieldsCreateProps, EntityFormCreateProps } from './Entity/En
 export { EntityFormEdit } from './Entity/EntityFormEdit';
 export type { RenderFieldsEditProps, EntityFormEditProps, } from './Entity/EntityFormEdit';
 export { GeneralizedViewPage, ViewPageMode } from './Entity/EntityViewPage';
+export type { GeneralizedViewPageDetailComponentProps } from './Entity/EntityViewPage';
 export * from './Entity/table';
 // CSS modules are imported directly by components, no need to export

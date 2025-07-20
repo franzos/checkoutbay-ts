@@ -11,7 +11,7 @@ export function AccountIntegrationPage() {
   const selectedShop = useRustyState((s) => s.shopId);
   const { createLanguageURL } = useLanguageAwareRouting();
 
-  const shopPreviewUrlAlt = `${SHOP_PREVIEW_BASE_URL_ALT}/#/?shop_id=${selectedShop}`;
+  const shopPreviewUrlAlt = `${SHOP_PREVIEW_BASE_URL_ALT}?shop_id=${selectedShop}`;
   
   // Construct static shop preview URL from API_BASE_URL
   const staticShopPreviewUrl = API_BASE_URL?.replace('/v1', `/shop/${selectedShop}/`) || '';

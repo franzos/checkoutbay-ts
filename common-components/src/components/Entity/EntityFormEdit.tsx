@@ -4,6 +4,7 @@ import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
 import { showWarningNotification } from '../../index';
 import { RenderFieldsGeneralProps } from './EntityFormGeneral';
+import { ShopEntityAccessParams } from '@gofranz/common';
 
 export interface RenderFieldsEditProps<Edit> extends RenderFieldsGeneralProps {
   form: UseFormReturnType<Edit>;
@@ -18,7 +19,7 @@ export interface EntityFormEditProps<Edit> {
   description?: string;
   initialValues: Edit;
   validation: FormValidateInput<Edit> | ((values: Edit) => FormValidateInput<Edit>);
-  submitFormCb: (id: string, data: Edit) => Promise<void>;
+  submitFormCb: (params: ShopEntityAccessParams, data: Edit) => Promise<void>;
   renderFields: (props: RenderFieldsEditProps<Edit>) => React.ReactNode;
   primaryEntityId: string;
 }
@@ -117,7 +118,10 @@ export function EntityFormEdit<Edit>({
     setIsBusy(true);
     try {
       setSubmittedValues(data);
-      await submitFormCb(id, data as Edit);
+      await submitFormCb({
+        primaryEntityId,
+        entityId: id
+      }, data as Edit);
       setError('');
     } catch (e) {
       setError(`${e}`);

@@ -81,6 +81,11 @@ export interface Address {
 	updated_at: string;
 }
 
+export interface AddressesQueryParams {
+	limit: number;
+	offset: number;
+}
+
 export interface AddressesResponse {
 	data: Address[];
 	total: number;
@@ -230,7 +235,6 @@ export interface DiscountProductsResponse {
 }
 
 export interface DiscountsQueryParams {
-	shop_id: string;
 	limit: number;
 	offset: number;
 }
@@ -289,12 +293,9 @@ export interface NewAddress {
 	company_name?: string;
 	is_default: boolean;
 	kind: AddressType;
-	shop_id?: string;
-	user_id?: string;
 }
 
 export interface NewDiscount {
-	shop_id: string;
 	title: string;
 	description?: string;
 	discount_type: DiscountType;
@@ -327,7 +328,6 @@ export interface NewPaymentGateway {
 	title: string;
 	provider_config: PaymentGatewayConfig;
 	is_test_mode: boolean;
-	shop_id: string;
 }
 
 export interface NewProduct {
@@ -345,7 +345,6 @@ export interface NewProduct {
 	requires_shipping: boolean;
 	categories: string[];
 	tags: string[];
-	shop_id: string;
 }
 
 export interface NewPublicUserOrderFields {
@@ -374,7 +373,6 @@ export enum ShippingSpeed {
 export interface NewShippingRateTemplate {
 	title?: string;
 	description?: string;
-	shop_id: string;
 	provider: string;
 	rates: ShippingRates;
 	currency: Currency;
@@ -402,7 +400,6 @@ export interface NewStockMovement {
 	warehouse_id: string;
 	reference?: string;
 	reason: StockMovementReason;
-	shop_id: string;
 }
 
 export interface NewWarehouse {
@@ -410,7 +407,6 @@ export interface NewWarehouse {
 	code?: string;
 	address_id: string;
 	is_active: boolean;
-	shop_id: string;
 }
 
 export enum OrderStatus {
@@ -505,7 +501,6 @@ export interface OrderTotal {
 }
 
 export interface OrdersQueryParams {
-	shop_id: string;
 	limit: number;
 	offset: number;
 }
@@ -535,7 +530,6 @@ export interface PaymentGateway {
 }
 
 export interface PaymentGatewaysQueryParams {
-	shop_id: string;
 	limit: number;
 	offset: number;
 }
@@ -546,7 +540,6 @@ export interface PaymentGatewaysResponse {
 }
 
 export interface PaymentsQueryParams {
-	shop_id: string;
 	order_id?: string;
 	status?: PaymentStatus;
 	limit: number;
@@ -588,13 +581,11 @@ export interface ProcessedOrderBase {
 }
 
 export interface ProductsByCategoryQueryParams {
-	shop_id: string;
 	limit: number;
 	offset: number;
 }
 
 export interface ProductsQueryParams {
-	shop_id: string;
 	limit: number;
 	offset: number;
 	is_live?: boolean;
@@ -741,7 +732,6 @@ export interface StockMovement {
 }
 
 export interface StockMovementsQueryParams {
-	shop_id: string;
 	limit: number;
 	offset: number;
 }
@@ -780,6 +770,11 @@ export interface TaxRatesQueryValidated {
 	destination_region: Region;
 	transaction: TransactionType;
 	ignore_threshold: boolean;
+}
+
+export interface TemplatesQueryParams {
+	limit: number;
+	offset: number;
 }
 
 export interface TemplatesWithWarehouseIdResponse {
@@ -852,9 +847,9 @@ export interface UpdatePaymentStatus {
 }
 
 export interface UpdateProduct {
-	title?: string;
+	title: string;
 	cover_url?: string;
-	slug?: string;
+	slug: string;
 	description?: string;
 	sku?: string;
 	price?: Decimal | number;
@@ -903,7 +898,6 @@ export interface VolumeTier {
 }
 
 export interface VoucherCodeValidationRequest {
-	shop_id: string;
 	code: string;
 	order_subtotal: Decimal | number;
 }
@@ -932,7 +926,6 @@ export interface WarehouseStockLevel {
 }
 
 export interface WarehousesQueryParams {
-	shop_id: string;
 	limit: number;
 	offset: number;
 }

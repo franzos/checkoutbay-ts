@@ -269,7 +269,6 @@ function renderBankAccountDetails(account: BankAccount) {
 
 // Banking Details Section Component
 function BankingDetailsSection({ form }: { form: UseFormReturnType<NewPaymentGateway, (values: NewPaymentGateway) => NewPaymentGateway> | UseFormReturnType<UpdatePaymentGateway, (values: UpdatePaymentGateway) => UpdatePaymentGateway> }) {
-  const { t } = useTranslation();
   const [currentBankAccount, setCurrentBankAccount] = useState<Partial<BankAccount> | null>(null);
 
   const invoiceConfig = form.values.provider_config?.content as InvoiceConfig;

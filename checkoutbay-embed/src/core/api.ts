@@ -1,6 +1,6 @@
 /**
  * Shop API client for CheckoutBay
- * Wrapper around RustyShopAPI from @gofranz/checkoutbay-common
+ * Wrapper around CheckoutbayApi from @gofranz/checkoutbay-common
  */
 
 import type {
@@ -11,18 +11,18 @@ import type {
   ProcessedOrder,
   ProcessedOrderPreview,
   PublicProduct,
-  PublicProductsResponseComplete,
+  PublicProductsResponse,
   PublicShippingRate,
   PublicShop,
   PublicWarehouse
 } from '@gofranz/checkoutbay-common';
-import { RustyShopAPI } from '@gofranz/checkoutbay-common';
+import { CheckoutbayApi } from '@gofranz/checkoutbay-common';
 
 export class ShopAPI {
-  private api: RustyShopAPI;
+  private api: CheckoutbayApi;
 
   constructor(baseUrl: string = 'https://api.checkoutbay.com/v1') {
-    this.api = new RustyShopAPI({
+    this.api = new CheckoutbayApi({
       baseUrl,
       timeout: 10000
     });
@@ -34,7 +34,7 @@ export class ShopAPI {
   }
 
   // Get all products for a shop
-  async getPublicProducts(shopId: string, warehouseId?: string | null): Promise<PublicProductsResponseComplete> {
+  async getPublicProducts(shopId: string, warehouseId?: string | null): Promise<PublicProductsResponse> {
     return this.api.getPublicProductsComplete(shopId, undefined, undefined, warehouseId || undefined);
   }
 

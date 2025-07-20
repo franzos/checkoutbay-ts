@@ -1,4 +1,4 @@
-import { Currency } from "@gofranz/common";
+import { Currency, ShopEntityAccessParams } from "@gofranz/common";
 
 export interface CommonTableProps<Entity, Update> {
   pagination: {
@@ -9,10 +9,10 @@ export interface CommonTableProps<Entity, Update> {
   onChange: (params: { nextPage: number; is_spam?: boolean }) => Promise<Entity[]>;
   openRowPage: (form: Entity) => void;
   updateCb?: (
-    id: string,
+    params: ShopEntityAccessParams,
     data: Update
   ) => Promise<void>;
-  deleteCb?: (id: string) => Promise<void>;
-  shopId: string
+  deleteCb?: (params: ShopEntityAccessParams) => Promise<void>;
+  primaryEntityId: string
   shopCurrency: Currency
 }

@@ -17,7 +17,7 @@ export interface AccountProfilePageProps {
   serviceEmail: string;
 }
 
-export function AccountProfilePage({ serviceDomain, serviceEmail }: AccountProfilePageProps) {
+export function AccountProfilePage({ serviceEmail }: AccountProfilePageProps) {
   const api = useRustyState.getState().api;
   const session = useRustyState((state) => state.api?.auth?.getSession());
   const loginMethod = session?.method;
@@ -44,30 +44,6 @@ export function AccountProfilePage({ serviceDomain, serviceEmail }: AccountProfi
     getBalance();
   }, []);
 
-  // const getPrivateKey = () => {
-  //   if (loginMethod === LOGIN_METHOD.PRIVATE_KEY) {
-  //     const pk = getLsPrivateKey(LOCAL_STORAGE_KEY);
-  //     if (pk) {
-  //       setPrivateKey(pk);
-  //     }
-  //   }
-  //   return '';
-  // };
-
-  // const downloadKeypair = () => {
-  //   const data = `public_key: ${publicKey}\nprivate_key: ${privateKey}\n\nLogin at https://${serviceDomain} and select 'Private Key'`;
-  //   const element = document.createElement('a');
-  //   const file = new Blob([data], { type: 'text/plain' });
-  //   element.href = URL.createObjectURL(file);
-  //   element.download = 'rusty-forms-keypair.txt';
-  //   document.body.appendChild(element); // Required for this to work in FireFox
-  //   element.click();
-  // };
-
-  // useEffect(() => {
-  //   getPrivateKey();
-  // }, []);
-
   const Balance = (props: { bal: Balance }) => {
     return <Text>{formatCurrency(props.bal)}</Text>;
   };
@@ -87,45 +63,6 @@ export function AccountProfilePage({ serviceDomain, serviceEmail }: AccountProfi
 
   const LoginMethodInfo = () => {
     switch (loginMethod) {
-      // case LOGIN_METHOD.PRIVATE_KEY:
-      //   return (
-      //     <>
-      //       <Alert icon={<IconAlertCircle size={16} />} color="blue" mt="md" mb="md">
-      //         Save these keys in your password manager or somewhere safe. We cannot recover them.
-      //         You can use them to access the service from other devices, and login to our other
-      //         services.
-      //         <br />
-      //         <br />
-      //         <Button onClick={downloadKeypair} size="sm">
-      //           Download keys
-      //         </Button>
-      //       </Alert>
-      //       <TextInput
-      //         label="Public Key"
-      //         type="text"
-      //         id="publicKey"
-      //         name="publicKey"
-      //         value={publicKey}
-      //         readOnly
-      //       />
-      //       <Text size="sm" mb="xs" color="gray">
-      //         Your public key is what identifies you; We store it on our server.
-      //       </Text>
-
-      //       <PasswordInput
-      //         label="Private Key"
-      //         type="text"
-      //         id="privateKey"
-      //         name="privateKey"
-      //         value={privateKey}
-      //         readOnly
-      //         withAsterisk
-      //       />
-      //       <Text size="sm" mb="xs" color="gray">
-      //         Your private key is what you use to login and never leaves your computer.
-      //       </Text>
-      //     </>
-      //   );
       case LOGIN_METHOD.NOSTR:
         return (
           <>

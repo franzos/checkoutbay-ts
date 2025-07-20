@@ -1,30 +1,19 @@
 import { decodeSessionTokens } from '../auth';
 import { LOCAL_STORAGE_KEY } from '../constants';
-import { Session } from '../types';
-
-export function getLsPrivateKey(storageKey: string = LOCAL_STORAGE_KEY) {
-  console.debug('getLsPrivateKey');
-  return localStorage.getItem(`${storageKey}.privateKey`);
-}
-
-export function setLsPrivateKey(privateKey: string, storageKey: string = LOCAL_STORAGE_KEY) {
-  console.debug('setLsPrivateKey');
-  localStorage.setItem(`${storageKey}.privateKey`, privateKey);
-}
-
-export function getLsPublicKey(storageKey: string = LOCAL_STORAGE_KEY) {
-  console.debug('getLsPublicKey');
-  return localStorage.getItem(`${storageKey}.publicKey`);
-}
-
-export function setLsPublicKey(publicKey: string, storageKey: string = LOCAL_STORAGE_KEY) {
-  console.debug('setLsPublicKey');
-  localStorage.setItem(`${storageKey}.publicKey`, publicKey);
-}
+import { LoggedInUserSession, Session } from '../types';
 
 export function hasFutureExpiry(expiresAt: number, threshold: number) {
   const now = Math.round(Date.now() / 1000);
   return expiresAt > (now + threshold)
+}
+
+export function getLsLoginSession(storageKey: string = LOCAL_STORAGE_KEY): Session | null {
+  console.debug('getLoginSession');
+  const sessionJson = localStorage.getItem(`${storageKey}.data`);
+  if (sessionJson) {
+    return JSON.parse(sessionJson) as LoggedInUserSession;
+  }
+  return null;
 }
 
 export function getLsSession(storageKey: string = LOCAL_STORAGE_KEY): Session | null {

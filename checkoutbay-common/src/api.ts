@@ -2,16 +2,19 @@ import axios, { AxiosInstance, AxiosError } from "axios";
 import Decimal from "decimal.js";
 import {
   CommonQueryParams,
-  makeAuthHeaders,
-  QueryParamsBase,
   RustyAuthSpec,
   RustyVerifiedEmailsSpec,
   RustyDeposit,
   RustyDepositSpec,
   RustyVerifiedEmails,
   HttpNewVerifiedEmail,
+  ShopEntityAccessParams,
+  ShopEntitiesAccessParams,
+  NewDepositHttp,
+  ApiProps,
+  makeUrl
 } from "@gofranz/common";
-import { Address, AddressesResponse, Discount, DiscountProductsQueryParams, DiscountProductsResponse, DiscountsQueryParams, DiscountsResponse, NewAddress, NewDiscount, NewOrderCalculation, NewOrderPaymentSubmission, NewPaymentGateway, NewProduct, NewPublicUserOrder, NewRegisteredUserOrder, NewShippingRateTemplate, NewShop, NewStockMovement, NewWarehouse, Order, OrderItem, OrderPayment, OrderRecord, OrdersResponse, PaymentGateway, PaymentGatewaysResponse, ProcessedOrder, ProcessedOrderPreview, ProcessedPublicUserOrder, ProcessedRegisteredUserOrder, Product, PublicFile, PublicProduct, PublicProductsResponse, PublicShippingRate, PublicShop, PublicStock, PublicWarehouse, ShippingRateTemplate, Shop, ShopsResponse, ShopUser, StockMovement, StockMovementsResponse, TaxRate, TaxRatesQuery, TemplatesWithWarehouseIdResponse, UpdateDiscount, UpdatePaymentGateway, UpdateProduct, UpdateShippingRateTemplate, UpdateShop, UpdateStockMovement, UpdateWarehouse, VoucherCodeValidationRequest, VoucherCodeValidationResponse, Warehouse, WarehousesResponse, WarehouseStockLevel } from "./types";
+import { Address, AddressesQueryParams, AddressesResponse, Discount, DiscountProductsQueryParams, DiscountProductsResponse, DiscountsQueryParams, DiscountsResponse, NewAddress, NewDiscount, NewOrderCalculation, NewOrderPaymentSubmission, NewPaymentGateway, NewProduct, NewPublicUserOrder, NewRegisteredUserOrder, NewShippingRateTemplate, NewShop, NewStockMovement, NewWarehouse, Order, OrderItem, OrderPayment, OrderRecord, OrdersQueryParams, OrdersResponse, PaymentGateway, PaymentGatewaysQueryParams, PaymentGatewaysResponse, PaymentsQueryParams, ProcessedOrder, ProcessedOrderPreview, ProcessedPublicUserOrder, ProcessedRegisteredUserOrder, Product, ProductsQueryParams, ProductsResponse, PublicFile, PublicProduct, PublicProductsResponse, PublicShippingRate, PublicShop, PublicStock, PublicWarehouse, ShippingRateTemplate, Shop, ShopsResponse, ShopUser, StockMovement, StockMovementsQueryParams, StockMovementsResponse, TaxRate, TaxRatesQuery, TemplatesQueryParams, TemplatesWithWarehouseIdResponse, UpdateDiscount, UpdatePaymentGateway, UpdateProduct, UpdateShippingRateTemplate, UpdateShop, UpdateStockMovement, UpdateWarehouse, VoucherCodeValidationRequest, VoucherCodeValidationResponse, Warehouse, WarehousesQueryParams, WarehousesResponse, WarehouseStockLevel } from "./types";
 
 function convertToDecimal(value: string | number | Decimal): Decimal {
   if (value instanceof Decimal) return value;
@@ -146,52 +149,14 @@ function evaluateObjectWithDates<T extends ObjectWithDates>(
   };
 }
 
-function makeUrl(
-  url: string,
-  params?:
-    | QueryParamsBase
-    | ShopQueryParams
-    | ItemQueryParams
-    | ProductQueryParams
-) {
-  if (params) {
-    const filteredParams = Object.fromEntries(
-      Object.entries(params).filter(([_, value]) => value !== undefined)
-    );
-    return `${url}?${new URLSearchParams(
-      filteredParams as Record<string, string>
-    )}`;
-  }
-  return url;
-}
-
-export interface ShopQueryParams extends QueryParamsBase {
-  shop_id: string;
-}
-
-export interface ItemQueryParams extends QueryParamsBase {
-  is_live: boolean;
-}
-
-export interface ProductQueryParams extends ShopQueryParams {
-  warehouse_id?: string;
-}
-
-export interface RustyShopApiProps {
-  baseUrl?: string;
-  timeout?: number;
-  auth?: RustyAuthSpec;
-  errorHandler?: (error: AxiosError) => void;
-}
-
-export class RustyShopAPI {
+export class CheckoutbayApi {
   private baseUrl: string;
   private timeout: number;
   private client: AxiosInstance;
   private errorHandler?: (error: AxiosError) => void;
   auth?: RustyAuthSpec;
 
-  constructor({ baseUrl, timeout, auth, errorHandler }: RustyShopApiProps) {
+  constructor({ baseUrl, timeout, auth, errorHandler }: ApiProps) {
     if (baseUrl) {
       this.baseUrl = baseUrl;
     } else {
@@ -286,7 +251,7 @@ export class RustyShopAPI {
     return this.getDepositApi().getDeposit(id, this.getAccessToken());
   };
 
-  newDeposit = async (deposit: import('@gofranz/common').NewDepositHttp) => {
+  newDeposit = async (deposit: NewDepositHttp) => {
     return this.getDepositApi().newDeposit(deposit, this.getAccessToken());
   };
 
@@ -316,101 +281,111 @@ export class RustyShopAPI {
   };
 
   // Address endpoints
-  createAddress = async (addressData: NewAddress): Promise<Address> => {
+  createAddress = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    addressData: NewAddress
+  ): Promise<Address> => {
     const response = await this.client.post<Address>(
-      "/a/addresses",
+      `/a/shops/${primaryEntityId}/addresses`,
       addressData,
     );
     return response.data;
   };
 
   getAddresses = async (
-    params: ShopQueryParams
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: AddressesQueryParams
   ): Promise<AddressesResponse> => {
     const response = await this.client.get<AddressesResponse>(
-      makeUrl("/a/addresses", params)
+      makeUrl(`/a/shops/${primaryEntityId}/addresses`, params)
     );
     return response.data;
   };
 
-  getAddress = async (addressId: string): Promise<Address> => {
+  getAddress = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<Address> => {
     const response = await this.client.get<Address>(
-      `/a/addresses/${addressId}`
+      `/a/shops/${primaryEntityId}/addresses/${entityId}`,
     );
     return response.data;
   };
 
   updateAddress = async (
-    addressId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     addressData: Partial<Address>
   ): Promise<void> => {
     await this.client.patch<Address>(
-      `/a/addresses/${addressId}`,
+      `/a/shops/${primaryEntityId}/addresses/${entityId}`,
       addressData
     );
   };
 
-  deleteAddress = async (addressId: string): Promise<void> => {
-    await this.client.delete(`/a/addresses/${addressId}`);
+  deleteAddress = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<void> => {
+    await this.client.delete(`/a/shops/${primaryEntityId}/addresses/${entityId}`);
   };
 
   // Warehouse endpoints
   createWarehouse = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
     warehouseData: NewWarehouse
   ): Promise<Warehouse> => {
     const response = await this.client.post<Warehouse>(
-      "/a/warehouses",
+      `/a/shops/${primaryEntityId}/warehouses`,
       warehouseData,
     );
     return response.data;
   };
 
   getWarehouses = async (
-    params: ShopQueryParams
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: WarehousesQueryParams
   ): Promise<WarehousesResponse> => {
     const response = await this.client.get<WarehousesResponse>(
-      makeUrl("/a/warehouses", params),
+      makeUrl(`/a/shops/${primaryEntityId}/warehouses`, params),
     );
     return response.data;
   };
 
-  getWarehouse = async (warehouseId: string): Promise<Warehouse> => {
+  getWarehouse = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<Warehouse> => {
     const response = await this.client.get<Warehouse>(
-      `/a/warehouses/${warehouseId}`,
+      `/a/shops/${primaryEntityId}/warehouses/${entityId}`,
     );
     return response.data;
   };
 
   updateWarehouse = async (
-    warehouseId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     warehouseData: UpdateWarehouse
   ): Promise<void> => {
     await this.client.patch<Warehouse>(
-      `/a/warehouses/${warehouseId}`,
+      `/a/shops/${primaryEntityId}/warehouses/${entityId}`,
       warehouseData,
     );
   };
 
-  deleteWarehouse = async (warehouseId: string): Promise<void> => {
-    await this.client.delete(`/a/warehouses/${warehouseId}`, {
+  deleteWarehouse = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<void> => {
+    await this.client.delete(`/a/shops/${primaryEntityId}/warehouses/${entityId}`, {
       timeout: this.timeout
     });
   };
 
   // Product endpoints
-  createProduct = async (productData: NewProduct): Promise<Product> => {
+  createProduct = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    productData: NewProduct
+  ): Promise<Product> => {
     const response = await this.client.post<Product>(
-      "/a/products",
+      `/a/shops/${primaryEntityId}/products`,
       productData,
     );
     return response.data;
   };
 
   getProducts = async (
-    params: ProductQueryParams
-  ): Promise<import('./types/index').GenericListResponse<Product>> => {
-    const { data } = await this.client.get<{ data: import('./types/generated').Product[], total: number }>(
-      makeUrl("/a/products", params),
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: ProductsQueryParams
+  ): Promise<ProductsResponse> => {
+    const { data } = await this.client.get<{ data: Product[], total: number }>(
+      makeUrl(`/a/shops/${primaryEntityId}/products`, params),
     );
     return {
       ...data,
@@ -421,9 +396,9 @@ export class RustyShopAPI {
     };
   };
 
-  getProduct = async (productId: string): Promise<Product> => {
+  getProduct = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<Product> => {
     const response = await this.client.get<Product>(
-      `/a/products/${productId}`,
+      `/a/shops/${primaryEntityId}/products/${entityId}`,
     );
     return {
       ...response.data,
@@ -432,84 +407,88 @@ export class RustyShopAPI {
   };
 
   updateProduct = async (
-    productId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     productData: UpdateProduct
   ): Promise<void> => {
     await this.client.patch<Product>(
-      `/a/products/${productId}`,
+      `/a/shops/${primaryEntityId}/products/${entityId}`,
       productData,
     );
   };
 
-  deleteProduct = async (productId: string): Promise<void> => {
-    await this.client.delete(`/a/products/${productId}`, {
+  deleteProduct = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<void> => {
+    await this.client.delete(`/a/shops/${primaryEntityId}/products/${entityId}`, {
       timeout: this.timeout
     });
   };
 
   // Stock Movement endpoints
   createStockMovement = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
     stockData: NewStockMovement
   ): Promise<StockMovement> => {
     const response = await this.client.post<StockMovement>(
-      "/a/stock_movements",
+      `/a/shops/${primaryEntityId}/stock-movements`,
       stockData,
     );
     return response.data;
   };
 
   getStockMovements = async (
-    params: ShopQueryParams
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: StockMovementsQueryParams
   ): Promise<StockMovementsResponse> => {
     const response = await this.client.get<StockMovementsResponse>(
-      makeUrl("/a/stock_movements", params),
+      makeUrl(`/a/shops/${primaryEntityId}/stock-movements`, params),
     );
     return response.data;
   };
 
   getStockMovement = async (
-    stockMovementId: string
+    { primaryEntityId, entityId }: ShopEntityAccessParams
   ): Promise<StockMovement> => {
     const response = await this.client.get<StockMovement>(
-      `/a/stock_movements/${stockMovementId}`,
+      `/a/shops/${primaryEntityId}/stock-movements/${entityId}`,
     );
     return response.data;
   };
 
   updateStockMovement = async (
-    stockMovementId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     stockData: UpdateStockMovement
   ): Promise<void> => {
     await this.client.patch<StockMovement>(
-      `/a/stock_movements/${stockMovementId}`,
+      `/a/shops/${primaryEntityId}/stock-movements/${entityId}`,
       stockData,
     );
   };
 
-  deleteStockMovement = async (stockMovementId: string): Promise<void> => {
+  deleteStockMovement = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<void> => {
     await this.client.delete(
-      `/a/stock_movements/${stockMovementId}`,
+      `/a/shops/${primaryEntityId}/stock-movements/${entityId}`,
     );
   };
 
   getStockMovementsByProducts = async (
-    product_ids: string[],
-    shop_id: string
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    product_ids: string[]
   ): Promise<[string, WarehouseStockLevel][]> => {
     const response = await this.client.post<[string, WarehouseStockLevel][]>(
-      "/a/stock_movements/by_products",
+      `/a/shops/${primaryEntityId}/stock-movements/by-products`,
       {
         product_ids,
-        shop_id,
       },
     );
     return response.data;
   };
 
   // Order endpoints
-  getOrders = async (params: ShopQueryParams): Promise<OrdersResponse> => {
+  getOrders = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: OrdersQueryParams
+  ): Promise<OrdersResponse> => {
     const response = await this.client.get<OrdersResponse>(
-      makeUrl("/a/orders", params),
+      makeUrl(`/a/shops/${primaryEntityId}/orders`, params),
     );
 
     const convertedOrders = response.data.data.map((order) =>
@@ -524,42 +503,52 @@ export class RustyShopAPI {
     };
   };
 
-  getOrder = async (orderId: string): Promise<Order> => {
+  getOrder = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<Order> => {
     const response = await this.client.get<Order>(
-      `/a/orders/${orderId}`,
+      `/a/shops/${primaryEntityId}/orders/${entityId}`,
     );
 
     return evaluateObjectWithDates(convertOrderDecimals(response.data));
   };
 
-  getOrderItems = async (orderId: string): Promise<OrderItem[]> => {
+  getOrderItems = async (
+    { primaryEntityId, entityId }: ShopEntityAccessParams
+  ): Promise<OrderItem[]> => {
     const response = await this.client.get<OrderItem[]>(
-      `/a/orders/${orderId}/items`,
+      `/a/shops/${primaryEntityId}/orders/${entityId}/items`,
     );
     return response.data.map(convertOrderItemDecimals);
   };
 
-  markOrderAsPaid = async (orderId: string): Promise<void> => {
+  markOrderAsPaid = async (
+    { primaryEntityId, entityId }: ShopEntityAccessParams
+  ): Promise<void> => {
     await this.client.post<void>(
-      `/a/orders/${orderId}/paid`,
+      `/a/shops/${primaryEntityId}/orders/${entityId}/paid`,
     );
   };
 
-  markOrderAsShipped = async (orderId: string): Promise<void> => {
+  markOrderAsShipped = async (
+    { primaryEntityId, entityId }: ShopEntityAccessParams
+  ): Promise<void> => {
     await this.client.post<void>(
-      `/a/orders/${orderId}/shipped`,
+      `/a/shops/${primaryEntityId}/orders/${entityId}/shipped`,
     );
   };
 
-  markOrderAsDelivered = async (orderId: string): Promise<void> => {
+  markOrderAsDelivered = async (
+    { primaryEntityId, entityId }: ShopEntityAccessParams
+  ): Promise<void> => {
     await this.client.post<void>(
-      `/a/orders/${orderId}/delivered`,
+      `/a/shops/${primaryEntityId}/orders/${entityId}/delivered`,
     );
   };
 
-  getOrderInvoice = async (orderId: string): Promise<string> => {
+  getOrderInvoice = async (
+    { primaryEntityId, entityId }: ShopEntityAccessParams
+  ): Promise<string> => {
     const response = await this.client.get<string>(
-      `/a/orders/${orderId}/invoice`,
+      `/a/shops/${primaryEntityId}/orders/${entityId}/invoice`,
       {
         responseType: "blob",
       }
@@ -608,44 +597,46 @@ export class RustyShopAPI {
 
   // Payment Gateway endpoints
   createPaymentGateway = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
     gatewayData: NewPaymentGateway
   ): Promise<PaymentGateway> => {
     const response = await this.client.post<PaymentGateway>(
-      "/a/payment_gateways",
+      `/a/shops/${primaryEntityId}/payment-gateways`,
       gatewayData,
     );
     return response.data;
   };
 
   getPaymentGateways = async (
-    params: ShopQueryParams
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: PaymentGatewaysQueryParams
   ): Promise<PaymentGatewaysResponse> => {
     const response = await this.client.get<PaymentGatewaysResponse>(
-      makeUrl("/a/payment_gateways", params),
+      makeUrl(`/a/shops/${primaryEntityId}/payment-gateways`, params),
     );
     return response.data;
   };
 
-  getPaymentGateway = async (gatewayId: string): Promise<PaymentGateway> => {
+  getPaymentGateway = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<PaymentGateway> => {
     const response = await this.client.get<PaymentGateway>(
-      `/a/payment_gateways/${gatewayId}`,
+      `/a/shops/${primaryEntityId}/payment-gateways/${entityId}`,
     );
     return response.data;
   };
 
   updatePaymentGateway = async (
-    gatewayId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     gatewayData: UpdatePaymentGateway
   ): Promise<void> => {
     await this.client.patch<PaymentGateway>(
-      `/a/payment_gateways/${gatewayId}`,
+      `/a/shops/${primaryEntityId}/payment-gateways/${entityId}`,
       gatewayData,
     );
   };
 
-  deletePaymentGateway = async (gatewayId: string): Promise<void> => {
+  deletePaymentGateway = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<void> => {
     await this.client.delete(
-      `/a/payment_gateways/${gatewayId}`,
+      `/a/shops/${primaryEntityId}/payment-gateways/${entityId}`,
     );
   };
 
@@ -664,25 +655,25 @@ export class RustyShopAPI {
     return response.data;
   };
 
-  getShop = async (shopId: string): Promise<Shop> => {
+  getShop = async ({ entityId }: { entityId: string }): Promise<Shop> => {
     const response = await this.client.get<Shop>(
-      `/a/shops/${shopId}`
+      `/a/shops/${entityId}`
     );
     return response.data;
   };
 
   updateShop = async (
-    shopId: string,
+    { entityId }: { entityId: string },
     shopData: UpdateShop
   ): Promise<void> => {
     await this.client.patch(
-      `/a/shops/${shopId}`,
+      `/a/shops/${entityId}`,
       shopData
     );
   };
 
-  deleteShop = async (shopId: string): Promise<void> => {
-    await this.client.delete(`/a/shops/${shopId}`);
+  deleteShop = async ({ entityId }: { entityId: string }): Promise<void> => {
+    await this.client.delete(`/a/shops/${entityId}`);
   };
 
   addShopUser = async (shopId: string, data: ShopUser): Promise<void> => {
@@ -709,22 +700,64 @@ export class RustyShopAPI {
     );
   };
 
+  // Payment endpoints
+  getPayments = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: PaymentsQueryParams
+  ): Promise<{ data: OrderPayment[]; total: number }> => {
+    const response = await this.client.get<{ data: OrderPayment[]; total: number }>(
+      makeUrl(`/a/shops/${primaryEntityId}/payments`, params)
+    );
+    return {
+      ...response.data,
+      data: response.data.data.map((payment) => ({
+        ...payment,
+        amount: convertToDecimal(payment.amount),
+      })),
+    };
+  };
+
+  getPayment = async (
+    { primaryEntityId, entityId }: ShopEntityAccessParams
+  ): Promise<OrderPayment> => {
+    const response = await this.client.get<OrderPayment>(
+      `/a/shops/${primaryEntityId}/payments/${entityId}`
+    );
+    return {
+      ...response.data,
+      amount: convertToDecimal(response.data.amount),
+    };
+  };
+
+  updatePaymentStatus = async (
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
+    status: string,
+    error_message?: string
+  ): Promise<void> => {
+    await this.client.patch(
+      `/a/shops/${primaryEntityId}/payments/${entityId}/status`,
+      { status, error_message }
+    );
+  };
+
   createShippingRateTemplate = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
     templateData: NewShippingRateTemplate
   ): Promise<ShippingRateTemplate> => {
     const response = await this.client.post<ShippingRateTemplate>(
-      "/a/shipping-rate-templates",
+      `/a/shops/${primaryEntityId}/shipping-rate-templates`,
       templateData
     );
     return response.data;
   };
 
   getShippingRateTemplates = async (
-    params: ShopQueryParams
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: TemplatesQueryParams
   ): Promise<TemplatesWithWarehouseIdResponse> => {
     const response =
       await this.client.get<TemplatesWithWarehouseIdResponse>(
-        makeUrl("/a/shipping-rate-templates", params)
+        makeUrl(`/a/shops/${primaryEntityId}/shipping-rate-templates`, params)
       );
 
     return {
@@ -743,45 +776,45 @@ export class RustyShopAPI {
   };
 
   getShippingRateTemplate = async (
-    templateId: string
+    { primaryEntityId, entityId }: ShopEntityAccessParams
   ): Promise<ShippingRateTemplate> => {
     const response = await this.client.get<ShippingRateTemplate>(
-      `/a/shipping-rate-templates/${templateId}`
+      `/a/shops/${primaryEntityId}/shipping-rate-templates/${entityId}`
     );
     return response.data;
   };
 
   updateShippingRateTemplate = async (
-    templateId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     templateData: UpdateShippingRateTemplate
   ): Promise<void> => {
     await this.client.patch<ShippingRateTemplate>(
-      `/a/shipping-rate-templates/${templateId}`,
+      `/a/shops/${primaryEntityId}/shipping-rate-templates/${entityId}`,
       templateData
     );
   };
 
-  deleteShippingRateTemplate = async (templateId: string): Promise<void> => {
+  deleteShippingRateTemplate = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<void> => {
     await this.client.delete(
-      `/a/shipping-rate-templates/${templateId}`
+      `/a/shops/${primaryEntityId}/shipping-rate-templates/${entityId}`
     );
   };
 
   relateTemplateToWarehouse = async (
-    templateId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     warehouseId: string
   ): Promise<void> => {
     await this.client.post(
-      `/a/shipping-rate-templates/${templateId}/warehouses/${warehouseId}`,
+      `/a/shops/${primaryEntityId}/shipping-rate-templates/${entityId}/warehouses/${warehouseId}`,
     );
   };
 
   removeTemplateFromWarehouse = async (
-    templateId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     warehouseId: string
   ): Promise<void> => {
     await this.client.delete(
-      `/a/shipping-rate-templates/${templateId}/warehouses/${warehouseId}`
+      `/a/shops/${primaryEntityId}/shipping-rate-templates/${entityId}/warehouses/${warehouseId}`
     );
   };
 
@@ -918,63 +951,71 @@ export class RustyShopAPI {
   };
 
   // Discount endpoints
-  createDiscount = async (data: NewDiscount): Promise<Discount> => {
+  createDiscount = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    data: NewDiscount
+  ): Promise<Discount> => {
     const response = await this.client.post<Discount>(
-      '/a/discounts',
+      `/a/shops/${primaryEntityId}/discounts`,
       data
     );
     return response.data;
   };
 
-  getDiscounts = async (params: DiscountsQueryParams): Promise<DiscountsResponse> => {
+  getDiscounts = async (
+    { primaryEntityId }: ShopEntitiesAccessParams,
+    params?: DiscountsQueryParams
+  ): Promise<DiscountsResponse> => {
     const response = await this.client.get<DiscountsResponse>(
-      makeUrl('/a/discounts', params)
+      makeUrl(`/a/shops/${primaryEntityId}/discounts`, params)
     );
     return response.data;
   };
 
-  getDiscount = async (discountId: string): Promise<Discount> => {
+  getDiscount = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<Discount> => {
     const response = await this.client.get<Discount>(
-      `/a/discounts/${discountId}`
+      `/a/shops/${primaryEntityId}/discounts/${entityId}`
     );
     return response.data;
   };
 
-  updateDiscount = async (discountId: string, data: UpdateDiscount): Promise<void> => {
+  updateDiscount = async ({ primaryEntityId, entityId }: ShopEntityAccessParams, data: UpdateDiscount): Promise<void> => {
     await this.client.patch<void>(
-      `/a/discounts/${discountId}`,
+      `/a/shops/${primaryEntityId}/discounts/${entityId}`,
       data
     );
   };
 
-  deleteDiscount = async (discountId: string): Promise<void> => {
+  deleteDiscount = async ({ primaryEntityId, entityId }: ShopEntityAccessParams): Promise<void> => {
     await this.client.delete(
-      `/a/discounts/${discountId}`
+      `/a/shops/${primaryEntityId}/discounts/${entityId}`
     );
   };
 
-  validateVoucherCode = async (data: VoucherCodeValidationRequest): Promise<VoucherCodeValidationResponse> => {
+  validateVoucherCode = async (primaryEntityId: string, data: VoucherCodeValidationRequest): Promise<VoucherCodeValidationResponse> => {
     const response = await this.client.post<VoucherCodeValidationResponse>(
-      '/public/discounts/validate-voucher',
+      `/a/shops/${primaryEntityId}/discounts/validate-voucher`,
       data
     );
     return response.data;
   };
 
-  getProductDiscounts = async (productId: string, shopId: string): Promise<Discount[]> => {
+  getProductDiscounts = async (
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
+  ): Promise<Discount[]> => {
     const response = await this.client.get<Discount[]>(
-      makeUrl(`/a/products/${productId}/discounts`, { shop_id: shopId })
+      `/a/shops/${primaryEntityId}/products/${entityId}/discounts`
     );
     return response.data;
   };
 
   // Discount Product Management endpoints
   getDiscountProducts = async (
-    discountId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     params?: DiscountProductsQueryParams
   ): Promise<DiscountProductsResponse> => {
     const response = await this.client.get<DiscountProductsResponse>(
-      makeUrl(`/a/discounts/${discountId}/products`, params)
+      makeUrl(`/a/shops/${primaryEntityId}/discounts/${entityId}/products`, params)
     );
     return {
       ...response.data,
@@ -986,20 +1027,20 @@ export class RustyShopAPI {
   };
 
   addProductToDiscount = async (
-    discountId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     productId: string
   ): Promise<void> => {
     await this.client.post(
-      `/a/discounts/${discountId}/products/${productId}`
+      `/a/shops/${primaryEntityId}/discounts/${entityId}/products/${productId}`
     );
   };
 
   removeProductFromDiscount = async (
-    discountId: string,
+    { primaryEntityId, entityId }: ShopEntityAccessParams,
     productId: string
   ): Promise<void> => {
     await this.client.delete(
-      `/a/discounts/${discountId}/products/${productId}`
+      `/a/shops/${primaryEntityId}/discounts/${entityId}/products/${productId}`
     );
   };
 }

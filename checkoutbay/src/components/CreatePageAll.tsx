@@ -71,7 +71,7 @@ export function AccountPaymentMethodCreatePage() {
     <GeneralizedCreatePage<PaymentGateway, NewPaymentGateway>
       CreateComponent={CreatePaymentMethod}
       createFunction={useRustyState.getState().api.createPaymentGateway}
-      redirectPath={(entity) => `/account/payment-gateways/${entity.id}`}
+      redirectPath={(entity) => `/account/payment-methods/${entity.id}`}
     />
   );
 }

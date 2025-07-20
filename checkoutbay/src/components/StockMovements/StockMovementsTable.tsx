@@ -30,15 +30,18 @@ export function StockMovementsTable(
     doIt();
   }, [page]);
 
-  const deleteCb = async (id: string) => {
+  const deleteCb = async (entityId: string) => {
     if (!props.deleteCb) {
       alert('Delete callback is not defined');
       return;
     }
     setIsBusy(true);
-    await props.deleteCb(id);
+    await props.deleteCb({
+      primaryEntityId: props.primaryEntityId,
+      entityId,
+    });
     setRecords((prev) => {
-      return prev.filter((m) => m.id !== id);
+      return prev.filter((m) => m.id !== entityId);
     });
     setIsBusy(false);
   };

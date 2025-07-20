@@ -125,6 +125,20 @@ export interface EmailVerificationRequest {
 	email_id: string;
 }
 
+export interface FieldValidationError {
+	field: string;
+	code: string;
+	message: string;
+	params: any;
+}
+
+export interface FieldValidationErrorResponse {
+	error: string;
+	action?: string;
+	message: string;
+	errors: FieldValidationError[];
+}
+
 export interface GoogleLoginChallenge {
 	auth_url: string;
 	referral_code?: string;
@@ -317,18 +331,18 @@ export interface VerifyEmailResponse {
 
 export type LoginChallenge = 
 	| { type: "NOSTR", content: NostrLoginChallenge }
-	| { type: "EmailMagicLink", content: MagicLinkLoginChallenge }
-	| { type: "Google", content: GoogleLoginChallenge };
+	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginChallenge }
+	| { type: "GOOGLE", content: GoogleLoginChallenge };
 
 export type LoginChallengeUserResponse = 
 	| { type: "NOSTR", content: NostrLoginChallengeResponse }
-	| { type: "EmailMagicLink", content: MagicLinkLoginChallengeResponse }
-	| { type: "Google", content: GoogleLoginChallengeResponse };
+	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginChallengeResponse }
+	| { type: "GOOGLE", content: GoogleLoginChallengeResponse };
 
 export type LoginRequest = 
 	| { type: "NOSTR", content: NostrLoginRequest }
-	| { type: "EmailMagicLink", content: MagicLinkLoginReqest }
-	| { type: "Google", content: GoogleLoginRequest };
+	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginReqest }
+	| { type: "GOOGLE", content: GoogleLoginRequest };
 
 export type NewDepositResponse = 
 	| { type: "STRIPE", content: NewDepositStripeResponse };

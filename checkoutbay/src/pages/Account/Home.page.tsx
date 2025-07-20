@@ -1,3 +1,5 @@
+import { ShopEntitiesAccessParams } from '@gofranz/common';
+import { News, useLanguageAwareRouting } from '@gofranz/common-components';
 import {
   Anchor,
   Button,
@@ -11,8 +13,6 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { News, useLanguageAwareRouting } from '@gofranz/common-components';
-import { ShopQueryParams } from '@gofranz/checkoutbay-common';
 import {
   IconAddressBook,
   IconBoxSeam,
@@ -38,10 +38,10 @@ export function AccountHomePage() {
   const theme = useMantineTheme();
   const { t } = useTranslation();
   const { createLanguageURL } = useLanguageAwareRouting();
-  const shopId = useRustyState((s) => s.shopId);
+  const primaryEntityId = useRustyState((s) => s.shopId);
   const shops = useRustyState((s) => s.shops);
   const api = useRustyState((s) => s.api);
-  const isShopSelected = !!shopId;
+  const isShopSelected = !!primaryEntityId;
 
   // State for tracking completion of each step
   const [completionStatus, setCompletionStatus] = useState({
@@ -67,10 +67,10 @@ export function AccountHomePage() {
     };
 
     // Only check other steps if a shop is selected
-    if (shopId) {
+    if (primaryEntityId) {
       try {
         // Make parallel API calls
-        const queryParams: ShopQueryParams = { shop_id: shopId };
+        const queryParams: ShopEntitiesAccessParams = { primaryEntityId };
         const [paymentGateways, addresses, warehouses, shippingRates, products, stockMovements] =
           await Promise.allSettled([
             api.getPaymentGateways(queryParams),
@@ -111,7 +111,7 @@ export function AccountHomePage() {
   // Check completion status when shopId or shops change
   useEffect(() => {
     checkCompletionStatus();
-  }, [shopId, shops]);
+  }, [primaryEntityId, shops]);
 
   const GetStarted = () => (
     <Card shadow="xs" padding="lg" radius="md" mb="md" withBorder>
@@ -208,7 +208,7 @@ export function AccountHomePage() {
               </Text>
               <Button
                 component={Link}
-                to={createLanguageURL("/account/payment-gateways")}
+                to={createLanguageURL(`/account/${primaryEntityId}/payment-gateways`)}
                 size="xs"
                 variant="light"
                 fullWidth
@@ -262,7 +262,7 @@ export function AccountHomePage() {
               </Text>
               <Button
                 component={Link}
-                to={createLanguageURL("/account/addresses")}
+                to={createLanguageURL(`/account/${primaryEntityId}/addresses`)}
                 size="xs"
                 variant="light"
                 fullWidth
@@ -313,7 +313,7 @@ export function AccountHomePage() {
               </Text>
               <Button
                 component={Link}
-                to={createLanguageURL("/account/warehouses")}
+                to={createLanguageURL(`/account/${primaryEntityId}/warehouses`)}
                 size="xs"
                 variant="light"
                 fullWidth
@@ -365,7 +365,7 @@ export function AccountHomePage() {
               </Text>
               <Button
                 component={Link}
-                to={createLanguageURL("/account/shipping-rate-templates")}
+                to={createLanguageURL(`/account/${primaryEntityId}/shipping-rate-templates`)}
                 size="xs"
                 variant="light"
                 fullWidth
@@ -414,7 +414,7 @@ export function AccountHomePage() {
               </Text>
               <Button
                 component={Link}
-                to={createLanguageURL("/account/products")}
+                to={createLanguageURL(`/account/${primaryEntityId}/products`)}
                 size="xs"
                 variant="light"
                 fullWidth
@@ -464,7 +464,7 @@ export function AccountHomePage() {
               </Text>
               <Button
                 component={Link}
-                to={createLanguageURL("/account/stock-movements")}
+                to={createLanguageURL(`/account/${primaryEntityId}/stock-movements`)}
                 size="xs"
                 variant="light"
                 fullWidth
@@ -506,7 +506,7 @@ export function AccountHomePage() {
           </Text>
           <Button
             component="a"
-            href={`#${createLanguageURL("/account/orders")}`}
+            href={`#${createLanguageURL(`/account/${primaryEntityId}/orders`)}`}
             variant="light"
             size="sm"
             fullWidth
@@ -530,7 +530,7 @@ export function AccountHomePage() {
           </Text>
           <Button
             component="a"
-            href={`#${createLanguageURL("/account/products")}`}
+            href={`#${createLanguageURL(`/account/${primaryEntityId}/products`)}`}
             variant="light"
             size="sm"
             fullWidth
@@ -554,7 +554,7 @@ export function AccountHomePage() {
           </Text>
           <Button
             component="a"
-            href={`#${createLanguageURL("/account/addresses")}`}
+            href={`#${createLanguageURL(`/account/${primaryEntityId}/addresses`)}`}
             variant="light"
             size="sm"
             fullWidth
@@ -578,7 +578,7 @@ export function AccountHomePage() {
           </Text>
           <Button
             component="a"
-            href={`#${createLanguageURL("/account/warehouses")}`}
+            href={`#${createLanguageURL(`/account/${primaryEntityId}/warehouses`)}`}
             variant="light"
             size="sm"
             fullWidth
@@ -602,7 +602,7 @@ export function AccountHomePage() {
           </Text>
           <Button
             component="a"
-            href={`#${createLanguageURL("/account/stock-movements")}`}
+            href={`#${createLanguageURL(`/account/${primaryEntityId}/stock-movements`)}`}
             variant="light"
             size="sm"
             fullWidth
@@ -626,7 +626,7 @@ export function AccountHomePage() {
           </Text>
           <Button
             component="a"
-            href={`#${createLanguageURL("/account/payment-gateways")}`}
+            href={`#${createLanguageURL(`/account/${primaryEntityId}/payment-methods`)}`}
             variant="light"
             size="sm"
             fullWidth
@@ -650,7 +650,7 @@ export function AccountHomePage() {
           </Text>
           <Button
             component="a"
-            href={`#${createLanguageURL("/account/shipping-rate-templates")}`}
+            href={`#${createLanguageURL(`/account/${primaryEntityId}/shipping-rate-templates`)}`}
             variant="light"
             size="sm"
             fullWidth

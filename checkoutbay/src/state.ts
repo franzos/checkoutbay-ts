@@ -1,7 +1,7 @@
 import {
   clearLsShop,
   getLsShop,
-  RustyShopAPI,
+  CheckoutbayApi,
   setLsShop,
   Shop,
 } from "@gofranz/checkoutbay-common";
@@ -59,7 +59,7 @@ interface State {
   loginChallenge(loginResponse: LoginChallengeUserResponse): Promise<LoginSuccess>;
   // generateNewAccount: () => Promise<void>;
   logout: () => Promise<void>;
-  api: RustyShopAPI;
+  api: CheckoutbayApi;
   shops: Shop[];
   loadShops: () => Promise<void>;
   shopId: undefined | string;
@@ -68,7 +68,7 @@ interface State {
   shopCurrency: () => Currency;
 }
 
-const api = new RustyShopAPI({
+const api = new CheckoutbayApi({
   baseUrl: API_BASE_URL,
   auth: new RustyAuth({ baseUrl: API_BASE_URL, useLocalStore: true, localStorageKey: LOCAL_STORAGE_KEY }),
   errorHandler: handleApiError,
@@ -96,35 +96,31 @@ export const useRustyState = create<State>((set, get) => ({
       throw new Error('No auth');
     }
 
-    api.auth.setSession({
-      isLoggedIn: false,
-      publicKey: identifier,
-      method: loginMethod,
-    });
-
-    if (loginMethod === LOGIN_METHOD.NOSTR) {
+    switch (loginMethod) {
+      case LOGIN_METHOD.NOSTR:
+    // Nostr login uses the public key as the identifier
       return await api.auth.login({
-        type: 'NOSTR',
+        type: LOGIN_METHOD.NOSTR,
         content: {
           public_key: identifier,
-        }
+        },
       });
-    } else if (loginMethod === LOGIN_METHOD.EMAIL_MAGIC_LINK) {
-      return api.auth.login({
-        type: 'EmailMagicLink',
-        content: {
+      case LOGIN_METHOD.EMAIL_MAGIC_LINK:
+        // Use the identifier as the email for magic link login
+        return await api.auth.login({
+          type: LOGIN_METHOD.EMAIL_MAGIC_LINK,
+          content: {
           email: identifier,
         },
       });
-    } else if (loginMethod === LOGIN_METHOD.GOOGLE) {
-      return api.auth.login({
-        type: 'Google',
-        content: {
-        },
+      case LOGIN_METHOD.GOOGLE:
+        return await api.auth.login({
+          type: LOGIN_METHOD.GOOGLE,
+          content: {},
       });
+      default:
+        throw new Error(`Unsupported login method: ${loginMethod}`);
     }
-
-    throw new Error('Unsupported login method');
   },
   /**
    *
@@ -140,9 +136,9 @@ export const useRustyState = create<State>((set, get) => ({
       throw new Error('No auth');
     }
 
-    if (loginResponse.type === 'EmailMagicLink') {
+    if (loginResponse.type === LOGIN_METHOD.EMAIL_MAGIC_LINK) {
       const response = await api.auth.loginChallenge({
-        type: 'EmailMagicLink',
+        type: LOGIN_METHOD.EMAIL_MAGIC_LINK,
         content: {
           id: loginResponse.content.id,
           challenge: loginResponse.content.challenge,
@@ -150,18 +146,16 @@ export const useRustyState = create<State>((set, get) => ({
       });
 
       // Update Sentry context after successful login
-      const session = get().getSession();
-      updateSentryUserContext(session);
+      updateSentryUserContext(get().getSession());
 
       return response;
     } else if (
-      loginResponse.type === 'NOSTR'
+      loginResponse.type === LOGIN_METHOD.NOSTR
     ) {
       const response = await api.auth.loginChallenge(loginResponse);
 
       // Update Sentry context after successful login
-      const session = get().getSession();
-      updateSentryUserContext(session);
+      updateSentryUserContext(get().getSession());
 
       return response;
     }

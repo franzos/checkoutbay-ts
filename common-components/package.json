@@ -37,8 +37,9 @@
     "react-router-dom": "^6.30.0 || ^7.5.2"
   },
   "dependencies": {
-    "@nostr-ts/common": "^0.0.6",
     "@gofranz/common": "workspace:*",
+    "@nostr-ts/common": "^0.0.6",
+    "axios": "^1.9.0",
     "fast-xml-parser": "^4.5.3",
     "react-markdown": "^10.1.0"
   },

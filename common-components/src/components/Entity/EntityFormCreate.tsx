@@ -1,3 +1,4 @@
+import { axiosFieldValidationErrorToFormErrors, hasFieldValidationError, ShopEntitiesAccessParams } from '@gofranz/common';
 import { Button, Text, Title } from '@mantine/core';
 import { FormValidateInput, useForm, UseFormReturnType } from '@mantine/form';
 import { notifications } from '@mantine/notifications';
@@ -16,10 +17,10 @@ export interface EntityFormCreateProps<Create> {
   description?: string;
   initialValues: Create;
   validation: FormValidateInput<Create> | ((values: Create) => FormValidateInput<Create>);
-  submitFormCb: (data: Create) => Promise<void>;
+  submitFormCb: (params: ShopEntitiesAccessParams, data: Create) => Promise<void>;
   renderFields: (props: RenderFieldsCreateProps<Create>) => React.ReactNode;
-    // For ex. Shop ID, Business ID, Site ID, etc.
-    primaryEntityId: string;
+  // For ex. Shop ID, Business ID, Site ID, etc.
+  primaryEntityId: string;
 }
 
 export function EntityFormCreate<Create>({
@@ -29,7 +30,7 @@ export function EntityFormCreate<Create>({
   validation,
   submitFormCb,
   renderFields,
-    primaryEntityId,
+  primaryEntityId,
 }: EntityFormCreateProps<Create>) {
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState('');
@@ -54,11 +55,11 @@ export function EntityFormCreate<Create>({
     validate: getInitialValidation() as FormValidateInput<Record<string, unknown>>,
   });
 
-  const handleFormSubmit = (values: typeof form.values) => {
+  const handleFormSubmit = async (values: typeof form.values) => {
     // For dynamic validation functions, manually validate with current values
     if (typeof validation === 'function') {
       const validationRules = validation(values as Create) as FormValidateInput<Create>;
-      
+
       const errors: Record<string, string> = {};
       // Manually validate each field
       if (validationRules) {
@@ -72,11 +73,11 @@ export function EntityFormCreate<Create>({
           }
         });
       }
-      
+
       if (Object.keys(errors).length > 0) {
         // Set errors on form
         form.setErrors(errors);
-        
+
         // Show notification to guide user
         showWarningNotification(
           'Validation Error',
@@ -88,7 +89,7 @@ export function EntityFormCreate<Create>({
     } else {
       // For static validation, use form's built-in validation
       const validationResult = form.validate();
-      
+
       if (validationResult.hasErrors) {
         // Show notification to guide user
         showWarningNotification(
@@ -99,20 +100,25 @@ export function EntityFormCreate<Create>({
         return; // Don't proceed with submission
       }
     }
-    
+
     // Proceed with actual submission
-    submitForm(values);
+    await submitForm({
+      primaryEntityId,
+    }, values);
   };
 
-  const submitForm = async (data: typeof form.values) => {
+  const submitForm = async (params: ShopEntitiesAccessParams, data: typeof form.values) => {
     setIsBusy(true);
     try {
       setSubmittedValues(data);
-      await submitFormCb(data as Create);
+      await submitFormCb(params, data as Create);
       setError('');
     } catch (e) {
       setError(`${e}`);
-      console.error(e);
+      if (hasFieldValidationError(e)) {
+        console.log(axiosFieldValidationErrorToFormErrors(e));
+        form.setErrors(axiosFieldValidationErrorToFormErrors(e));
+      }
     } finally {
       setIsBusy(false);
     }
@@ -124,13 +130,13 @@ export function EntityFormCreate<Create>({
     <>
       <Title order={3}>{title}</Title>
       {description && <Text>{description}</Text>}
-      
+
       <form onSubmit={form.onSubmit(handleFormSubmit)}>
         {renderFields({
           form: form as UseFormReturnType<Create>,
           submittedValues: submittedValues as Create | null,
           setParentLoading: setLoading,
-            primaryEntityId,
+          primaryEntityId,
           entityId: undefined, // Not needed for creation
           isEditing: false
         })}

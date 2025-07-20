@@ -21,3 +21,12 @@ export interface QueryParamsBase {
   export type ExtendedListResponse<T, R> = ListResponse<T> & {
     [key: string]: R | T[] | number;
   };
+
+export interface ShopEntitiesAccessParams {
+  primaryEntityId: string;
+}
+
+export interface ShopEntityAccessParams extends ShopEntitiesAccessParams {
+  entityId: string;
+  primaryEntityId: string;
+}

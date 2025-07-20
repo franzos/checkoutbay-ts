@@ -20,7 +20,7 @@ pnpm add @gofranz/checkoutbay-common
 ## Key Exports
 
 ### API Client
-- `RustyShopAPI` - Complete e-commerce API client
+- `CheckoutbayApi` - Complete e-commerce API client
 
 ### Core Types
 - `Product` - Product catalog with stock management

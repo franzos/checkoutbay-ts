@@ -1,5 +1,5 @@
 import { ShopQueryParams } from '@gofranz/checkoutbay-common';
-import { Currency } from '@gofranz/common';
+import { Currency, ShopEntitiesAccessParams, ShopEntityAccessParams } from '@gofranz/common';
 import { CommonTableProps, useLanguageAwareRouting, usePagination } from '@gofranz/common-components';
 import { Button, Flex, Group, Pagination, Text } from '@mantine/core';
 import { useCallback } from 'react';
@@ -7,14 +7,14 @@ import { useNavigate } from 'react-router-dom';
 
 interface GeneralizedStartPageProps<Entity, Query, Update> {
   TableComponent: React.ComponentType<CommonTableProps<Entity, Update>>;
-  getFunction: (params: Query) => Promise<{ total: number; data: Entity[] }>;
+  getFunction: (params: ShopEntitiesAccessParams, queryParams?: Query) => Promise<{ total: number; data: Entity[] }>;
   createPath?: string;
   openPath: (item: Entity) => string;
-  updateCb?: (id: string, item: Update) => Promise<void>;
-  deleteCb?: (id: string) => Promise<void>;
+  updateCb?: (params: ShopEntityAccessParams, item: Update) => Promise<void>;
+  deleteCb?: (params: ShopEntityAccessParams) => Promise<void>;
   buttonText: string;
   headerText: string;
-  shopId?: string;
+  primaryEntityId?: string;
   shopCurrency: Currency;
 }
 
@@ -27,32 +27,34 @@ export function GeneralizedStartPage<Entity, Query, Update>({
   deleteCb,
   buttonText,
   headerText,
-  shopId,
+  primaryEntityId,
   shopCurrency,
 }: GeneralizedStartPageProps<Entity, Query, Update>) {
   const nav = useNavigate();
   const { createLanguageURL } = useLanguageAwareRouting();
 
   // Unified pagination using the common hook
-  const fetchData = useCallback(async (params: { nextPage: number;[key: string]: unknown }) => {
-    if (!shopId) {
+  const fetchData = useCallback(async (queryParams: { nextPage: number;[key: string]: unknown }) => {
+    if (!primaryEntityId) {
       return { data: [], total: 0 };
     }
     
-    const { nextPage, ...otherParams } = params;
-    const apiParams = {
+    const { nextPage, ...otherParams } = queryParams;
+    const combQueryParams = {
       offset: nextPage === 1 ? 0 : 10 * (nextPage - 1),
       limit: 10,
-      shop_id: shopId,
       ...otherParams
     } as ShopQueryParams & Query;
     
-    const res = await getFunction(apiParams);
+    const res = await getFunction(
+      { primaryEntityId }, // entityId is not used in this context, so we pass an empty string
+      combQueryParams
+    );
     return {
       data: res.data,
       total: res.total,
     };
-  }, [getFunction, shopId]);
+  }, [getFunction, primaryEntityId]);
 
   const pagination = usePagination({
     perPage: 10,
@@ -85,7 +87,7 @@ export function GeneralizedStartPage<Entity, Query, Update>({
     [pagination]
   );
 
-  if (!shopId) {
+  if (!primaryEntityId) {
     return <Text>You need to select a shop from the sidebar to view this page.</Text>;
   }
 
@@ -101,7 +103,7 @@ export function GeneralizedStartPage<Entity, Query, Update>({
     openRowPage: openItem,
     updateCb,
     deleteCb,
-    shopId,
+    primaryEntityId,
     shopCurrency,
   };
 

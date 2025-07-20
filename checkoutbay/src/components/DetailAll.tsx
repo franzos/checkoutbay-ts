@@ -28,91 +28,49 @@ import {
   EditWarehouse,
   ViewOrder,
 } from "./EditingAll";
+import { GeneralizedViewPageDetailComponentProps } from "@gofranz/common-components";
 
-export interface ProductDetailProps {
-  item: Product;
-  submitCb: (id: string, updateProduct: UpdateProduct) => Promise<void>;
-  deleteCb?: (formId: string) => Promise<void>;
-}
-
-export function ProductDetail(props: ProductDetailProps) {
+export function ProductDetail(props: GeneralizedViewPageDetailComponentProps<Product, UpdateProduct>) {
   return (
     <>
-      <EditProduct item={props.item} submitFormCb={props.submitCb} />
+      <EditProduct item={props.item} submitCb={props.submitCb} />
     </>
   );
 }
 
-export interface WarehouseDetailProps {
-  item: Warehouse;
-  submitCb: (id: string, updateWarehouse: UpdateWarehouse) => Promise<void>;
-  deleteCb?: (formId: string) => Promise<void>;
-}
-
-export function WarehouseDetail(props: WarehouseDetailProps) {
+export function WarehouseDetail(props: GeneralizedViewPageDetailComponentProps<Warehouse, UpdateWarehouse>) {
   return (
     <>
-      <EditWarehouse item={props.item} submitFormCb={props.submitCb} />
+      <EditWarehouse item={props.item} submitCb={props.submitCb} />
     </>
   );
 }
 
-export interface AddressDetailProps {
-  item: Address;
-  submitCb: (id: string, item: UpdateAddres) => Promise<void>;
-  deleteCb?: (id: string) => Promise<void>;
-}
-
-export function AddressDetail(props: AddressDetailProps) {
+export function AddressDetail(props: GeneralizedViewPageDetailComponentProps<Address, UpdateAddres>) {
   return (
     <>
-      <EditAddress item={props.item} submitFormCb={props.submitCb} />
+      <EditAddress item={props.item} submitCb={props.submitCb} />
     </>
   );
 }
 
-export interface StockMovementDetailProps {
-  item: StockMovement;
-  submitCb: (
-    id: string,
-    updateStockMovement: UpdateStockMovement
-  ) => Promise<void>;
-  deleteCb?: (formId: string) => Promise<void>;
-}
-
-export function StockMovementDetail(props: StockMovementDetailProps) {
+export function StockMovementDetail(props: GeneralizedViewPageDetailComponentProps<StockMovement, UpdateStockMovement>) {
   return (
     <>
-      <EditStockMovement item={props.item} submitFormCb={props.submitCb} />
+      <EditStockMovement item={props.item} submitCb={props.submitCb} />
     </>
   );
 }
 
-export interface PaymentMethodDetailProps {
-  item: PaymentGateway;
-  submitCb: (
-    id: string,
-    updatePaymentMethod: UpdatePaymentGateway
-  ) => Promise<void>;
-  deleteCb?: (formId: string) => Promise<void>;
-}
-
-export function PaymentMethodDetail(props: PaymentMethodDetailProps) {
+export function PaymentMethodDetail(props: GeneralizedViewPageDetailComponentProps<PaymentGateway, UpdatePaymentGateway>) {
   return (
     <>
-      <EditPaymentMethod item={props.item} submitFormCb={props.submitCb} />
+      <EditPaymentMethod item={props.item} submitCb={props.submitCb} />
     </>
   );
 }
 
-export interface OrderDetailProps {
-  item: Order;
-  submitCb?: (id: string, updateOrder: Partial<Order>) => Promise<void>;
-  deleteCb?: (formId: string) => Promise<void>;
-  reload?: () => Promise<void>;
-}
-
-export function OrderDetail(props: OrderDetailProps) {
+export function OrderDetail(props: GeneralizedViewPageDetailComponentProps<Order, Partial<Order>>) {
   return (
     <>
       <ViewOrder item={props.item} reload={props.reload} />
@@ -120,47 +78,26 @@ export function OrderDetail(props: OrderDetailProps) {
   );
 }
 
-export interface ShippingRateTemplateDetailProps {
-  item: ShippingRateTemplate;
-  submitCb: (
-    id: string,
-    updateShippingRateTemplate: UpdateShippingRateTemplate
-  ) => Promise<void>;
-  deleteCb?: (formId: string) => Promise<void>;
-}
-
-export function ShippingRateTemplateDetail(props: ShippingRateTemplateDetailProps) {
+export function ShippingRateTemplateDetail(props: GeneralizedViewPageDetailComponentProps<ShippingRateTemplate, UpdateShippingRateTemplate>) {
   return (
     <>
-      <EditShippingRateTemplate item={props.item} submitFormCb={props.submitCb} />
+      <EditShippingRateTemplate item={props.item} submitCb={props.submitCb} />
     </>
   );
 }
 
-export interface ShopDetailProps {
-  item: Shop;
-  submitCb: (id: string, updateShop: UpdateShop) => Promise<void>;
-  deleteCb?: (formId: string) => Promise<void>;
-}
-
-export function ShopDetail(props: ShopDetailProps) {
+export function ShopDetail(props: GeneralizedViewPageDetailComponentProps<Shop, UpdateShop>) {
   return (
     <>
-      <EditShop item={props.item} submitFormCb={props.submitCb} />
+      <EditShop item={props.item} submitCb={props.submitCb} />
     </>
   );
 }
 
-export interface DiscountDetailProps {
-  item: Discount;
-  submitCb: (id: string, updateDiscount: UpdateDiscount) => Promise<void>;
-  deleteCb?: (formId: string) => Promise<void>;
-}
-
-export function DiscountDetail(props: DiscountDetailProps) {
+export function DiscountDetail(props: GeneralizedViewPageDetailComponentProps<Discount, UpdateDiscount>) {
   return (
     <>
-      <EditDiscount item={props.item} submitFormCb={props.submitCb} />
+      <EditDiscount item={props.item} submitCb={props.submitCb} />
     </>
   );
 }
