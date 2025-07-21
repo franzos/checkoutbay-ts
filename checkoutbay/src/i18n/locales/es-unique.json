@@ -105,7 +105,7 @@
     "titlePlaceholder": "Título",
     "coverUrl": "URL de Portada",
     "coverUrlPlaceholder": "https://ejemplo.com/imagen.jpg",
-    "coverUrlDescription": "URL de la imagen de portada del producto (subida aún no soportada)",
+    "coverUrlDescription": "URL de la imagen de portada del producto. Las imágenes se mostrarán en formato cuadrado (1:1) en el catálogo de productos y se escalarán para ajustarse sin recortar o estirar.",
     "slug": "Slug",
     "slugPlaceholder": "slug-url-producto",
     "slugDescription": "Slug de URL para el producto",

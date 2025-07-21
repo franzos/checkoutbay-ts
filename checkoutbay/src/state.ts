@@ -1,7 +1,7 @@
 import {
+  CheckoutbayApi,
   clearLsShop,
   getLsShop,
-  CheckoutbayApi,
   setLsShop,
   Shop,
 } from "@gofranz/checkoutbay-common";
@@ -9,28 +9,53 @@ import {
   Currency,
   getErrorTitle,
   LOGIN_METHOD,
-  LoginChallenge,
   LoginChallengeUserResponse,
-  LoginSuccess,
   RustyAuth,
   Session,
+  StateBase,
 } from "@gofranz/common";
-import { showApiErrorNotification } from "@gofranz/common-components";
+import { showApiErrorNotification, showSuccessNotification } from "@gofranz/common-components";
 import { notifications } from "@mantine/notifications";
 import * as Sentry from '@sentry/react';
+import type { AxiosError, AxiosResponse } from "axios";
 import { create } from "zustand";
 import { API_BASE_URL, LOCAL_STORAGE_KEY } from "./constants";
-import type { AxiosError } from "axios";
 
-// Helper function to handle API errors generically
-const handleApiError = (error: AxiosError) => {
+const errorHandler = (error: AxiosError) => {
   // Don't show notifications for aborted requests or network timeouts during development
   if (error.code === 'ECONNABORTED' || error.message === 'Network Error') {
     return;
   }
 
+  Sentry.captureException(error, {
+    extra: {
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      data: error.response?.data,
+    },
+  });
+
   const title = getErrorTitle(error);
   showApiErrorNotification(error, notifications, title);
+};
+
+const successHandler = (response: AxiosResponse) => {
+  const accepted = ['post', 'put', 'patch']
+  if (!accepted.includes(response.config.method || '')) {
+    return;
+  }
+
+  const ignored = ['/stock-movements/by-products']
+  if (ignored.some((path) => response.config.url?.includes(path))) {
+    return;
+  }
+
+  showSuccessNotification(
+    `Request Successful`,
+    `Your ${response.config.method?.toUpperCase()} request to ${response.config.url} was successful.`,
+    notifications
+  );
 };
 
 // Helper function to update Sentry user context
@@ -52,14 +77,7 @@ const updateSentryUserContext = (session: Session | undefined) => {
   }
 };
 
-interface State {
-  init: () => void;
-  getSession: () => Session | undefined;
-  login: (identifier: string, loginMethod: LOGIN_METHOD) => Promise<LoginChallenge>;
-  loginChallenge(loginResponse: LoginChallengeUserResponse): Promise<LoginSuccess>;
-  // generateNewAccount: () => Promise<void>;
-  logout: () => Promise<void>;
-  api: CheckoutbayApi;
+interface State extends StateBase<CheckoutbayApi> {
   shops: Shop[];
   loadShops: () => Promise<void>;
   shopId: undefined | string;
@@ -71,7 +89,8 @@ interface State {
 const api = new CheckoutbayApi({
   baseUrl: API_BASE_URL,
   auth: new RustyAuth({ baseUrl: API_BASE_URL, useLocalStore: true, localStorageKey: LOCAL_STORAGE_KEY }),
-  errorHandler: handleApiError,
+  errorHandler,
+  successHandler,
 });
 
 export const useRustyState = create<State>((set, get) => ({
@@ -161,43 +180,6 @@ export const useRustyState = create<State>((set, get) => ({
     }
     throw new Error('Unsupported challenge response');
   },
-  // generateNewAccount: async () => {
-  //   const keypair = await loadOrCreateKeypair();
-  //   console.log(`Generated new account with public key: ${keypair.publicKey}`);
-  //   get().api?.auth?.setSession({
-  //     isLoggedIn: false,
-  //     publicKey: keypair.publicKey,
-  //   });
-  //   setLsPrivateKey(keypair.privateKey, LOCAL_STORAGE_KEY);
-  //   setLsPublicKey(keypair.publicKey, LOCAL_STORAGE_KEY);
-  //   const loginChallenge = await get().login(keypair.publicKey, LOGIN_METHOD.NOSTR);
-
-  //   if (loginChallenge.type === 'NOSTR') {
-  //     const { content } = loginChallenge;
-  //     // Create the signed nostr event
-  //     const event = new NEvent({
-  //       pubkey: keypair.publicKey,
-  //       kind: NEVENT_KIND.CLIENT_AUTHENTICATION,
-  //       tags: [
-  //         ['relay', API_BASE_URL],
-  //         ['challenge', content.challenge],
-  //       ],
-  //       content: '',
-  //     });
-
-  //     await get().loginChallenge({
-  //       type: 'NOSTR',
-  //       content: {
-  //         id: content.id,
-  //         response: event.ToObj(),
-  //       },
-  //     });
-
-  //     // Update Sentry context after successful account generation and login
-  //     const session = get().getSession();
-  //     updateSentryUserContext(session);
-  //   }
-  // },
   logout: async () => {
     if (api.auth) {
       await api.auth.logout();
@@ -209,6 +191,7 @@ export const useRustyState = create<State>((set, get) => ({
     updateSentryUserContext(undefined);
   },
   api,
+  verifiedEmails: [],
   shops: [],
   loadShops: async () => {
     try {

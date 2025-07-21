@@ -105,7 +105,7 @@
     "titlePlaceholder": "Título",
     "coverUrl": "URL da Capa",
     "coverUrlPlaceholder": "https://exemplo.com/imagem.jpg",
-    "coverUrlDescription": "URL para a imagem de capa do produto (upload ainda não suportado)",
+    "coverUrlDescription": "URL para a imagem de capa do produto. As imagens serão exibidas no formato quadrado (1:1) no catálogo de produtos e dimensionadas para se ajustar sem corte ou estiramento.",
     "slug": "Slug",
     "slugPlaceholder": "slug-da-url-do-produto",
     "slugDescription": "Slug da URL para o produto",

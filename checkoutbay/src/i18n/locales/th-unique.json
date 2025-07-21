@@ -105,7 +105,7 @@
     "titlePlaceholder": "ชื่อเรื่อง",
     "coverUrl": "URL รูปปก",
     "coverUrlPlaceholder": "https://example.com/image.jpg",
-    "coverUrlDescription": "URL ของรูปปกสินค้า (ยังไม่รองรับการอัปโหลด)",
+    "coverUrlDescription": "URL ของรูปปกสินค้า รูปภาพจะแสดงในรูปแบบสี่เหลี่ยมจัตุรัส (1:1) ในแคตตาล็อกสินค้าและจะปรับขนาดให้พอดีโดยไม่ตัดหรือยืด",
     "slug": "Slug",
     "slugPlaceholder": "product-url-slug",
     "slugDescription": "URL slug สำหรับสินค้า",

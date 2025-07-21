@@ -46,7 +46,7 @@ export function AccountProductStartPage() {
       TableComponent={ProductsTable}
       getFunction={api.getProducts}
       createPath={`/account/${shopId}/products/create`}
-      openPath={(entity) => `/account/${entity.shop_id}products/${entity.id}`}
+      openPath={(entity) => `/account/${entity.shop_id}/products/${entity.id}`}
       updateCb={api.updateProduct}
       deleteCb={api.deleteProduct}
       buttonText={t('entities.newProduct')}

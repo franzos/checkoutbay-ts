@@ -184,6 +184,17 @@ export interface DiscountProductsQueryParams {
 	offset: number;
 }
 
+export interface ProductTranslations {
+	en: string;
+	de?: string;
+	es?: string;
+	fr?: string;
+	pt?: string;
+	zh?: string;
+	th?: string;
+	ar?: string;
+}
+
 export enum WeightUnit {
 	Grams = "grams",
 	Kilograms = "kilograms",
@@ -213,7 +224,8 @@ export interface Product {
 	title: string;
 	cover_url?: string;
 	slug: string;
-	description: string;
+	description: ProductTranslations;
+	description_long: ProductTranslations;
 	sku?: string;
 	price: Decimal | number;
 	data?: string;
@@ -334,7 +346,8 @@ export interface NewProduct {
 	title: string;
 	cover_url?: string;
 	slug: string;
-	description: string;
+	description: ProductTranslations;
+	description_long: ProductTranslations;
 	sku?: string;
 	price: Decimal | number;
 	data?: string;
@@ -608,7 +621,8 @@ export interface PublicProduct {
 	title: string;
 	cover_url?: string;
 	slug: string;
-	description: string;
+	description: ProductTranslations;
+	description_long: ProductTranslations;
 	sku?: string;
 	price: Decimal | number;
 	data_public?: string;
@@ -830,7 +844,6 @@ export interface UpdateDiscount {
 	config?: DiscountConfig;
 	start_date: string;
 	end_date: string;
-	product_ids?: string[];
 	is_active?: boolean;
 }
 
@@ -850,7 +863,8 @@ export interface UpdateProduct {
 	title: string;
 	cover_url?: string;
 	slug: string;
-	description?: string;
+	description?: ProductTranslations;
+	description_long?: ProductTranslations;
 	sku?: string;
 	price?: Decimal | number;
 	data?: string;

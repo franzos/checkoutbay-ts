@@ -1,4 +1,4 @@
-import { ShopQueryParams } from '@gofranz/checkoutbay-common';
+import { CommonQueryParams } from '@gofranz/common';
 import { Currency, ShopEntitiesAccessParams, ShopEntityAccessParams } from '@gofranz/common';
 import { CommonTableProps, useLanguageAwareRouting, usePagination } from '@gofranz/common-components';
 import { Button, Flex, Group, Pagination, Text } from '@mantine/core';
@@ -44,7 +44,7 @@ export function GeneralizedStartPage<Entity, Query, Update>({
       offset: nextPage === 1 ? 0 : 10 * (nextPage - 1),
       limit: 10,
       ...otherParams
-    } as ShopQueryParams & Query;
+    } as CommonQueryParams & Query;
     
     const res = await getFunction(
       { primaryEntityId }, // entityId is not used in this context, so we pass an empty string

@@ -1,19 +1,19 @@
-import axios, { AxiosInstance, AxiosError } from "axios";
-import Decimal from "decimal.js";
 import {
+  ApiProps,
   CommonQueryParams,
+  HttpNewVerifiedEmail,
+  makeUrl,
+  NewDepositHttp,
   RustyAuthSpec,
-  RustyVerifiedEmailsSpec,
   RustyDeposit,
   RustyDepositSpec,
   RustyVerifiedEmails,
-  HttpNewVerifiedEmail,
-  ShopEntityAccessParams,
+  RustyVerifiedEmailsSpec,
   ShopEntitiesAccessParams,
-  NewDepositHttp,
-  ApiProps,
-  makeUrl
+  ShopEntityAccessParams
 } from "@gofranz/common";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import Decimal from "decimal.js";
 import { Address, AddressesQueryParams, AddressesResponse, Discount, DiscountProductsQueryParams, DiscountProductsResponse, DiscountsQueryParams, DiscountsResponse, NewAddress, NewDiscount, NewOrderCalculation, NewOrderPaymentSubmission, NewPaymentGateway, NewProduct, NewPublicUserOrder, NewRegisteredUserOrder, NewShippingRateTemplate, NewShop, NewStockMovement, NewWarehouse, Order, OrderItem, OrderPayment, OrderRecord, OrdersQueryParams, OrdersResponse, PaymentGateway, PaymentGatewaysQueryParams, PaymentGatewaysResponse, PaymentsQueryParams, ProcessedOrder, ProcessedOrderPreview, ProcessedPublicUserOrder, ProcessedRegisteredUserOrder, Product, ProductsQueryParams, ProductsResponse, PublicFile, PublicProduct, PublicProductsResponse, PublicShippingRate, PublicShop, PublicStock, PublicWarehouse, ShippingRateTemplate, Shop, ShopsResponse, ShopUser, StockMovement, StockMovementsQueryParams, StockMovementsResponse, TaxRate, TaxRatesQuery, TemplatesQueryParams, TemplatesWithWarehouseIdResponse, UpdateDiscount, UpdatePaymentGateway, UpdateProduct, UpdateShippingRateTemplate, UpdateShop, UpdateStockMovement, UpdateWarehouse, VoucherCodeValidationRequest, VoucherCodeValidationResponse, Warehouse, WarehousesQueryParams, WarehousesResponse, WarehouseStockLevel } from "./types";
 
 function convertToDecimal(value: string | number | Decimal): Decimal {
@@ -154,9 +154,10 @@ export class CheckoutbayApi {
   private timeout: number;
   private client: AxiosInstance;
   private errorHandler?: (error: AxiosError) => void;
+  private successHandler?: (response: AxiosResponse) => void;
   auth?: RustyAuthSpec;
 
-  constructor({ baseUrl, timeout, auth, errorHandler }: ApiProps) {
+  constructor({ baseUrl, timeout, auth, errorHandler, successHandler }: ApiProps) {
     if (baseUrl) {
       this.baseUrl = baseUrl;
     } else {
@@ -178,6 +179,7 @@ export class CheckoutbayApi {
     }
 
     this.errorHandler = errorHandler;
+    this.successHandler = successHandler;
 
     this.client = axios.create({
       baseURL: this.baseUrl,
@@ -204,9 +206,14 @@ export class CheckoutbayApi {
       return config;
     });
 
-    // Add response interceptor to handle errors generically
+    // Add response interceptor to handle errors / success generically
     this.client.interceptors.response.use(
-      (response) => response, // Pass through successful responses
+      (response) => {
+        if (this.successHandler) {
+          this.successHandler(response);
+        }
+        return response; // Pass through successful responses
+      }, // Pass through successful responses
       (error: AxiosError) => {
         if (this.errorHandler) {
           this.errorHandler(error);

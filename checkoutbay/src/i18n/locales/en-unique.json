@@ -105,7 +105,7 @@
     "titlePlaceholder": "Title",
     "coverUrl": "Cover URL",
     "coverUrlPlaceholder": "https://example.com/image.jpg",
-    "coverUrlDescription": "URL to the product cover image (upload not yet supported)",
+    "coverUrlDescription": "URL to the product cover image. Images will be displayed in a square (1:1) format on the product catalog and scaled to fit without cropping or stretching.",
     "slug": "Slug",
     "slugPlaceholder": "product-url-slug",
     "slugDescription": "URL slug for the product",

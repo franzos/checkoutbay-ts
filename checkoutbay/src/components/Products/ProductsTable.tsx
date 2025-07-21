@@ -70,7 +70,7 @@ export function ProductsTable(props: CommonTableProps<Product, UpdateProduct>) {
     {
       accessor: 'cover_url',
       title: 'Cover',
-      render: (row: Product) => <Image src={row.cover_url} h={50} w="auto" fit="contain" />,
+      render: (row: Product) => <Image src={row.cover_url} h={50} w={50} fit="contain" />,
     },
     {
       accessor: 'title',

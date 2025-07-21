@@ -516,7 +516,7 @@ function RegionBankingFields({
         details: {
           ...bankAccount.details!.details,
           [field]: value
-        }
+        } as any
       }
     });
   };

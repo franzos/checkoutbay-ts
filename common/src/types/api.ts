@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { RustyAuthSpec } from "../auth";
 
 export interface ApiProps {
@@ -6,6 +6,7 @@ export interface ApiProps {
   timeout?: number;
   auth?: RustyAuthSpec;
   errorHandler?: (error: AxiosError) => void;
+  successHandler?: (response: AxiosResponse) => void;
 }
 
 export function makeUrl<T extends object>(

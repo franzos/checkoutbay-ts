@@ -151,7 +151,7 @@ export function RenderAddressFields({
           if (value) {
             (form as FormMarkup).setFieldValue("country", value);
           }
-          (form as FormMarkup).setFieldValue("state", null);
+          (form as FormMarkup).setFieldValue("state", "");
           onCountryChange(value);
         }}
       />

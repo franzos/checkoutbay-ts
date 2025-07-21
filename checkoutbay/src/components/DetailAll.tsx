@@ -31,6 +31,7 @@ import {
 import { GeneralizedViewPageDetailComponentProps } from "@gofranz/common-components";
 
 export function ProductDetail(props: GeneralizedViewPageDetailComponentProps<Product, UpdateProduct>) {
+  console.log('ProductDetail', props.item);
   return (
     <>
       <EditProduct item={props.item} submitCb={props.submitCb} />

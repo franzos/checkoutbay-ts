@@ -105,7 +105,7 @@
     "titlePlaceholder": "العنوان",
     "coverUrl": "رابط الصورة الرئيسية",
     "coverUrlPlaceholder": "https://example.com/image.jpg",
-    "coverUrlDescription": "رابط صورة غلاف المنتج (الرفع غير مدعوم بعد)",
+    "coverUrlDescription": "رابط صورة غلاف المنتج. ستظهر الصور بتنسيق مربع (1:1) في كتالوج المنتجات وستُحجم لتناسب بدون قص أو تمديد.",
     "slug": "المعرف",
     "slugPlaceholder": "معرف-رابط-المنتج",
     "slugDescription": "معرف الرابط للمنتج",
