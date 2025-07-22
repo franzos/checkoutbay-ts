@@ -2,7 +2,7 @@
  * Simple Product Grid Component
  */
 
-import type { PublicProduct } from '@gofranz/checkoutbay-common';
+import type { PublicProduct, ProductTranslations } from '@gofranz/checkoutbay-common';
 import type { Cart } from '../core/cart.js';
 import { events } from '../core/events.js';
 import { Storage } from '../core/storage.js';
@@ -11,6 +11,17 @@ import { createElement, escapeHtml } from '../utils/dom.js';
 interface ProductGridConfig {
   columns?: string;
   showDescription?: boolean;
+}
+
+/**
+ * Helper function to get translated text, falling back to English
+ */
+function getTranslatedText(translations: ProductTranslations, preferredLanguage: string = 'en'): string {
+  // Try preferred language first, then fallback to English, then any available language
+  return translations[preferredLanguage as keyof ProductTranslations] || 
+         translations.en || 
+         Object.values(translations).find(text => text) || 
+         '';
 }
 
 export class ProductGrid {
@@ -107,10 +118,13 @@ export class ProductGrid {
     info.appendChild(name);
     
     if (this.config.showDescription && product.description) {
-      const description = createElement('p', 'cb-product-description', {
-        innerHTML: escapeHtml(product.description)
-      });
-      info.appendChild(description);
+      const descriptionText = getTranslatedText(product.description);
+      if (descriptionText) {
+        const description = createElement('p', 'cb-product-description', {
+          innerHTML: escapeHtml(descriptionText)
+        });
+        info.appendChild(description);
+      }
     }
     
     const price = createElement('div', 'cb-product-price', {

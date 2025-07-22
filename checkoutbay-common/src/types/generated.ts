@@ -16,10 +16,12 @@ import { Decimal } from 'decimal.js';
 export type BankAccountDetails = 
 	| { region: "UK", details: UKBankDetails }
 	| { region: "US", details: USBankDetails }
-	| { region: "EU", details: EUBankDetails }
+	| { region: "IBAN", details: IBANBankDetails }
 	| { region: "AUSTRALIA", details: AustraliaBankDetails }
 	| { region: "CANADA", details: CanadaBankDetails }
-	| { region: "INDIA", details: IndiaBankDetails };
+	| { region: "INDIA", details: IndiaBankDetails }
+	| { region: "SWIFT", details: SWIFTBankDetails }
+	| { region: "GENERIC", details: GenericBankDetails };
 
 export enum TransferScope {
 	DOMESTIC = "DOMESTIC",
@@ -256,7 +258,15 @@ export interface DiscountsResponse {
 	total: number;
 }
 
-export interface EUBankDetails {
+export interface GenericBankDetails {
+	bank_name: string;
+	account_number: string;
+	account_holder_name: string;
+	routing_info?: string;
+	special_instructions?: string;
+}
+
+export interface IBANBankDetails {
 	bank_name: string;
 	iban: string;
 	bic_swift: string;
@@ -676,6 +686,14 @@ export interface RegisteredUserOrderFields {
 	shipping_address: InlineAddress;
 	billing_address_id: string;
 	billing_address: InlineAddress;
+}
+
+export interface SWIFTBankDetails {
+	bank_name: string;
+	swift_code: string;
+	account_number: string;
+	account_holder_name: string;
+	bank_address?: string;
 }
 
 export interface ShippingRateTemplate {

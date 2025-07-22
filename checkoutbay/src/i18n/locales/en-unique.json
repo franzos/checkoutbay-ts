@@ -88,6 +88,7 @@
     "stockMovements": "Stock Movements",
     "paymentMethods": "Payment Methods",
     "shippingRates": "Shipping Rates",
+    "discounts": "Discounts",
     "integration": "Integration",
     "selectShop": "Select a Shop",
     "createNewShop": "Create a new shop",
@@ -389,5 +390,15 @@
     "name": "Checkout",
     "nameSecond": "Bay",
     "logoAlt": "CheckoutBay Logo"
+  },
+  "notFound": {
+    "page_not_found_title": "Page Not Found",
+    "page_not_found_message": "The shop page you're looking for doesn't exist or may have been moved.",
+    "suggestions_title": "What you can try:",
+    "check_url_suggestion": "Check that the shop URL is correct",
+    "shop_homepage_suggestion": "Visit the main shop page to browse available products",
+    "contact_support_suggestion": "Contact shop support if you believe this is an error",
+    "back_to_shops_button": "Browse Shops",
+    "error_reference": "Error Reference"
   }
 }

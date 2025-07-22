@@ -366,7 +366,7 @@ export function RenderOrder({
                       </Text>
                       {products[item.product_id] && (
                         <Text size="sm" c="dimmed">
-                          {products[item.product_id].description}
+                          {products[item.product_id].description.en}
                         </Text>
                       )}
                       <Text size="sm">Quantity: {item.quantity}</Text>

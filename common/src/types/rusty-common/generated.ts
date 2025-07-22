@@ -213,7 +213,7 @@ export interface NostrLoginChallenge {
 
 export interface NostrLoginChallengeResponse {
 	id: string;
-	response: any;
+	response: string;
 }
 
 export interface NostrLoginRequest {

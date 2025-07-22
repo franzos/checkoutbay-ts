@@ -437,7 +437,6 @@ function TranslatableRichTextEditor({ label, value, onChange, error }: Translata
         {SUPPORTED_LANGUAGES.map((lang) => (
           <Tabs.Panel key={lang.code} value={lang.code} pt="xs">
             <RichTextEditorForLanguage
-              langCode={lang.code}
               content={getCurrentValue(lang.code)}
               onChange={(html) => handleContentChange(lang.code, html)}
               isActive={activeTab === lang.code}
@@ -461,13 +460,12 @@ function TranslatableRichTextEditor({ label, value, onChange, error }: Translata
 }
 
 interface RichTextEditorForLanguageProps {
-  langCode: string;
   content: string;
   onChange: (html: string) => void;
   isActive: boolean;
 }
 
-function RichTextEditorForLanguage({ langCode, content, onChange, isActive }: RichTextEditorForLanguageProps) {
+function RichTextEditorForLanguage({ content, onChange, isActive }: RichTextEditorForLanguageProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,

@@ -88,6 +88,7 @@
     "stockMovements": "Bestandsbewegungen",
     "paymentMethods": "Zahlungsmethoden",
     "shippingRates": "Versandtarife",
+    "discounts": "Rabatte",
     "integration": "Integration",
     "selectShop": "Shop auswählen",
     "createNewShop": "Neuen Shop erstellen",
@@ -389,5 +390,15 @@
     "name": "Checkout",
     "nameSecond": "Bay",
     "logoAlt": "CheckoutBay Logo"
+  },
+  "notFound": {
+    "page_not_found_title": "Seite nicht gefunden",
+    "page_not_found_message": "Die Shop-Seite, die Sie suchen, existiert nicht oder wurde möglicherweise verschoben.",
+    "suggestions_title": "Was Sie versuchen können:",
+    "check_url_suggestion": "Überprüfen Sie, ob die Shop-URL korrekt ist",
+    "shop_homepage_suggestion": "Besuchen Sie die Haupt-Shop-Seite, um verfügbare Produkte zu durchsuchen",
+    "contact_support_suggestion": "Kontaktieren Sie den Shop-Support, wenn Sie glauben, dass dies ein Fehler ist",
+    "back_to_shops_button": "Shops durchsuchen",
+    "error_reference": "Fehler-Referenz"
   }
 }

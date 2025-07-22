@@ -13,10 +13,8 @@ On ne va pas vous ennuyer avec des termes dont la plupart des entreprises n'en o
 - 🇩🇪 Backend : Hetzner Dedicated, Allemagne
 - 🇪🇺 Frontend : Amazon AWS Cloudfront
 - 🇪🇺 Paiements : Stripe
-- 🇺🇸 Email : Postmark (Notifications uniquement)
+- 🇺🇸 Email : [Postmark](https://postmarkapp.com/eu-privacy) (Notifications only) (Notifications uniquement)
 - 🇩🇪 Suivi des Erreurs : Sentry (hébergé sur Hetzner, Allemagne)
-
-Il est raisonnable de supposer que vous êtes tracé à chaque étape du processus ; de votre fournisseur d'accès internet, aux routeurs entre les serveurs, et aux fournisseurs des serveurs eux-mêmes.
 
 ## Des questions ?
 

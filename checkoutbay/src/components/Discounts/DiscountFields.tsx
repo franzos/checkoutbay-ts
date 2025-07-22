@@ -70,14 +70,14 @@ export function RenderDiscountFields({
     loadDiscountProducts();
   }, [isEditing, entityId]);
 
-  // Initialize selected products from form in create mode
+  // Initialize selected products from form in create mode only
   useEffect(() => {
-    if (!isEditing && form.values.product_ids) {
+    if (!isEditing && 'product_ids' in form.values && form.values.product_ids) {
       const selectedIds = form.values.product_ids;
       const selectedProds = products.filter(p => selectedIds.includes(p.id));
       setSelectedProducts(selectedProds);
     }
-  }, [isEditing, form.values.product_ids, products]);
+  }, [isEditing, products]);
 
   const discountTypeOptions = Object.values(DiscountType)
 

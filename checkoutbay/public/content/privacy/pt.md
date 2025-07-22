@@ -13,9 +13,7 @@ Não vamos te entediar com termos que a maioria das empresas não dá a mínima;
 - 🇩🇪 Backend: Hetzner Dedicado, Alemanha
 - 🇪🇺 Frontend: Amazon AWS Cloudfront
 - 🇪🇺 Pagamentos: Stripe
-- 🇺🇸 Email: Postmark (Apenas notificações)
-
-É razoável assumir que você é rastreado em cada etapa do processo; desde seu provedor de internet, até os roteadores entre servidores, e os provedores dos próprios servidores.
+- 🇺🇸 Email: [Postmark](https://postmarkapp.com/eu-privacy) (Notifications only) (Apenas notificações)
 
 ## Dúvidas?
 

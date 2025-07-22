@@ -4,11 +4,13 @@ import {
   BankAccountDetails,
   BankAccountList,
   CanadaBankDetails,
-  EUBankDetails,
+  GenericBankDetails,
+  IBANBankDetails,
   IndiaBankDetails,
   InvoiceConfig,
   NewPaymentGateway,
   StripeConfig,
+  SWIFTBankDetails,
   UKBankDetails,
   UpdatePaymentGateway,
   USAccountType,
@@ -222,12 +224,33 @@ function renderBankAccountDetails(account: BankAccount) {
         );
       }
 
-    case 'EU':
+    case 'IBAN':
       {
-        const euDetails = details as EUBankDetails;
+        const ibanDetails = details as IBANBankDetails;
         return (
           <Text size="xs" c="dimmed" mt={2}>
-            IBAN: {euDetails.iban} • BIC/SWIFT: {euDetails.bic_swift}
+            IBAN: {ibanDetails.iban} • BIC/SWIFT: {ibanDetails.bic_swift}
+          </Text>
+        );
+      }
+
+    case 'SWIFT':
+      {
+        const swiftDetails = details as SWIFTBankDetails;
+        return (
+          <Text size="xs" c="dimmed" mt={2}>
+            SWIFT: {swiftDetails.swift_code} • Account: {swiftDetails.account_number}
+          </Text>
+        );
+      }
+
+    case 'GENERIC':
+      {
+        const genericDetails = details as GenericBankDetails;
+        return (
+          <Text size="xs" c="dimmed" mt={2}>
+            Account: {genericDetails.account_number}
+            {genericDetails.routing_info && ` • Routing: ${genericDetails.routing_info}`}
           </Text>
         );
       }
@@ -277,10 +300,12 @@ function BankingDetailsSection({ form }: { form: UseFormReturnType<NewPaymentGat
   const regionOptions = [
     { value: 'UK', label: 'United Kingdom' },
     { value: 'US', label: 'United States' },
-    { value: 'EU', label: 'European Union' },
+    { value: 'IBAN', label: 'IBAN Countries (Europe & Others)' },
     { value: 'AUSTRALIA', label: 'Australia' },
     { value: 'CANADA', label: 'Canada' },
     { value: 'INDIA', label: 'India' },
+    { value: 'SWIFT', label: 'International (SWIFT)' },
+    { value: 'GENERIC', label: 'Other Banking System' },
   ];
 
   // const transferScopeOptions = [
@@ -291,14 +316,10 @@ function BankingDetailsSection({ form }: { form: UseFormReturnType<NewPaymentGat
   //   { value: TransferScope.CORRESPONDENT, label: 'Correspondent Banking' },
   // ];
 
-  const currencyOptions = [
-    { value: Currency.USD, label: 'USD' },
-    { value: Currency.EUR, label: 'EUR' },
-    { value: Currency.GBP, label: 'GBP' },
-    { value: Currency.AUD, label: 'AUD' },
-    { value: Currency.CAD, label: 'CAD' },
-    { value: Currency.INR, label: 'INR' },
-  ];
+  const currencyOptions = Object.values(Currency).map(currency => ({
+    value: currency,
+    label: currency.toUpperCase()
+  }));
 
   const addNewBankAccount = () => {
     setCurrentBankAccount({
@@ -448,15 +469,37 @@ function createBankDetailsForRegion(region: string): BankAccountDetails {
           swift_code: undefined,
         } as USBankDetails
       };
-    case 'EU':
+    case 'IBAN':
       return {
-        region: 'EU',
+        region: 'IBAN',
         details: {
           bank_name: '',
           iban: '',
           bic_swift: '',
           account_holder_name: '',
-        } as EUBankDetails
+        } as IBANBankDetails
+      };
+    case 'SWIFT':
+      return {
+        region: 'SWIFT',
+        details: {
+          bank_name: '',
+          swift_code: '',
+          account_number: '',
+          account_holder_name: '',
+          bank_address: undefined,
+        } as SWIFTBankDetails
+      };
+    case 'GENERIC':
+      return {
+        region: 'GENERIC',
+        details: {
+          bank_name: '',
+          account_number: '',
+          account_holder_name: '',
+          routing_info: undefined,
+          special_instructions: undefined,
+        } as GenericBankDetails
       };
     case 'AUSTRALIA':
       return {
@@ -625,10 +668,10 @@ function RegionBankingFields({
         </Stack>
       );
 
-    case 'EU':
+    case 'IBAN':
       return (
         <Stack gap="sm">
-          <Text size="sm" fw={500} c="blue">EU Banking Details</Text>
+          <Text size="sm" fw={500} c="blue">IBAN Banking Details</Text>
           <TextInput
             label="Bank Name"
             placeholder="Deutsche Bank"
@@ -786,6 +829,88 @@ function RegionBankingFields({
             placeholder="SBININBB123"
             value={details.swift_code || ''}
             onChange={(e) => updateBankDetails('swift_code', e.target.value || undefined)}
+          />
+        </Stack>
+      );
+
+    case 'SWIFT':
+      return (
+        <Stack gap="sm">
+          <Text size="sm" fw={500} c="blue">International SWIFT Banking</Text>
+          <TextInput
+            label="Bank Name"
+            placeholder="Bank of Singapore"
+            value={details.bank_name || ''}
+            onChange={(e) => updateBankDetails('bank_name', e.target.value)}
+            withAsterisk
+          />
+          <TextInput
+            label="SWIFT/BIC Code"
+            placeholder="DBSSSGSG"
+            value={details.swift_code || ''}
+            onChange={(e) => updateBankDetails('swift_code', e.target.value)}
+            withAsterisk
+          />
+          <TextInput
+            label="Account Number"
+            placeholder="1234567890"
+            value={details.account_number || ''}
+            onChange={(e) => updateBankDetails('account_number', e.target.value)}
+            withAsterisk
+          />
+          <TextInput
+            label="Account Holder Name"
+            placeholder="John Smith"
+            value={details.account_holder_name || ''}
+            onChange={(e) => updateBankDetails('account_holder_name', e.target.value)}
+            withAsterisk
+          />
+          <TextInput
+            label="Bank Address (Optional)"
+            placeholder="12 Marina Boulevard, Singapore 018982"
+            value={details.bank_address || ''}
+            onChange={(e) => updateBankDetails('bank_address', e.target.value || undefined)}
+          />
+        </Stack>
+      );
+
+    case 'GENERIC':
+      return (
+        <Stack gap="sm">
+          <Text size="sm" fw={500} c="blue">Generic Banking Details</Text>
+          <TextInput
+            label="Bank Name"
+            placeholder="Your Bank Name"
+            value={details.bank_name || ''}
+            onChange={(e) => updateBankDetails('bank_name', e.target.value)}
+            withAsterisk
+          />
+          <TextInput
+            label="Account Number"
+            placeholder="Your account number"
+            value={details.account_number || ''}
+            onChange={(e) => updateBankDetails('account_number', e.target.value)}
+            withAsterisk
+          />
+          <TextInput
+            label="Account Holder Name"
+            placeholder="John Smith"
+            value={details.account_holder_name || ''}
+            onChange={(e) => updateBankDetails('account_holder_name', e.target.value)}
+            withAsterisk
+          />
+          <TextInput
+            label="Routing Information (Optional)"
+            placeholder="Branch code, sort code, or routing number"
+            value={details.routing_info || ''}
+            onChange={(e) => updateBankDetails('routing_info', e.target.value || undefined)}
+          />
+          <Textarea
+            label="Special Instructions (Optional)"
+            placeholder="Additional payment instructions or requirements..."
+            value={details.special_instructions || ''}
+            onChange={(e) => updateBankDetails('special_instructions', e.target.value || undefined)}
+            rows={3}
           />
         </Stack>
       );
