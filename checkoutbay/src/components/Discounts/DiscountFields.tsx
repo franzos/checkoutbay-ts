@@ -248,35 +248,38 @@ export function RenderDiscountFields({
         error={form.errors.discount_type}
       />
 
-      {(!isEditing && form.values.discount_type !== DiscountType.VolumeDiscount) && (
+      {form.values.discount_type !== DiscountType.VolumeDiscount && (
         <Group grow>
           <NumberInput
             label="Discount Value"
             placeholder="Enter discount value"
-            withAsterisk
+            withAsterisk={!isEditing}
             value={typeof form.values.value === 'number' ? form.values.value : new Decimal(form.values.value || 0)?.toNumber()}
             onChange={(value) => (form as FormMarkup).setFieldValue('value', Number(value) || 0)}
             error={form.errors.value}
             allowDecimal={true}
             min={0}
+            disabled={isEditing}
           />
 
           <Select
             label="Value Type"
             placeholder="Select value type"
-            withAsterisk
+            withAsterisk={!isEditing}
             data={discountValueTypeOptions}
             {...(form as FormMarkup).getInputProps('value_type')}
             error={form.errors.value_type}
+            disabled={isEditing}
           />
         </Group>
       )}
 
-      {(!isEditing && form.values.discount_type === DiscountType.VolumeDiscount) && (
+      {form.values.discount_type === DiscountType.VolumeDiscount && (
         <Alert color="blue" icon={<IconInfoCircle size={16} />}>
           <Text size="sm">
             <strong>Volume Discount:</strong> Discount percentages are configured in the volume tiers below.
             Each tier can have its own discount percentage based on quantity purchased.
+            {isEditing && <span> (View only - cannot be edited)</span>}
           </Text>
         </Alert>
       )}
@@ -420,13 +423,16 @@ export function RenderDiscountFields({
         </Accordion>
       )}
 
-      {(!isEditing && form.values.discount_type === DiscountType.VolumeDiscount) && (
+      {form.values.discount_type === DiscountType.VolumeDiscount && (
         <Accordion variant="contained">
           <Accordion.Item value="volume-config">
             <Accordion.Control>
               <Text fw={500}>Volume Discount Tiers</Text>
               <Text size="sm" c="dimmed">
-                Set different discount percentages based on quantity purchased. Customers get higher discounts for buying more items.
+                {isEditing 
+                  ? "View existing discount tiers. These cannot be modified in edit mode."
+                  : "Set different discount percentages based on quantity purchased. Customers get higher discounts for buying more items."
+                }
               </Text>
             </Accordion.Control>
             <Accordion.Panel>
@@ -450,6 +456,7 @@ export function RenderDiscountFields({
                               });
                             }
                           }}
+                          disabled={isEditing}
                         />
                       </Grid.Col>
                       <Grid.Col span={3}>
@@ -468,6 +475,7 @@ export function RenderDiscountFields({
                               });
                             }
                           }}
+                          disabled={isEditing}
                         />
                       </Grid.Col>
                       <Grid.Col span={3}>
@@ -489,17 +497,20 @@ export function RenderDiscountFields({
                               });
                             }
                           }}
+                          disabled={isEditing}
                         />
                       </Grid.Col>
                       <Grid.Col span={3}>
-                        <ActionIcon
-                          color="red"
-                          onClick={() => removeVolumeTier(index)}
-                          variant="light"
-                          style={{ marginTop: 25 }}
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
+                        {!isEditing && (
+                          <ActionIcon
+                            color="red"
+                            onClick={() => removeVolumeTier(index)}
+                            variant="light"
+                            style={{ marginTop: 25 }}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        )}
                       </Grid.Col>
                     </Grid>
                   ))}
@@ -512,13 +523,15 @@ export function RenderDiscountFields({
                     </Text>
                   )}
 
-                <Button
-                  leftSection={<IconPlus size={16} />}
-                  variant="light"
-                  onClick={addVolumeTier}
-                >
-                  Add Tier
-                </Button>
+                {!isEditing && (
+                  <Button
+                    leftSection={<IconPlus size={16} />}
+                    variant="light"
+                    onClick={addVolumeTier}
+                  >
+                    Add Tier
+                  </Button>
+                )}
               </Stack>
             </Accordion.Panel>
           </Accordion.Item>
