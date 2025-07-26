@@ -1,3 +1,5 @@
+import { AxiosFieldValidationErrorResponse, FieldValidationError } from "@gofranz/common";
+
 /**
  * API Error Response format
  */
@@ -43,6 +45,9 @@ export function parseApiError(error: any): ParsedApiError {
 
   // Handle Axios errors with response.data
   if (error.response?.data) {
+    if (error.response.data.error === 'validation_error') {
+      return parseApiFieldValidationError(error);
+    }
     return parseApiErrorData(error.response.data);
   }
 
@@ -96,6 +101,26 @@ function parseApiErrorData(data: any): ParsedApiError {
   };
 }
 
+function parseApiFieldValidationError(error: AxiosFieldValidationErrorResponse): ParsedApiError {
+  const responseData = error.response?.data;
+
+  if (responseData.error !== 'validation_error') {
+    return {
+      title: 'Validation Error',
+      message: 'There was a validation error with your request.',
+    };
+  }
+
+  const messages = responseData.errors.map((fieldError: FieldValidationError) => {
+    return `${fieldError.field}: ${fieldError.message}`;
+  }).join(', ');
+
+  return {
+    title: responseData.message,
+    message: messages,
+  };
+}
+
 /**
  * Convert error code to user-friendly title
  */
@@ -127,7 +152,7 @@ export function showApiErrorNotification(error: any, notifications: any, default
     title: parsed.title || defaultTitle,
     message: parsed.message,
     color: 'red',
-    autoClose: 8000, // 8 seconds for errors - longer so users can read them
+    autoClose: 10000, // 8 seconds for errors - longer so users can read them
     withCloseButton: true,
     position: 'top-center',
     radius: 'xs',

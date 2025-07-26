@@ -4,7 +4,7 @@ import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
 import { showWarningNotification } from '../../index';
 import { RenderFieldsGeneralProps } from './EntityFormGeneral';
-import { ShopEntityAccessParams } from '@gofranz/common';
+import { axiosFieldValidationErrorToFormErrors, hasFieldValidationError, ShopEntityAccessParams } from '@gofranz/common';
 
 export interface RenderFieldsEditProps<Edit> extends RenderFieldsGeneralProps {
   form: UseFormReturnType<Edit>;
@@ -64,7 +64,7 @@ export function EntityFormEdit<Edit>({
     validate: getInitialValidation(),
   });
 
-  const handleFormSubmit = (values: typeof form.values) => {
+  const handleFormSubmit = async (values: typeof form.values) => {
     // For dynamic validation functions, manually validate with current values
     if (typeof validation === 'function') {
       const validationRules = validation(values as Edit);
@@ -111,7 +111,7 @@ export function EntityFormEdit<Edit>({
     }
 
     // Proceed with actual submission
-    submitForm(values);
+    await submitForm(values);
   };
 
   const submitForm = async (data: typeof form.values) => {
@@ -125,7 +125,10 @@ export function EntityFormEdit<Edit>({
       setError('');
     } catch (e) {
       setError(`${e}`);
-      console.error(e);
+      if (hasFieldValidationError(e)) {
+        console.log(axiosFieldValidationErrorToFormErrors(e));
+        form.setErrors(axiosFieldValidationErrorToFormErrors(e));
+      }
     } finally {
       setIsBusy(false);
     }
