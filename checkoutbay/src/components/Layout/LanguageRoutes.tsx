@@ -89,6 +89,8 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
                 return await state.api.auth!.login(loginRequest);
               } else if (loginRequest.type === LOGIN_METHOD.GOOGLE) {
                 return await state.api.auth!.login(loginRequest);
+              } else if (loginRequest.type === LOGIN_METHOD.GITHUB) {
+                return await state.api.auth!.login(loginRequest);
               }
               throw new Error('Unsupported login method');
             }}

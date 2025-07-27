@@ -1,4 +1,12 @@
 import {
+  LOGIN_METHOD,
+  LoginChallenge,
+  LoginChallengeUserResponse,
+  LoginRequest,
+  LoginSuccess,
+  decodeNostrPublicKey,
+} from "@gofranz/common";
+import {
   Button,
   Center,
   Group,
@@ -8,21 +16,14 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import {
-  LOGIN_METHOD,
-  LoginRequest,
-  LoginChallenge,
-  LoginChallengeUserResponse,
-  LoginSuccess,
-  decodeNostrPublicKey,
-} from "@gofranz/common";
-import { IconBrandGoogle, IconBrowser, IconRecordMail } from '@tabler/icons-react';
+import { IconBrandGithub, IconBrandGoogle, IconBrowser, IconRecordMail } from '@tabler/icons-react';
 import { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface StepOneProps {
   googleLogin: () => void;
+  githubLogin: () => void;
   nostrLogin: () => void;
   magicLinkLoginChallenge: (email: string) => void;
   isBusy: boolean;
@@ -31,6 +32,7 @@ interface StepOneProps {
 
 const StepOne = ({
   googleLogin,
+  githubLogin,
   nostrLogin,
   magicLinkLoginChallenge,
   isBusy,
@@ -51,6 +53,9 @@ const StepOne = ({
     <Stack>
       <Button type="submit" loading={isBusy} onClick={googleLogin} leftSection={<IconBrandGoogle />} variant='outline'>
         {t("login.googleTab")}
+      </Button>
+      <Button type="submit" loading={isBusy} onClick={githubLogin} leftSection={<IconBrandGithub />} variant='outline'>
+        {t("login.githubTab")}
       </Button>
       <Button type="submit" loading={isBusy} onClick={nostrLogin} leftSection={<IconBrowser />} variant='outline'>
         {t("login.nostrTab")}
@@ -152,6 +157,14 @@ const StepTwo = ({
           </Center>
         </>
       )}
+      {loginMethod === LOGIN_METHOD.GITHUB && (
+        <>
+          <Text mb="md">{t("login.redirectingGithub")}</Text>
+          <Center>
+            <Loader size="xl" />
+          </Center>
+        </>
+      )}
     </>
   )
 }
@@ -247,6 +260,30 @@ export function Login(props: LoginProps) {
     }
   };
 
+  const githubLogin = async () => {
+    setIsBusy(true);
+    setLoginMethod(LOGIN_METHOD.GITHUB);
+    setHasError(null);
+    setActiveStep(1);
+    try {
+      const githubChallenge = await props.login({
+        type: LOGIN_METHOD.GITHUB,
+        content: {}
+      });
+      if (!githubChallenge || githubChallenge.type !== LOGIN_METHOD.GITHUB) {
+        setHasError(t("login.githubNoChallenge"));
+        return;
+      }
+      window.location.href = (githubChallenge.content as any).auth_url;
+    } catch (e) {
+      setHasError(`Error: ${e}`);
+      setActiveStep(0);
+      console.error(e);
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
   const magicLinkLoginChallenge = async (email: string) => {
     setIsBusy(true);
     setLoginMethod(LOGIN_METHOD.EMAIL_MAGIC_LINK);
@@ -312,6 +349,7 @@ export function Login(props: LoginProps) {
       {activeStep === 0 && (
         <StepOne
           googleLogin={googleLogin}
+          githubLogin={githubLogin}
           nostrLogin={nostrLogin}
           magicLinkLoginChallenge={magicLinkLoginChallenge}
           isBusy={isBusy}

@@ -42,7 +42,8 @@
     "invalidEmail": "Ungültige E-Mail",
     "getPublicKey": "Öffentlichen Schlüssel aus Erweiterung",
     "emailTab": "E-Mail",
-    "googleTab": "Google", 
+    "googleTab": "Google",
+    "githubTab": "GitHub", 
     "nostrTab": "Nostr",
     "emailDescription": "Mit E-Mail anmelden.",
     "googleDescription": "Mit Google anmelden",
@@ -64,6 +65,8 @@
     "challenge": "Challenge: ",
     "loginWithExtension": "Fortfahren...",
     "redirectingGoogle": "Weiterleitung zu Google...",
+    "redirectingGithub": "Weiterleitung zu GitHub...",
+    "githubNoChallenge": "GitHub-Challenge konnte nicht abgerufen werden",
     "back": "zurück",
     "cancel": "Abbrechen",
     "submit": "Absenden"

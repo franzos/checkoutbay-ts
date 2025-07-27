@@ -139,6 +139,21 @@ export interface FieldValidationErrorResponse {
 	errors: FieldValidationError[];
 }
 
+export interface GitHubLoginChallenge {
+	auth_url: string;
+	referral_code?: string;
+}
+
+export interface GitHubLoginChallengeResponse {
+	code: string;
+	state: string;
+	scope?: string;
+}
+
+export interface GitHubLoginRequest {
+	referral_code?: string;
+}
+
 export interface GoogleLoginChallenge {
 	auth_url: string;
 	referral_code?: string;
@@ -332,17 +347,20 @@ export interface VerifyEmailResponse {
 export type LoginChallenge = 
 	| { type: "NOSTR", content: NostrLoginChallenge }
 	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginChallenge }
-	| { type: "GOOGLE", content: GoogleLoginChallenge };
+	| { type: "GOOGLE", content: GoogleLoginChallenge }
+	| { type: "GITHUB", content: GitHubLoginChallenge };
 
 export type LoginChallengeUserResponse = 
 	| { type: "NOSTR", content: NostrLoginChallengeResponse }
 	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginChallengeResponse }
-	| { type: "GOOGLE", content: GoogleLoginChallengeResponse };
+	| { type: "GOOGLE", content: GoogleLoginChallengeResponse }
+	| { type: "GITHUB", content: GitHubLoginChallengeResponse };
 
 export type LoginRequest = 
 	| { type: "NOSTR", content: NostrLoginRequest }
 	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginReqest }
-	| { type: "GOOGLE", content: GoogleLoginRequest };
+	| { type: "GOOGLE", content: GoogleLoginRequest }
+	| { type: "GITHUB", content: GitHubLoginRequest };
 
 export type NewDepositResponse = 
 	| { type: "STRIPE", content: NewDepositStripeResponse };

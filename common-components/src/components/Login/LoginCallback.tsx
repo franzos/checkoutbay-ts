@@ -1,5 +1,5 @@
+import { decodeSessionTokens, Session } from "@gofranz/common";
 import { Box, Text } from "@mantine/core";
-import { decodeSessionTokens, LOGIN_METHOD, Session } from "@gofranz/common";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,6 +19,7 @@ export function LoginCallback(props: LoginCallbackProps) {
     const refreshToken = hashParams.get("refresh_token");
     const expiresAt = hashParams.get("expires_at");
     const userId = hashParams.get("user_id");
+    const loginMethod = hashParams.get("login_method");
 
     if (!accessToken || !refreshToken || !expiresAt || !userId) {
       setHasError(t('login.invalidLoginResponse'));
@@ -35,14 +36,14 @@ export function LoginCallback(props: LoginCallbackProps) {
         access_token: accessToken,
         refresh_token: refreshToken,
       }),
-      method: LOGIN_METHOD.GOOGLE,
+      method: loginMethod,
     } as Session);
 
     props.loginDoneCb();
   }, [props, t]);
 
   const ErrorMessage = () => (
-    <Text color="red" mb="md">
+    <Text c="red" mb="md">
       {hasError}
     </Text>
   );

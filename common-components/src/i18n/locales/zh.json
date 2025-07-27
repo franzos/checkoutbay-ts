@@ -42,7 +42,8 @@
     "invalidEmail": "无效邮箱",
     "getPublicKey": "从扩展获取公钥",
     "emailTab": "邮箱",
-    "googleTab": "Google", 
+    "googleTab": "Google",
+    "githubTab": "GitHub", 
     "nostrTab": "Nostr",
     "emailDescription": "使用邮箱登录。",
     "googleDescription": "使用 Google 登录",
@@ -64,6 +65,8 @@
     "challenge": "挑战：",
     "loginWithExtension": "使用扩展登录",
     "redirectingGoogle": "正在重定向到 Google...",
+    "redirectingGithub": "正在重定向到 GitHub...",
+    "githubNoChallenge": "获取 GitHub 挑战失败",
     "back": "返回",
     "cancel": "取消",
     "submit": "提交"

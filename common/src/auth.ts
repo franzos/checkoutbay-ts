@@ -223,6 +223,12 @@ export class RustyAuth implements RustyAuthSpec {
           method: LOGIN_METHOD.GOOGLE,
         });
         break;
+      case LOGIN_METHOD.GITHUB:
+        this.setSession({
+          isLoggedIn: false,
+          method: LOGIN_METHOD.GITHUB,
+        });
+        break;
       default:
         throw new Error(`Unsupported login method: ${loginRequest.type}`);
     }

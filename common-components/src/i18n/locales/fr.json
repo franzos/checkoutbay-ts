@@ -42,7 +42,8 @@
     "invalidEmail": "Email invalide",
     "getPublicKey": "Obtenir la clé publique depuis l'extension",
     "emailTab": "Email",
-    "googleTab": "Google", 
+    "googleTab": "Google",
+    "githubTab": "GitHub", 
     "nostrTab": "Nostr",
     "emailDescription": "Se connecter avec un email.",
     "googleDescription": "Se connecter avec Google",
@@ -64,6 +65,8 @@
     "challenge": "Défi : ",
     "loginWithExtension": "Se connecter avec l'extension",
     "redirectingGoogle": "Redirection vers Google...",
+    "redirectingGithub": "Redirection vers GitHub...",
+    "githubNoChallenge": "Échec de l'obtention du défi GitHub",
     "back": "retour",
     "cancel": "Annuler",
     "submit": "Soumettre"

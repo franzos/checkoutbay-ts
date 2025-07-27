@@ -42,7 +42,8 @@
     "invalidEmail": "Invalid email",
     "getPublicKey": "Get public key from extention",
     "emailTab": "Email",
-    "googleTab": "Google", 
+    "googleTab": "Google",
+    "githubTab": "GitHub", 
     "nostrTab": "Nostr",
     "emailDescription": "Login with Email.",
     "googleDescription": "Login with Google",
@@ -64,6 +65,8 @@
     "challenge": "Challenge: ",
     "loginWithExtension": "Login with extention",
     "redirectingGoogle": "Redirecting to Google...",
+    "redirectingGithub": "Redirecting to GitHub...",
+    "githubNoChallenge": "Failed to get GitHub challenge",
     "back": "back",
     "cancel": "Cancel",
     "submit": "Submit"

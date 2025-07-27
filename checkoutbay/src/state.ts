@@ -137,6 +137,11 @@ export const useRustyState = create<State>((set, get) => ({
           type: LOGIN_METHOD.GOOGLE,
           content: {},
       });
+      case LOGIN_METHOD.GITHUB:
+        return await api.auth.login({
+          type: LOGIN_METHOD.GITHUB,
+          content: {},
+        });
       default:
         throw new Error(`Unsupported login method: ${loginMethod}`);
     }

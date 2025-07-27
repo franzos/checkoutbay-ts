@@ -42,7 +42,8 @@
     "invalidEmail": "อีเมลไม่ถูกต้อง",
     "getPublicKey": "รับคีย์สาธารณะจากส่วนขยาย",
     "emailTab": "อีเมล",
-    "googleTab": "Google", 
+    "googleTab": "Google",
+    "githubTab": "GitHub", 
     "nostrTab": "Nostr",
     "emailDescription": "เข้าสู่ระบบด้วยอีเมล",
     "googleDescription": "เข้าสู่ระบบด้วย Google",
@@ -64,6 +65,8 @@
     "challenge": "ความท้าทาย: ",
     "loginWithExtension": "เข้าสู่ระบบด้วยส่วนขยาย",
     "redirectingGoogle": "กำลังเปลี่ยนเส้นทางไปยัง Google...",
+    "redirectingGithub": "กำลังเปลี่ยนเส้นทางไปยัง GitHub...",
+    "githubNoChallenge": "ไม่สามารถรับความท้าทายจาก GitHub ได้",
     "back": "กลับ",
     "cancel": "ยกเลิก",
     "submit": "ส่ง"
