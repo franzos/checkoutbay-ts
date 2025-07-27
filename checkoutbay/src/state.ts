@@ -129,17 +129,22 @@ export const useRustyState = create<State>((set, get) => ({
         return await api.auth.login({
           type: LOGIN_METHOD.EMAIL_MAGIC_LINK,
           content: {
-          email: identifier,
-        },
-      });
+            email: identifier,
+          },
+        });
       case LOGIN_METHOD.GOOGLE:
         return await api.auth.login({
           type: LOGIN_METHOD.GOOGLE,
           content: {},
-      });
+        });
       case LOGIN_METHOD.GITHUB:
         return await api.auth.login({
           type: LOGIN_METHOD.GITHUB,
+          content: {},
+        });
+      case LOGIN_METHOD.MICROSOFT:
+        return await api.auth.login({
+          type: LOGIN_METHOD.MICROSOFT,
           content: {},
         });
       default:

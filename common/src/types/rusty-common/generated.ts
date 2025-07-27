@@ -203,6 +203,22 @@ export interface MagicLinkLoginReqest {
 	referral_code?: string;
 }
 
+export interface MicrosoftLoginChallenge {
+	auth_url: string;
+	referral_code?: string;
+}
+
+export interface MicrosoftLoginChallengeResponse {
+	code: string;
+	state: string;
+	scope?: string;
+	session_state?: string;
+}
+
+export interface MicrosoftLoginRequest {
+	referral_code?: string;
+}
+
 export interface NewDepositHttp {
 	amount: number;
 	currency: Currency;
@@ -348,19 +364,22 @@ export type LoginChallenge =
 	| { type: "NOSTR", content: NostrLoginChallenge }
 	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginChallenge }
 	| { type: "GOOGLE", content: GoogleLoginChallenge }
-	| { type: "GITHUB", content: GitHubLoginChallenge };
+	| { type: "GITHUB", content: GitHubLoginChallenge }
+	| { type: "MICROSOFT", content: MicrosoftLoginChallenge };
 
 export type LoginChallengeUserResponse = 
 	| { type: "NOSTR", content: NostrLoginChallengeResponse }
 	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginChallengeResponse }
 	| { type: "GOOGLE", content: GoogleLoginChallengeResponse }
-	| { type: "GITHUB", content: GitHubLoginChallengeResponse };
+	| { type: "GITHUB", content: GitHubLoginChallengeResponse }
+	| { type: "MICROSOFT", content: MicrosoftLoginChallengeResponse };
 
 export type LoginRequest = 
 	| { type: "NOSTR", content: NostrLoginRequest }
 	| { type: "EMAIL_MAGIC_LINK", content: MagicLinkLoginReqest }
 	| { type: "GOOGLE", content: GoogleLoginRequest }
-	| { type: "GITHUB", content: GitHubLoginRequest };
+	| { type: "GITHUB", content: GitHubLoginRequest }
+	| { type: "MICROSOFT", content: MicrosoftLoginRequest };
 
 export type NewDepositResponse = 
 	| { type: "STRIPE", content: NewDepositStripeResponse };

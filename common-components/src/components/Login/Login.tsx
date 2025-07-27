@@ -16,7 +16,7 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconBrandGithub, IconBrandGoogle, IconBrowser, IconRecordMail } from '@tabler/icons-react';
+import { IconBrandGithub, IconBrandGoogle, IconBrandWindows, IconBrowser, IconRecordMail } from '@tabler/icons-react';
 import { TFunction } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next';
 interface StepOneProps {
   googleLogin: () => void;
   githubLogin: () => void;
+  microsoftLogin: () => void;
   nostrLogin: () => void;
   magicLinkLoginChallenge: (email: string) => void;
   isBusy: boolean;
@@ -33,6 +34,7 @@ interface StepOneProps {
 const StepOne = ({
   googleLogin,
   githubLogin,
+  microsoftLogin,
   nostrLogin,
   magicLinkLoginChallenge,
   isBusy,
@@ -56,6 +58,9 @@ const StepOne = ({
       </Button>
       <Button type="submit" loading={isBusy} onClick={githubLogin} leftSection={<IconBrandGithub />} variant='outline'>
         {t("login.githubTab")}
+      </Button>
+      <Button type="submit" loading={isBusy} onClick={microsoftLogin} leftSection={<IconBrandWindows />} variant='outline'>
+        {t("login.microsoftTab")}
       </Button>
       <Button type="submit" loading={isBusy} onClick={nostrLogin} leftSection={<IconBrowser />} variant='outline'>
         {t("login.nostrTab")}
@@ -160,6 +165,14 @@ const StepTwo = ({
       {loginMethod === LOGIN_METHOD.GITHUB && (
         <>
           <Text mb="md">{t("login.redirectingGithub")}</Text>
+          <Center>
+            <Loader size="xl" />
+          </Center>
+        </>
+      )}
+      {loginMethod === LOGIN_METHOD.MICROSOFT && (
+        <>
+          <Text mb="md">{t("login.redirectingMicrosoft")}</Text>
           <Center>
             <Loader size="xl" />
           </Center>
@@ -284,6 +297,30 @@ export function Login(props: LoginProps) {
     }
   };
 
+  const microsoftLogin = async () => {
+    setIsBusy(true);
+    setLoginMethod(LOGIN_METHOD.MICROSOFT);
+    setHasError(null);
+    setActiveStep(1);
+    try {
+      const microsoftChallenge = await props.login({
+        type: LOGIN_METHOD.MICROSOFT,
+        content: {}
+      });
+      if (!microsoftChallenge || microsoftChallenge.type !== LOGIN_METHOD.MICROSOFT) {
+        setHasError(t("login.microsoftNoChallenge"));
+        return;
+      }
+      window.location.href = (microsoftChallenge.content as any).auth_url;
+    } catch (e) {
+      setHasError(`Error: ${e}`);
+      setActiveStep(0);
+      console.error(e);
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
   const magicLinkLoginChallenge = async (email: string) => {
     setIsBusy(true);
     setLoginMethod(LOGIN_METHOD.EMAIL_MAGIC_LINK);
@@ -350,6 +387,7 @@ export function Login(props: LoginProps) {
         <StepOne
           googleLogin={googleLogin}
           githubLogin={githubLogin}
+          microsoftLogin={microsoftLogin}
           nostrLogin={nostrLogin}
           magicLinkLoginChallenge={magicLinkLoginChallenge}
           isBusy={isBusy}
