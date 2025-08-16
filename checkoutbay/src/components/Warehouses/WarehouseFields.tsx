@@ -91,8 +91,8 @@ export function RenderWarehouseFields({
         if (!newTemplates.has(templateId)) {
           await api.removeTemplateFromWarehouse({
             primaryEntityId,
-            entityId,
-          }, templateId);
+            entityId: templateId,
+          }, entityId);
         }
       }
 
@@ -101,8 +101,8 @@ export function RenderWarehouseFields({
         if (!currentTemplates.has(templateId)) {
           await api.relateTemplateToWarehouse({
             primaryEntityId,
-            entityId,
-          }, templateId);
+            entityId: templateId,
+          }, entityId);
         }
       }
 
