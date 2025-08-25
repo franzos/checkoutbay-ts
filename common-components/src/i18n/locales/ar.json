@@ -28,13 +28,19 @@
     "alreadyAccount": "إذا لم يكن لديك حساب بعد، سيتم إنشاء واحد لك في المرة الأولى التي تسجل فيها الدخول. ",
     "emailSection": "رابط البريد الإلكتروني",
     "googleSection": "جوجل",
+    "githubSection": "GitHub",
+    "microsoftSection": "مايكروسوفت",
     "nostrSection": "إضافة متصفح Nostr",
     "signupDescription": "احصل على رابط مرسل إلى بريدك الإلكتروني لتسجيل الدخول. ",
     "googleDescription": "سجل الدخول باستخدام حساب جوجل الخاص بك. ",
+    "githubDescription": "سجل الدخول باستخدام حساب GitHub الخاص بك. ",
+    "microsoftDescription": "سجل الدخول باستخدام حساب مايكروسوفت الخاص بك. ",
     "nostrDescription": "سجل باستخدام ",
     "browserPlugin": "إضافة متصفح",
     "signupLoginEmail": "تسجيل الدخول بالبريد الإلكتروني.",
     "signupLoginGoogle": "تسجيل الدخول باستخدام جوجل",
+    "signupLoginGithub": "تسجيل الدخول باستخدام GitHub",
+    "signupLoginMicrosoft": "تسجيل الدخول باستخدام مايكروسوفت",
     "signupLoginNostr": "تسجيل الدخول باستخدام Nostr"
   },
   "login": {
@@ -88,7 +94,7 @@
   },
   "support": {
     "title": "الدعم",
-    "getHelp": "احصل على المساعدة مع Formshive",
+    "getHelp": "احصل على المساعدة مع {{serviceName}}",
     "description": "لديك سؤال أو تحتاج مساعدة؟ نحن هنا للمساعدة! املأ النموذج أدناه وسنعود إليك في أقرب وقت ممكن.",
     "thankYou": "شكراً لك!",
     "successMessage": "تم إرسال طلب الدعم الخاص بك بنجاح. سنعود إليك في أقرب وقت ممكن.",

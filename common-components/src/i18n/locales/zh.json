@@ -28,13 +28,19 @@
     "alreadyAccount": "如果您还没有账户，我们会在您首次登录时为您创建一个。",
     "emailSection": "邮件链接",
     "googleSection": "Google",
+    "githubSection": "GitHub",
+    "microsoftSection": "Microsoft",
     "nostrSection": "Nostr 浏览器插件",
     "signupDescription": "获取发送到您邮箱的登录链接。",
     "googleDescription": "使用您的 Google 账户登录。",
+    "githubDescription": "使用您的 GitHub 账户登录。",
+    "microsoftDescription": "使用您的 Microsoft 账户登录。",
     "nostrDescription": "使用支持的",
     "browserPlugin": "浏览器插件",
     "signupLoginEmail": "使用邮箱登录。",
     "signupLoginGoogle": "使用 Google 登录",
+    "signupLoginGithub": "使用 GitHub 登录",
+    "signupLoginMicrosoft": "使用 Microsoft 登录",
     "signupLoginNostr": "使用 Nostr 登录"
   },
   "login": {
@@ -88,7 +94,7 @@
   },
   "support": {
     "title": "支持",
-    "getHelp": "获取 Formshive 帮助",
+    "getHelp": "获取 {{serviceName}} 帮助",
     "description": "有问题或需要帮助？我们在这里为您服务！请填写下面的表单，我们会尽快回复您。",
     "thankYou": "谢谢！",
     "successMessage": "您的支持请求已成功提交。我们会尽快回复您。",

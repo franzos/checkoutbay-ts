@@ -26,12 +26,18 @@ interface SupportFormData {
 
 export interface SupportPageProps {
   session: Session | undefined;
+  formSubmissionEndpoint?: string;
+  serviceName?: string;
 }
 
 // This will be populated in the component since we need access to t()
 let SUBJECT_OPTIONS: { value: string; label: string }[] = [];
 
-export function SupportPage({ session }: SupportPageProps) {
+export function SupportPage({
+  session,
+  formSubmissionEndpoint = 'https://api.formshive.com/v1/digest/2ce22659-397b-412c-abe8-a64ce53dc4a0',
+  serviceName = 'Formshive'
+}: SupportPageProps) {
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -86,7 +92,7 @@ export function SupportPage({ session }: SupportPageProps) {
       formData.append('user_identifier', publicKey || 'unknown');
 
       const response = await fetch(
-        'https://api.formshive.com/v1/digest/2ce22659-397b-412c-abe8-a64ce53dc4a0',
+        formSubmissionEndpoint,
         {
           method: 'POST',
           body: formData,
@@ -145,7 +151,7 @@ export function SupportPage({ session }: SupportPageProps) {
 
       <Card shadow="xs" padding="lg" radius="md" withBorder>
         <Title order={2} mb="md">
-          {t('support.getHelp')}
+          {t('support.getHelp', { serviceName })}
         </Title>
         <Text mb="lg" c="dimmed">
           {t('support.description')}

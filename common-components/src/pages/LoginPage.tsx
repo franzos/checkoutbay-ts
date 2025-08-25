@@ -11,7 +11,7 @@ import {
   alpha,
   useMantineColorScheme,
 } from '@mantine/core';
-import { LoginRequest, LoginChallenge, LoginChallengeUserResponse, LoginSuccess } from '@gofranz/common';
+import { LoginRequest, LoginChallenge, LoginChallengeUserResponse, LoginSuccess, LOGIN_METHOD } from '@gofranz/common';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -32,6 +32,7 @@ export interface LoginPageProps {
   showSignupButton?: boolean; // Default: true
   titleGradient?: { from: string; to: string }; // Default: { from: 'pink', to: 'yellow' }
   titleClassName?: string; // CSS class for the title styling
+  loginMethods?: LOGIN_METHOD[]
 }
 
 export function LoginPage(props: LoginPageProps) {
@@ -49,6 +50,7 @@ export function LoginPage(props: LoginPageProps) {
     backgroundImage = "/and-machines-vqTWfa4DjEk.jpg",
     titleGradient = { from: "pink", to: "yellow" },
     titleClassName,
+    loginMethods = [LOGIN_METHOD.NOSTR, LOGIN_METHOD.GITHUB, LOGIN_METHOD.GOOGLE, LOGIN_METHOD.EMAIL_MAGIC_LINK, LOGIN_METHOD.MICROSOFT],
   } = props;
 
   const loginCb = async (loginRequest: LoginRequest) => {
@@ -92,6 +94,7 @@ export function LoginPage(props: LoginPageProps) {
               login={loginCb}
               loginChallenge={loginChallenge}
               loginDoneCb={loginDoneCb}
+              loginMethods={loginMethods}
             />
           </Card>
           {hasNewAccountButton && (

@@ -51,6 +51,7 @@ import {
   ShopViewPage,
 } from '../ViewPageAll';
 import { Footer } from './Footer';
+import { useMantineColorScheme } from '@mantine/core';
 
 interface LanguageRoutesProps {
   languagePrefix?: string;
@@ -58,6 +59,8 @@ interface LanguageRoutesProps {
 
 export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
   const { i18n } = useTranslation();
+  const { colorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === 'dark';
   
   // Update language when language prefix changes
   React.useEffect(() => {
@@ -89,6 +92,7 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
             }}
             loginChallenge={useRustyState.getState().loginChallenge}
             titleClassName={classes.title}
+            backgroundImage={isDark ? '/login-background_dark.jpg' : '/login-background.jpg'}
           />
         }
       />
@@ -112,7 +116,9 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
       />
       <Route path="/privacy" element={<PrivacyPage supportEmail="support@checkoutbay.com" footer={<Footer />} />} />
       <Route path="/terms" element={<TermsPage supportEmail="support@checkoutbay.com" footer={<Footer />} />} />
-      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/signup" element={<SignupPage
+        backgroundImage={isDark ? '/login-background_dark.jpg' : '/login-background.jpg'}
+      />} />
       <Route path="/news" element={<NewsPage blogBaseUrl="https://blog.checkoutbay.com" footer={<Footer />} />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/docs" element={<DocsPage />} />
@@ -162,7 +168,7 @@ export function LanguageRoutes({ languagePrefix }: LanguageRoutesProps) {
       <Route path="/account/:primary_entity_id/shop" element={<ShopViewPage />} />
       <Route
         path="/account/:primary_entity_id/support"
-        element={<SupportPage session={useRustyState.getState().api?.auth?.getSession()} />}
+        element={<SupportPage session={useRustyState.getState().api?.auth?.getSession()} serviceName="Checkoutbay" />}
       />
     </Routes>
   );

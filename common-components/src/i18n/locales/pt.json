@@ -28,13 +28,19 @@
     "alreadyAccount": "Se você ainda não tem uma conta, uma será criada para você na primeira vez que fizer login. ",
     "emailSection": "Link por email",
     "googleSection": "Google",
+    "githubSection": "GitHub",
+    "microsoftSection": "Microsoft",
     "nostrSection": "Plugin do navegador Nostr",
     "signupDescription": "Receba um link enviado para seu email para fazer login. ",
     "googleDescription": "Faça login com sua conta do Google. ",
+    "githubDescription": "Faça login com sua conta do GitHub. ",
+    "microsoftDescription": "Faça login com sua conta da Microsoft. ",
     "nostrDescription": "Cadastre-se usando um ",
     "browserPlugin": "plugin de navegador",
     "signupLoginEmail": "Entrar com email.",
     "signupLoginGoogle": "Entrar com Google",
+    "signupLoginGithub": "Entrar com GitHub",
+    "signupLoginMicrosoft": "Entrar com Microsoft",
     "signupLoginNostr": "Entrar com Nostr"
   },
   "login": {
@@ -88,7 +94,7 @@
   },
   "support": {
     "title": "Suporte",
-    "getHelp": "Obter ajuda com Formshive",
+    "getHelp": "Obter ajuda com {{serviceName}}",
     "description": "Tem uma pergunta ou precisa de assistência? Estamos aqui para ajudar! Preencha o formulário abaixo e entraremos em contato o mais breve possível.",
     "thankYou": "Obrigado!",
     "successMessage": "Sua solicitação de suporte foi enviada com sucesso. Entraremos em contato o mais breve possível.",

@@ -76,11 +76,54 @@ export interface AccountMovement {
 	currency: Currency;
 	features: string;
 	created_at: string;
+	token_id?: string;
 }
 
 export interface AccountMovementsResponse {
 	data: AccountMovement[];
 	total: number;
+}
+
+export interface ApiKey {
+	id: string;
+	user_id: string;
+	name: string;
+	key_hash: string;
+	scope?: any;
+	is_active: boolean;
+	created_at: string;
+	updated_at: string;
+	expires_at: string;
+}
+
+export interface ApiKeyCreateRequest {
+	name: string;
+	scope?: string[];
+	expires_in_days: number;
+}
+
+export interface ApiKeyResponse {
+	id: string;
+	name: string;
+	scope?: string[];
+	is_active: boolean;
+	created_at: string;
+	expires_at: string;
+	key?: string;
+}
+
+export interface ApiKeyUpdateRequest {
+	name?: string;
+	is_active?: boolean;
+	scope?: string[];
+}
+
+export interface ApiKeyUsageResponse {
+	total_spent: number;
+	currency: Currency;
+	transaction_count: number;
+	first_used: string;
+	last_used: string;
 }
 
 export interface CommonQueryParams {

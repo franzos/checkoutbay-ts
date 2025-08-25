@@ -27,6 +27,7 @@ interface StepOneProps {
   microsoftLogin: () => void;
   nostrLogin: () => void;
   magicLinkLoginChallenge: (email: string) => void;
+  loginMethods?: LOGIN_METHOD[]
   isBusy: boolean;
   t: TFunction<"translation", undefined>
 }
@@ -37,6 +38,7 @@ const StepOne = ({
   microsoftLogin,
   nostrLogin,
   magicLinkLoginChallenge,
+  loginMethods,
   isBusy,
   t
 }: StepOneProps) => {
@@ -51,36 +53,54 @@ const StepOne = ({
     },
   });
 
+  const hasGoogleLogin = loginMethods?.includes(LOGIN_METHOD.GOOGLE);
+  const hasGithubLogin = loginMethods?.includes(LOGIN_METHOD.GITHUB);
+  const hasMicrosoftLogin = loginMethods?.includes(LOGIN_METHOD.MICROSOFT);
+  const hasNostrLogin = loginMethods?.includes(LOGIN_METHOD.NOSTR);
+  const hasEmailMagicLinkLogin = loginMethods?.includes(LOGIN_METHOD.EMAIL_MAGIC_LINK);
+
   return (
     <Stack>
+      {hasGoogleLogin && 
       <Button type="submit" loading={isBusy} onClick={googleLogin} leftSection={<IconBrandGoogle />} variant='outline'>
         {t("login.googleTab")}
       </Button>
+      }
+      {hasGithubLogin &&
       <Button type="submit" loading={isBusy} onClick={githubLogin} leftSection={<IconBrandGithub />} variant='outline'>
         {t("login.githubTab")}
       </Button>
+      }
+      {hasMicrosoftLogin &&
       <Button type="submit" loading={isBusy} onClick={microsoftLogin} leftSection={<IconBrandWindows />} variant='outline'>
         {t("login.microsoftTab")}
       </Button>
+      }
+      {hasNostrLogin && 
       <Button type="submit" loading={isBusy} onClick={nostrLogin} leftSection={<IconBrowser />} variant='outline'>
         {t("login.nostrTab")}
       </Button>
-      <Text c="dimmed" size="sm" mt="md">
-        {t("auth.signupLoginEmail")}:
-      </Text>
-      <form
-        onSubmit={formRequestEmailMagicLink.onSubmit(() => magicLinkLoginChallenge(formRequestEmailMagicLink.values.email))}
-      >
-        <TextInput
-          withAsterisk
-          label={t("login.emailLabel")}
-          placeholder={t("login.emailPlaceholder")}
-          {...formRequestEmailMagicLink.getInputProps("email")}
-        />
-        <Button type="submit" loading={isBusy} mt='xs' w='100%' leftSection={<IconRecordMail />}>
-          {t("glob_buttons.login")}
-        </Button>
-      </form>
+      }
+      {hasEmailMagicLinkLogin &&
+        <>
+        <Text c="dimmed" size="sm" mt="md">
+          {t("auth.signupLoginEmail")}:
+        </Text>
+        <form
+          onSubmit={formRequestEmailMagicLink.onSubmit(() => magicLinkLoginChallenge(formRequestEmailMagicLink.values.email))}
+        >
+          <TextInput
+            withAsterisk
+            label={t("login.emailLabel")}
+            placeholder={t("login.emailPlaceholder")}
+            {...formRequestEmailMagicLink.getInputProps("email")}
+          />
+          <Button type="submit" loading={isBusy} mt='xs' w='100%' leftSection={<IconRecordMail />}>
+            {t("glob_buttons.login")}
+          </Button>
+        </form>
+        </>
+      }
     </Stack>
   )
 };
@@ -187,6 +207,7 @@ export interface LoginProps {
   login: (loginRequest: LoginRequest) => Promise<LoginChallenge>;
   loginChallenge: (props: LoginChallengeUserResponse) => Promise<LoginSuccess>;
   loginDoneCb: () => void;
+  loginMethods?: LOGIN_METHOD[]
 }
 
 export function Login(props: LoginProps) {
@@ -390,6 +411,7 @@ export function Login(props: LoginProps) {
           microsoftLogin={microsoftLogin}
           nostrLogin={nostrLogin}
           magicLinkLoginChallenge={magicLinkLoginChallenge}
+          loginMethods={props.loginMethods}
           isBusy={isBusy}
           t={t}
         />

@@ -1,4 +1,4 @@
-import { DiscountType, DiscountValueType, NewDiscount, Product, UpdateDiscount } from '@gofranz/checkoutbay-common';
+import { Discount, DiscountType, DiscountValueType, NewDiscount, Product, UpdateDiscount } from '@gofranz/checkoutbay-common';
 import { RenderFieldsCreateProps, RenderFieldsEditProps } from '@gofranz/common-components';
 import {
   Accordion,
@@ -248,7 +248,7 @@ export function RenderDiscountFields({
         error={form.errors.discount_type}
       />
 
-      {form.values.discount_type !== DiscountType.VolumeDiscount && (
+      {(form.values as Discount).discount_type !== DiscountType.VolumeDiscount && (
         <Group grow>
           <NumberInput
             label="Discount Value"
@@ -274,7 +274,7 @@ export function RenderDiscountFields({
         </Group>
       )}
 
-      {form.values.discount_type === DiscountType.VolumeDiscount && (
+      {(form.values as Discount).discount_type === DiscountType.VolumeDiscount && (
         <Alert color="blue" icon={<IconInfoCircle size={16} />}>
           <Text size="sm">
             <strong>Volume Discount:</strong> Discount percentages are configured in the volume tiers below.
@@ -423,7 +423,7 @@ export function RenderDiscountFields({
         </Accordion>
       )}
 
-      {form.values.discount_type === DiscountType.VolumeDiscount && (
+      {(form.values as Discount).discount_type === DiscountType.VolumeDiscount && (
         <Accordion variant="contained">
           <Accordion.Item value="volume-config">
             <Accordion.Control>
