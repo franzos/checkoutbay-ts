@@ -6,7 +6,7 @@ import {
   Text,
   Title,
   alpha,
-  useMantineColorScheme,
+  useComputedColorScheme,
 } from '@mantine/core';
 import { LOGIN_METHOD, LoginChallengeUserResponse, LoginSuccess } from '@gofranz/common';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,7 @@ export interface MagicLinkLoginPageProps {
 
 export function MagicLinkLoginPage(props: MagicLinkLoginPageProps) {
   const { t } = useTranslation();
-  const isDark = useMantineColorScheme().colorScheme === 'dark';
+  const isDark = useComputedColorScheme('light') === 'dark';
   const [errors, setErrors] = useState<string[]>([]);
   const [isBusy, setIsBusy] = useState(false);
   const nav = useNavigate();

@@ -7,7 +7,7 @@ import {
   Text,
   Title,
   alpha,
-  useMantineColorScheme,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ export interface LoginCallbackPageProps {
 
 export function LoginCallbackPage(props: LoginCallbackPageProps) {
   const { t } = useTranslation();
-  const isDark = useMantineColorScheme().colorScheme === "dark";
+  const isDark = useComputedColorScheme('light') === "dark";
   const nav = useNavigate();
   const { createLanguageURL } = useLanguageAwareRouting();
 

@@ -9,7 +9,7 @@ import {
   Text,
   Title,
   alpha,
-  useMantineColorScheme,
+  useComputedColorScheme,
 } from '@mantine/core';
 import { LoginRequest, LoginChallenge, LoginChallengeUserResponse, LoginSuccess, LOGIN_METHOD } from '@gofranz/common';
 import { useState } from 'react';
@@ -37,7 +37,7 @@ export interface LoginPageProps {
 
 export function LoginPage(props: LoginPageProps) {
   const { t } = useTranslation();
-  const isDark = useMantineColorScheme().colorScheme === 'dark';
+  const isDark = useComputedColorScheme('light') === 'dark';
   const [hasNewAccountButton, setHasNewAccountButton] = useState(props.showSignupButton !== false);
   const nav = useNavigate();
   const { createLanguageURL } = useLanguageAwareRouting();

@@ -3,7 +3,7 @@ import {
   BackgroundImage,
   Burger,
   Group,
-  useMantineColorScheme,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ColorSchemeToggle, useSessionCheck } from '@gofranz/common-components';
@@ -17,7 +17,7 @@ export interface AccountLayoutProps {
 }
 
 export function AccountLayout({ children, isLoggedIn }: AccountLayoutProps) {
-  const isDark = useMantineColorScheme().colorScheme === "dark";
+  const isDark = useComputedColorScheme('light') === "dark";
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 

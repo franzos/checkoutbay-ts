@@ -8,7 +8,7 @@ import {
   Text,
   Title,
   alpha,
-  useMantineColorScheme,
+  useComputedColorScheme,
 } from '@mantine/core';
 import { IconBrandGoogle, IconBrandGithub, IconBrowser, IconRecordMail, IconBrandWindows } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,7 @@ export interface SignupPageProps {
 export function SignupPage(props: SignupPageProps) {
   const { t } = useTranslation();
   const { createLanguageURL } = useLanguageAwareRouting();
-  const isDark = useMantineColorScheme().colorScheme === 'dark';
+  const isDark = useComputedColorScheme('light') === 'dark';
 
   const {
     backgroundImage = "/and-machines-vqTWfa4DjEk.jpg",

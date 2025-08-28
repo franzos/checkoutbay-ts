@@ -1,4 +1,4 @@
-import { Box, Burger, Button, Container, Drawer, Group, Image, Menu, Stack, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { Box, Burger, Button, Container, Drawer, Group, Image, Menu, Stack, useComputedColorScheme, useMantineTheme } from '@mantine/core';
 import { ColorSchemeToggle, useLanguageAwareRouting } from '@gofranz/common-components';
 import { useDisclosure } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
@@ -8,11 +8,11 @@ import { LanguageSelector } from '../LanguageSelector/LanguageSelector';
 export function PublicNavigation() {
   const { t } = useTranslation();
   const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme('light');
   const { createLanguageURL, isActive } = useLanguageAwareRouting();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
 
-  const isDark = colorScheme === 'dark';
+  const isDark = computedColorScheme === 'dark';
 
   return (
     <Box
