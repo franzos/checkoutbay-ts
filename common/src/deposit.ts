@@ -6,8 +6,7 @@ import {
   Deposits,
   AccountMovement,
   NewDepositHttp,
-  NewDepositResponse,
-  NewDepositStripeResponse
+  NewDepositResponse
 } from "./types";
 import { makeAuthHeaders } from "./index";
 
@@ -34,7 +33,7 @@ export interface RustyDepositSpec {
   newDeposit(
     deposit: NewDepositHttp,
     accessToken: string
-  ): Promise<NewDepositStripeResponse>;
+  ): Promise<NewDepositResponse>;
 }
 
 export class RustyDeposit implements RustyDepositSpec {
@@ -97,16 +96,11 @@ export class RustyDeposit implements RustyDepositSpec {
   async newDeposit(
     deposit: NewDepositHttp,
     accessToken: string
-  ): Promise<NewDepositStripeResponse> {
+  ): Promise<NewDepositResponse> {
     const result = await this.client.post<
       NewDepositResponse
     >("/a/deposits", deposit, { headers: makeAuthHeaders(accessToken) });
     
-    // Handle the tagged enum response
-    if (result.data.type === "STRIPE") {
-      return result.data.content;
-    }
-    
-    throw new Error(`Unsupported deposit provider: ${result.data.type}`);
+    return result.data;
   }
 }

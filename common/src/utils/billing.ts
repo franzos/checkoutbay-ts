@@ -9,5 +9,5 @@ export function balanceNextHigher(bal: Balance) {
 }
 
 export function formatCurrency(bal: Balance) {
-  return `${bal[0]} ${balanceNextHigher(bal)}`;
+  return `${bal[0].toUpperCase()} ${balanceNextHigher(bal)}`;
 }

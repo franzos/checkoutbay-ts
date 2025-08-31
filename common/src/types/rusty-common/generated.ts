@@ -143,6 +143,7 @@ export enum DepositStatus {
 
 export enum DepositProvider {
 	STRIPE = "STRIPE",
+	COINBASE = "COINBASE",
 }
 
 export interface Deposits {
@@ -262,7 +263,14 @@ export interface MicrosoftLoginRequest {
 	referral_code?: string;
 }
 
+export interface NewDepositCoinbaseResponse {
+	deposit_id: string;
+	charge_id: string;
+	hosted_url: string;
+}
+
 export interface NewDepositHttp {
+	/** Amount in cents (e.g., 1500 for 15.00 EUR, 1 for 0.01 EUR) */
 	amount: number;
 	currency: Currency;
 	provider: DepositProvider;
@@ -425,7 +433,8 @@ export type LoginRequest =
 	| { type: "MICROSOFT", content: MicrosoftLoginRequest };
 
 export type NewDepositResponse = 
-	| { type: "STRIPE", content: NewDepositStripeResponse };
+	| { type: "STRIPE", content: NewDepositStripeResponse }
+	| { type: "COINBASE", content: NewDepositCoinbaseResponse };
 
 export type NewSubscriptionResponse = 
 	| { type: "Direct", content: SubscriptionResponse }

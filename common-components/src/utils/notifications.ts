@@ -111,6 +111,14 @@ function parseApiFieldValidationError(error: AxiosFieldValidationErrorResponse):
     };
   }
 
+  // Handle case where errors array is not present (simple validation error with message)
+  if (!responseData.errors || !Array.isArray(responseData.errors)) {
+    return {
+      title: 'Validation Error',
+      message: responseData.message || 'There was a validation error with your request.',
+    };
+  }
+
   const messages = responseData.errors.map((fieldError: FieldValidationError) => {
     return `${fieldError.field}: ${fieldError.message}`;
   }).join(', ');
