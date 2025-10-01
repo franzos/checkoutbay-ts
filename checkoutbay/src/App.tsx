@@ -16,7 +16,7 @@ import { GeneralLayout } from './components/Layout/General';
 import { LanguageRoutes } from './components/Layout/LanguageRoutes';
 import { SEOHead } from './components/SEO/SEOHead';
 import './i18n';
-import { theme } from './theme';
+import { theme, cssVariablesResolver } from './theme';
 
 export default function App() {
   const { i18n } = useTranslation();
@@ -38,7 +38,7 @@ export default function App() {
   return (
     <HelmetProvider>
       <DirectionProvider>
-        <MantineProvider theme={theme} defaultColorScheme="auto">
+        <MantineProvider theme={theme} defaultColorScheme="auto" cssVariablesResolver={cssVariablesResolver}>
           <SEOHead />
           <HashRouter>
             <GeneralLayout>

@@ -1,5 +1,4 @@
 import {
-  BackgroundImage,
   Box,
   Button,
   Card,
@@ -47,7 +46,6 @@ export function LoginPage(props: LoginPageProps) {
     loginChallenge,
     onLoginSuccess,
     signupRoute = "/signup",
-    backgroundImage = "/and-machines-vqTWfa4DjEk.jpg",
     titleGradient = { from: "pink", to: "yellow" },
     titleClassName,
     loginMethods = [LOGIN_METHOD.NOSTR, LOGIN_METHOD.GITHUB, LOGIN_METHOD.GOOGLE, LOGIN_METHOD.EMAIL_MAGIC_LINK, LOGIN_METHOD.MICROSOFT],
@@ -67,54 +65,52 @@ export function LoginPage(props: LoginPageProps) {
   };
 
   return (
-    <BackgroundImage src={backgroundImage} radius={10} bgp="cover">
-      <Center h="100vh">
-        <Stack align="center">
-          <Title order={1} className={titleClassName} ta="center">
-            <Text
-              inherit
-              variant="gradient"
-              component="span"
-              gradient={titleGradient}
-            >
-              {t("auth.login")}
-            </Text>
-          </Title>
-          <Card
-            miw={300}
-            maw={400}
-            p="md"
-            bg={
-              isDark
-                ? alpha("var(--mantine-color-gray-8)", 0.6)
-                : alpha("var(--mantine-color-gray-0)", 0.6)
-            }
+    <Center h="100vh">
+      <Stack align="center">
+        <Title order={1} className={titleClassName} ta="center">
+          <Text
+            inherit
+            variant="gradient"
+            component="span"
+            gradient={titleGradient}
           >
-            <Login
-              login={loginCb}
-              loginChallenge={loginChallenge}
-              loginDoneCb={loginDoneCb}
-              loginMethods={loginMethods}
-            />
-          </Card>
-          {hasNewAccountButton && (
-            <Box p="md">
-              <Group justify="center">
-                <Text>{t("auth.newHere")}</Text>
-                <Button
-                  component={Link}
-                  to={signupRoute}
-                  variant="light"
-                  size="compact-md"
-                  color="dark"
-                >
-                  {t("auth.howToSignup")}
-                </Button>
-              </Group>
-            </Box>
-          )}
-        </Stack>
-      </Center>
-    </BackgroundImage>
+            {t("auth.login")}
+          </Text>
+        </Title>
+        <Card
+          miw={300}
+          maw={400}
+          p="md"
+          bg={
+            isDark
+              ? alpha("var(--mantine-color-gray-8)", 0.6)
+              : alpha("var(--mantine-color-gray-0)", 0.6)
+          }
+        >
+          <Login
+            login={loginCb}
+            loginChallenge={loginChallenge}
+            loginDoneCb={loginDoneCb}
+            loginMethods={loginMethods}
+          />
+        </Card>
+        {hasNewAccountButton && (
+          <Box p="md">
+            <Group justify="center">
+              <Text>{t("auth.newHere")}</Text>
+              <Button
+                component={Link}
+                to={signupRoute}
+                variant="light"
+                size="compact-md"
+                color="dark"
+              >
+                {t("auth.howToSignup")}
+              </Button>
+            </Group>
+          </Box>
+        )}
+      </Stack>
+    </Center>
   );
 }

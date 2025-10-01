@@ -1,6 +1,5 @@
 import {
   Anchor,
-  BackgroundImage,
   Button,
   Card,
   Center,
@@ -29,7 +28,6 @@ export function SignupPage(props: SignupPageProps) {
   const isDark = useComputedColorScheme('light') === 'dark';
 
   const {
-    backgroundImage = "/and-machines-vqTWfa4DjEk.jpg",
     titleGradient = { from: 'pink', to: 'yellow' },
     titleClassName,
     loginMethods = [LOGIN_METHOD.NOSTR, LOGIN_METHOD.GITHUB, LOGIN_METHOD.GOOGLE, LOGIN_METHOD.EMAIL_MAGIC_LINK, LOGIN_METHOD.MICROSOFT],
@@ -42,115 +40,113 @@ export function SignupPage(props: SignupPageProps) {
   const hasEmailMagicLinkLogin = loginMethods?.includes(LOGIN_METHOD.EMAIL_MAGIC_LINK);
 
   return (
-    <BackgroundImage src={backgroundImage} radius={10} bgp="cover">
-      <Center h="100vh">
-        <Stack align="center">
-          <Title order={1} className={titleClassName} ta="center">
-            <Text inherit variant="gradient" component="span" gradient={titleGradient}>
-              {t('auth.signup')}
-            </Text>
-          </Title>
-          <Card
-            maw={400}
-            p="md"
-            bg={
-              isDark
-                ? alpha('var(--mantine-color-gray-8)', 0.6)
-                : alpha('var(--mantine-color-gray-0)', 0.6)
-            }
-          >
-            <Text>{t('auth.alreadyAccount')}</Text>
-            {hasEmailMagicLinkLogin && (
-              <>
-                <Title order={3} mt="md">
-                  <IconRecordMail size="1.1rem" /> {t('auth.emailSection')}
-                </Title>
-                <Text mb="xs">
-                  {t('auth.signupDescription')}
-                </Text>
-                <Button
-                  component={Link}
-                  to={createLanguageURL("/login?kind=EMAIL_MAGIC_LINK")}
-                  variant="light"
-                >
-                  {t('auth.signupLoginEmail')}
-                </Button>
-              </>
-            )}
-            {hasGoogleLogin && (
-              <>
-                <Title order={3} mt="md">
-                  <IconBrandGoogle size="1.1rem" /> {t('auth.googleSection')}
-                </Title>
-                <Text mb="xs">
-                  {t('auth.googleDescription')}
-                </Text>
-                <Button
-                  component={Link}
-                  to={createLanguageURL("/login?kind=GOOGLE")}
-                  variant="light"
-                >
-                  {t('auth.signupLoginGoogle')}
-                </Button>
-              </>
-            )}
-            {hasGithubLogin && (
-              <>
-                <Title order={3} mt="md">
-                  <IconBrandGithub size="1.1rem" /> {t('auth.githubSection')}
-                </Title>
-                <Text mb="xs">
-                  {t('auth.githubDescription')}
-                </Text>
-                <Button
-                  component={Link}
-                  to={createLanguageURL("/login?kind=GITHUB")}
-                  variant="light"
-                >
-                  {t('auth.signupLoginGithub')}
-                </Button>
-              </>
-            )}
-            {hasMicrosoftLogin && (
-              <>
-                <Title order={3} mt="md">
-                  <IconBrandWindows size="1.1rem" /> {t('auth.microsoftSection')}
-                </Title>
-                <Text mb="xs">
-                  {t('auth.microsoftDescription')}
-                </Text>
-                <Button
-                  component={Link}
-                  to={createLanguageURL("/login?kind=MICROSOFT")}
-                  variant="light"
-                >
-                  {t('auth.signupLoginMicrosoft')}
-                </Button>
-              </>
-            )}
-            {hasNostrLogin && (
-              <>
-                <Title order={3} mt="md">
-                  <IconBrowser size="1.1rem" /> {t('auth.nostrSection')}
-                </Title>
-                <Text mb="xs">
-                  {t('auth.nostrDescription')}
-                  <Anchor href="https://blog.formshive.com/posts/get-started/">
-                    {t('auth.browserPlugin')}
-                  </Anchor>
-                  .
-                </Text>
-                <Button
-                  component={Link}
-                  to={createLanguageURL("/login?kind=NOSTR")}
-                  variant="light"
-                >
-                  {t('auth.signupLoginNostr')}
-                </Button>
-              </>)}
-          </Card>
-        </Stack>
-      </Center>
-    </BackgroundImage>
+    <Center h="100vh">
+      <Stack align="center">
+        <Title order={1} className={titleClassName} ta="center">
+          <Text inherit variant="gradient" component="span" gradient={titleGradient}>
+            {t('auth.signup')}
+          </Text>
+        </Title>
+        <Card
+          maw={400}
+          p="md"
+          bg={
+            isDark
+              ? alpha('var(--mantine-color-gray-8)', 0.6)
+              : alpha('var(--mantine-color-gray-0)', 0.6)
+          }
+        >
+          <Text>{t('auth.alreadyAccount')}</Text>
+          {hasEmailMagicLinkLogin && (
+            <>
+              <Title order={3} mt="md">
+                <IconRecordMail size="1.1rem" /> {t('auth.emailSection')}
+              </Title>
+              <Text mb="xs">
+                {t('auth.signupDescription')}
+              </Text>
+              <Button
+                component={Link}
+                to={createLanguageURL("/login?kind=EMAIL_MAGIC_LINK")}
+                variant="light"
+              >
+                {t('auth.signupLoginEmail')}
+              </Button>
+            </>
+          )}
+          {hasGoogleLogin && (
+            <>
+              <Title order={3} mt="md">
+                <IconBrandGoogle size="1.1rem" /> {t('auth.googleSection')}
+              </Title>
+              <Text mb="xs">
+                {t('auth.googleDescription')}
+              </Text>
+              <Button
+                component={Link}
+                to={createLanguageURL("/login?kind=GOOGLE")}
+                variant="light"
+              >
+                {t('auth.signupLoginGoogle')}
+              </Button>
+            </>
+          )}
+          {hasGithubLogin && (
+            <>
+              <Title order={3} mt="md">
+                <IconBrandGithub size="1.1rem" /> {t('auth.githubSection')}
+              </Title>
+              <Text mb="xs">
+                {t('auth.githubDescription')}
+              </Text>
+              <Button
+                component={Link}
+                to={createLanguageURL("/login?kind=GITHUB")}
+                variant="light"
+              >
+                {t('auth.signupLoginGithub')}
+              </Button>
+            </>
+          )}
+          {hasMicrosoftLogin && (
+            <>
+              <Title order={3} mt="md">
+                <IconBrandWindows size="1.1rem" /> {t('auth.microsoftSection')}
+              </Title>
+              <Text mb="xs">
+                {t('auth.microsoftDescription')}
+              </Text>
+              <Button
+                component={Link}
+                to={createLanguageURL("/login?kind=MICROSOFT")}
+                variant="light"
+              >
+                {t('auth.signupLoginMicrosoft')}
+              </Button>
+            </>
+          )}
+          {hasNostrLogin && (
+            <>
+              <Title order={3} mt="md">
+                <IconBrowser size="1.1rem" /> {t('auth.nostrSection')}
+              </Title>
+              <Text mb="xs">
+                {t('auth.nostrDescription')}
+                <Anchor href="https://blog.formshive.com/posts/get-started/">
+                  {t('auth.browserPlugin')}
+                </Anchor>
+                .
+              </Text>
+              <Button
+                component={Link}
+                to={createLanguageURL("/login?kind=NOSTR")}
+                variant="light"
+              >
+                {t('auth.signupLoginNostr')}
+              </Button>
+            </>)}
+        </Card>
+      </Stack>
+    </Center>
   );
 }

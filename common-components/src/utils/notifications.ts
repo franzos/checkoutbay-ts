@@ -1,5 +1,8 @@
 import { AxiosFieldValidationErrorResponse, FieldValidationError } from "@gofranz/common";
 
+// Re-export notification types for backward compatibility
+export type { NotificationConfig, CustomAxiosRequestConfig } from "@gofranz/common";
+
 /**
  * API Error Response format
  */
@@ -150,76 +153,51 @@ function getErrorTitle(errorCode: string): string {
 }
 
 /**
- * Show error notification using Mantine notifications
- * Requires @mantine/notifications to be imported where used
+ * Show error notification matching application style
  */
 export function showApiErrorNotification(error: any, notifications: any, defaultTitle = 'Error') {
   const parsed = parseApiError(error);
-  
+
   notifications.show({
     title: parsed.title || defaultTitle,
     message: parsed.message,
     color: 'red',
-    autoClose: 10000, // 8 seconds for errors - longer so users can read them
-    withCloseButton: true,
-    position: 'top-center',
-    radius: 'xs',
+    autoClose: 10000,
   });
 }
 
 /**
- * Show success notification with enhanced prominence
+ * Show success notification matching application style
  */
 export function showSuccessNotification(title: string, message: string, notifications: any) {
   notifications.show({
     title,
     message,
     color: 'green',
-    autoClose: 5000, // 5 seconds for success messages
-    withCloseButton: true,
-    withBorder: true,
-    radius: 'md',
-    style: {
-      borderLeftWidth: '4px',
-      borderLeftColor: 'var(--mantine-color-green-6)',
-    },
+    autoClose: 5000,
   });
 }
 
 /**
- * Show info notification with enhanced prominence
+ * Show info notification matching application style
  */
 export function showInfoNotification(title: string, message: string, notifications: any) {
   notifications.show({
     title,
     message,
     color: 'blue',
-    autoClose: 6000, // 6 seconds for info messages
-    withCloseButton: true,
-    withBorder: true,
-    radius: 'md',
-    style: {
-      borderLeftWidth: '4px',
-      borderLeftColor: 'var(--mantine-color-blue-6)',
-    },
+    autoClose: 6000,
   });
 }
 
 /**
- * Show warning notification with enhanced prominence
+ * Show warning notification matching application style
  */
 export function showWarningNotification(title: string, message: string, notifications: any) {
   notifications.show({
     title,
     message,
     color: 'orange',
-    autoClose: 7000, // 7 seconds for warnings - longer so users notice them
-    withCloseButton: true,
-    withBorder: true,
-    radius: 'md',
-    style: {
-      borderLeftWidth: '4px',
-      borderLeftColor: 'var(--mantine-color-orange-6)',
-    },
+    autoClose: 7000,
   });
 }

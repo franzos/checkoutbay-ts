@@ -1,4 +1,4 @@
-import { Anchor, Container, Divider, Grid, Group, Image, Stack, Text } from '@mantine/core';
+import { Anchor, Container, Divider, Grid, Group, Image, Stack, Text, useComputedColorScheme } from '@mantine/core';
 import { useLanguageAwareRouting } from '@gofranz/common-components';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 export function Footer() {
   const { t } = useTranslation();
   const { createLanguageURL } = useLanguageAwareRouting();
+  const computedColorScheme = useComputedColorScheme('light');
+  const isDark = computedColorScheme === 'dark';
 
   return (
     <>
@@ -77,14 +79,18 @@ export function Footer() {
               rel="noopener noreferrer"
               style={{ display: 'flex', alignItems: 'center' }}
             >
-              <Image
-                src="/gofranz.svg"
+              <img
+                src={isDark ? "/gofranz_white.svg" : "/gofranz.svg"}
                 alt="GoFranz - German Cloud Infrastructure"
-                height={16}
-                width="auto"
-                style={{ opacity: 0.7, transition: 'opacity 0.2s' }}
-                onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
+                height={20}
+                width={60}
+                style={{
+                  opacity: 0.7,
+                  transition: 'opacity 0.2s',
+                  filter: isDark ? 'none' : 'contrast(1.2) brightness(0.8)'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.7')}
               />
             </Anchor>
           </Group>

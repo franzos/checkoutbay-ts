@@ -121,108 +121,112 @@ export function SupportPage({
 
   if (isSubmitted) {
     return (
-      <Stack>
-        <Title order={1} mb="lg">
+      <>
+        <Title order={2} mb="md">
           {t('support.title')}
         </Title>
-        <Card shadow="xs" padding="lg" radius="md" withBorder>
-          <Stack align="center" gap="md">
-            <IconCheck size={48} color="green" />
-            <Title order={2} ta="center">
-              {t('support.thankYou')}
-            </Title>
-            <Text ta="center" size="lg">
-              {t('support.successMessage')}
-            </Text>
-            <Button onClick={() => setIsSubmitted(false)} variant="light">
-              {t('support.submitAnother')}
-            </Button>
-          </Stack>
-        </Card>
-      </Stack>
+        <Stack>
+          <Card shadow="xs" padding="lg" radius="md" withBorder>
+            <Stack align="center" gap="md">
+              <IconCheck size={48} color="green" />
+              <Title order={2} ta="center">
+                {t('support.thankYou')}
+              </Title>
+              <Text ta="center" size="lg">
+                {t('support.successMessage')}
+              </Text>
+              <Button onClick={() => setIsSubmitted(false)} variant="light">
+                {t('support.submitAnother')}
+              </Button>
+            </Stack>
+          </Card>
+        </Stack>
+      </>
     );
   }
 
   return (
-    <Stack>
-      <Title order={1} mb="lg">
+    <>
+      <Title order={2} mb="md">
         {t('support.title')}
       </Title>
+      <Stack>
 
-      <Card shadow="xs" padding="lg" radius="md" withBorder>
-        <Title order={2} mb="md">
-          {t('support.getHelp', { serviceName })}
-        </Title>
-        <Text mb="lg" c="dimmed">
-          {t('support.description')}
-        </Text>
+        <Card shadow="xs" padding="lg" radius="md" withBorder>
+          <Title order={2} mb="md">
+            {t('support.getHelp', { serviceName })}
+          </Title>
+          <Text mb="lg" c="dimmed">
+            {t('support.description')}
+          </Text>
 
-        {showSuccessAlert && (
-          <Alert color="green" variant="light" icon={<IconCheck size={16} />} mb="md">
-            <Text fw={500}>{t('support.successAlert')}</Text>
-            <Text size="sm">{t('support.successAlertMessage')}</Text>
-          </Alert>
-        )}
-
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="md">
-            <Group grow>
-              <TextInput
-                label={t('support.nameLabel')}
-                placeholder={t('support.namePlaceholder')}
-                {...form.getInputProps('name')}
-              />
-              {!isEmailLogin && (
-                <TextInput
-                  label={t('support.emailLabel')}
-                  placeholder={t('support.emailPlaceholder')}
-                  type="email"
-                  required
-                  {...form.getInputProps('email')}
-                />
-              )}
-              {isEmailLogin && (
-                <TextInput
-                  label={t('support.emailLabel')}
-                  value={userEmail}
-                  readOnly
-                  description={t('support.loggedInEmail')}
-                />
-              )}
-            </Group>
-
-            <Select
-              label={t('support.subjectLabel')}
-              placeholder={t('support.subjectPlaceholder')}
-              data={SUBJECT_OPTIONS}
-              required
-              {...form.getInputProps('subject')}
-            />
-
-            <Textarea
-              label={t('support.messageLabel')}
-              placeholder={t('support.messagePlaceholder')}
-              minRows={4}
-              required
-              {...form.getInputProps('message')}
-            />
-
-            <Alert color="blue" variant="light">
-              <Text size="sm">
-                {t('support.formInfo')}
-                {loginMethod || 'unknown'}
-                {t('support.formInfoEnd')}
-              </Text>
+          {showSuccessAlert && (
+            <Alert color="green" variant="light" icon={<IconCheck size={16} />} mb="md">
+              <Text fw={500}>{t('support.successAlert')}</Text>
+              <Text size="sm">{t('support.successAlertMessage')}</Text>
             </Alert>
+          )}
 
-            <Group justify="flex-end">
-              <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
-                {isSubmitting ? t('support.submitting') : t('support.submitButton')}
-              </Button>
-            </Group>
-          </Stack>
-        </form>
-      </Card>
-    </Stack>
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <Stack gap="md">
+              <Group grow>
+                <TextInput
+                  label={t('support.nameLabel')}
+                  placeholder={t('support.namePlaceholder')}
+                  {...form.getInputProps('name')}
+                />
+                {!isEmailLogin && (
+                  <TextInput
+                    label={t('support.emailLabel')}
+                    placeholder={t('support.emailPlaceholder')}
+                    type="email"
+                    required
+                    {...form.getInputProps('email')}
+                  />
+                )}
+                {isEmailLogin && (
+                  <TextInput
+                    label={t('support.emailLabel')}
+                    value={userEmail}
+                    readOnly
+                    description={t('support.loggedInEmail')}
+                  />
+                )}
+              </Group>
+
+              <Select
+                label={t('support.subjectLabel')}
+                placeholder={t('support.subjectPlaceholder')}
+                data={SUBJECT_OPTIONS}
+                required
+                {...form.getInputProps('subject')}
+              />
+
+              <Textarea
+                label={t('support.messageLabel')}
+                placeholder={t('support.messagePlaceholder')}
+                minRows={4}
+                required
+                {...form.getInputProps('message')}
+              />
+
+              <Alert color="blue" variant="light">
+                <Text size="sm">
+                  {t('support.formInfo')}
+                  {loginMethod || 'unknown'}
+                  {t('support.formInfoEnd')}
+                </Text>
+              </Alert>
+
+              <Group justify="flex-end">
+                <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
+                  {isSubmitting ? t('support.submitting') : t('support.submitButton')}
+                </Button>
+              </Group>
+            </Stack>
+          </form>
+        </Card>
+      </Stack>
+    </>
   );
 }

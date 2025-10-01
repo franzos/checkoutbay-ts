@@ -1,5 +1,4 @@
 import {
-  BackgroundImage,
   Card,
   Center,
   Stack,
@@ -33,7 +32,6 @@ export function MagicLinkLoginPage(props: MagicLinkLoginPageProps) {
   const {
     loginChallenge,
     onLoginSuccess,
-    backgroundImage = '/and-machines-vqTWfa4DjEk.jpg',
     titleGradient = { from: 'pink', to: 'yellow' },
     titleClassName
   } = props;
@@ -85,44 +83,42 @@ export function MagicLinkLoginPage(props: MagicLinkLoginPageProps) {
   }, []);
 
   return (
-    <BackgroundImage src={backgroundImage} radius={10} bgp="cover">
-      <Center h="100vh">
-        <Stack>
-          <Title order={1} className={titleClassName} ta="center">
-            <Text
-              inherit
-              variant="gradient"
-              component="span"
-              gradient={titleGradient}
-            >
-              {t('auth.login')}
-            </Text>
-          </Title>
-          <Card
-            maw={400}
-            p="md"
-            bg={
-              isDark
-                ? alpha('var(--mantine-color-gray-8)', 0.6)
-                : alpha('var(--mantine-color-gray-0)', 0.6)
-            }
+    <Center h="100vh">
+      <Stack>
+        <Title order={1} className={titleClassName} ta="center">
+          <Text
+            inherit
+            variant="gradient"
+            component="span"
+            gradient={titleGradient}
           >
-            {isBusy ? (
-              <Title order={3}>{t('login.processing')}</Title>
-            ) : (
-              <Text>{t('login.somethingWrong')}</Text>
-            )}
-            {errors.length > 0 && (
-              <>
-                <Title order={4}>{t('login.invalidMagicLink')}</Title>
-                {errors.map((error) => (
-                  <Text key={error}>{error}</Text>
-                ))}
-              </>
-            )}
-          </Card>
-        </Stack>
-      </Center>
-    </BackgroundImage>
+            {t('auth.login')}
+          </Text>
+        </Title>
+        <Card
+          maw={400}
+          p="md"
+          bg={
+            isDark
+              ? alpha('var(--mantine-color-gray-8)', 0.6)
+              : alpha('var(--mantine-color-gray-0)', 0.6)
+          }
+        >
+          {isBusy ? (
+            <Title order={3}>{t('login.processing')}</Title>
+          ) : (
+            <Text>{t('login.somethingWrong')}</Text>
+          )}
+          {errors.length > 0 && (
+            <>
+              <Title order={4}>{t('login.invalidMagicLink')}</Title>
+              {errors.map((error) => (
+                <Text key={error}>{error}</Text>
+              ))}
+            </>
+          )}
+        </Card>
+      </Stack>
+    </Center>
   );
 }

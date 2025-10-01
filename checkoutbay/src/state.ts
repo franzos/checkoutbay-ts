@@ -7,56 +7,39 @@ import {
 } from "@gofranz/checkoutbay-common";
 import {
   Currency,
-  getErrorTitle,
   LOGIN_METHOD,
   LoginChallengeUserResponse,
   RustyAuth,
   Session,
   StateBase,
 } from "@gofranz/common";
-import { showApiErrorNotification, showSuccessNotification } from "@gofranz/common-components";
+import { createErrorHandler, createSuccessHandler } from "@gofranz/common-components";
 import { notifications } from "@mantine/notifications";
 import * as Sentry from '@sentry/react';
-import type { AxiosError, AxiosResponse } from "axios";
+import type { AxiosError } from "axios";
 import { create } from "zustand";
 import { API_BASE_URL, LOCAL_STORAGE_KEY } from "./constants";
 
-const errorHandler = (error: AxiosError) => {
-  // Don't show notifications for aborted requests or network timeouts during development
-  if (error.code === 'ECONNABORTED' || error.message === 'Network Error') {
-    return;
+
+// Create notification handlers using shared factories
+const errorHandler = createErrorHandler({
+  notifications,
+  onError: (error: AxiosError) => {
+    Sentry.captureException(error, {
+      extra: {
+        url: error.config?.url,
+        method: error.config?.method,
+        status: error.response?.status,
+        data: error.response?.data,
+      },
+    });
   }
+});
 
-  Sentry.captureException(error, {
-    extra: {
-      url: error.config?.url,
-      method: error.config?.method,
-      status: error.response?.status,
-      data: error.response?.data,
-    },
-  });
-
-  const title = getErrorTitle(error);
-  showApiErrorNotification(error, notifications, title);
-};
-
-const successHandler = (response: AxiosResponse) => {
-  const accepted = ['post', 'put', 'patch']
-  if (!accepted.includes(response.config.method || '')) {
-    return;
-  }
-
-  const ignored = ['/stock-movements/by-products']
-  if (ignored.some((path) => response.config.url?.includes(path))) {
-    return;
-  }
-
-  showSuccessNotification(
-    `Request Successful`,
-    `Your ${response.config.method?.toUpperCase()} request to ${response.config.url} was successful.`,
-    notifications
-  );
-};
+const successHandler = createSuccessHandler({
+  notifications,
+  ignoredPaths: ['/stock-movements/by-products']
+});
 
 // Helper function to update Sentry user context
 const updateSentryUserContext = (session: Session | undefined) => {
@@ -67,7 +50,7 @@ const updateSentryUserContext = (session: Session | undefined) => {
       username: session.publicKey ? `${session.publicKey.slice(0, 8)}...${session.publicKey.slice(-8)}` : undefined,
       email: undefined, // Don't set email for privacy
     });
-    
+
     // Set additional context
     Sentry.setTag('login_method', session.method || 'unknown');
     Sentry.setTag('user_authenticated', 'true');
