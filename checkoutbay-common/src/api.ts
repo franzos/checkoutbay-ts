@@ -283,6 +283,13 @@ export class CheckoutbayApi {
     );
   };
 
+  setAccountEmail = async (id: string) => {
+    return this.getVerifiedEmailsApi().setAccountEmail(
+      id,
+      this.getAccessToken()
+    );
+  };
+
   getVerifiedEmails = async () => {
     return this.getVerifiedEmailsApi().getVerifiedEmails(this.getAccessToken());
   };

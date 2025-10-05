@@ -8,6 +8,7 @@ export interface VerifiedEmailDetailProps {
   submitFormCb: (newForm: HttpNewVerifiedEmail) => Promise<void>;
   deleteCb: (id: string) => Promise<void>;
   verifyCb: (id: string) => Promise<void>;
+  setAccountEmailCb: (id: string) => Promise<void>;
   getVerifiedEmails: () => Promise<ListResponse<VerifiedEmail>>;
 }
 
@@ -74,6 +75,20 @@ export function VerifiedEmailDetail(props: VerifiedEmailDetailProps) {
     }
   };
 
+  const setAccountEmailCb = async (id: string) => {
+    try {
+      setIsBusy(true);
+      await props.setAccountEmailCb(id);
+      const data = await props.getVerifiedEmails();
+      setVerifiedEmails(data.data);
+    } catch (e) {
+      alert(e);
+      console.error(e);
+    } finally {
+      setIsBusy(false);
+    }
+  };
+
   const Emails = () =>
     verifiedEmails.map((email) => (
       <Card key={email.id} shadow="xs" radius="md" mb="md" withBorder>
@@ -83,6 +98,7 @@ export function VerifiedEmailDetail(props: VerifiedEmailDetailProps) {
           isBusy={isBusy}
           verifyCb={verifyCb}
           deleteCb={deleteCb}
+          setAccountEmailCb={setAccountEmailCb}
         />
       </Card>
     ));

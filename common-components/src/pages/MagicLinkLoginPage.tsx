@@ -52,11 +52,35 @@ export function MagicLinkLoginPage(props: MagicLinkLoginPageProps) {
       } else {
         nav(createLanguageURL('/account'));
       }
-    } catch (e) {
-      alert(e);
+    } catch (e: any) {
       console.error(e);
+      setIsBusy(false);
+
+      // Parse structured error response from backend
+      const errorData = e?.response?.data;
+
+      if (errorData && typeof errorData === 'object' && errorData.error && errorData.message) {
+        // Backend returned structured error
+        switch (errorData.error) {
+          case 'INVALID_AUTH_METHOD':
+            setErrors([t('login.errorDifferentAuthMethod'), errorData.message]);
+            break;
+          case 'EMAIL_NOT_PRIMARY':
+            setErrors([t('login.errorNotPrimaryEmail'), errorData.message]);
+            break;
+          case 'INVALID_CHALLENGE':
+          case 'CHALLENGE_MISMATCH':
+            setErrors([t('login.invalidMagicLink'), errorData.message]);
+            break;
+          default:
+            setErrors([t('login.somethingWrong'), errorData.message]);
+        }
+      } else {
+        // Fallback to parsing error message
+        const errorMessage = e?.message || e?.toString() || '';
+        setErrors([t('login.somethingWrong'), errorMessage]);
+      }
     }
-    setIsBusy(false);
   };
 
   useEffect(() => {
@@ -105,17 +129,18 @@ export function MagicLinkLoginPage(props: MagicLinkLoginPageProps) {
           }
         >
           {isBusy ? (
-            <Title order={3}>{t('login.processing')}</Title>
+            <Stack gap="md">
+              <Title order={3}>{t('login.processing')}</Title>
+            </Stack>
+          ) : errors.length > 0 ? (
+            <Stack gap="md">
+              <Title order={4}>{t('login.somethingWrong')}</Title>
+              {errors.map((error, index) => (
+                <Text key={index} c={index === 0 ? 'red' : 'dimmed'}>{error}</Text>
+              ))}
+            </Stack>
           ) : (
             <Text>{t('login.somethingWrong')}</Text>
-          )}
-          {errors.length > 0 && (
-            <>
-              <Title order={4}>{t('login.invalidMagicLink')}</Title>
-              {errors.map((error) => (
-                <Text key={error}>{error}</Text>
-              ))}
-            </>
           )}
         </Card>
       </Stack>

@@ -126,6 +126,7 @@ export function AccountProfilePage({ serviceEmail }: AccountProfilePageProps) {
         submitFormCb={api.newVerifiedEmail}
         deleteCb={api.deleteVerifiedEmail}
         verifyCb={api.verifyVerifiedEmail}
+        setAccountEmailCb={api.setAccountEmail}
         getVerifiedEmails={api.getVerifiedEmails}
       />
       <Title order={2} mb="xs" mt="md">

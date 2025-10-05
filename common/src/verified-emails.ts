@@ -9,7 +9,8 @@ export interface RustyVerifiedEmailsSpec {
     newVerifiedEmail(data: HttpNewVerifiedEmail, accessToken: string): Promise<void>;
     verifyVerifiedEmail(id: string, accessToken: string): Promise<void>;
     deleteVerifiedEmail(id: string, accessToken: string): Promise<void>;
-  getVerifiedEmails(accessToken: string): Promise<ListResponse<VerifiedEmail>>;
+    setAccountEmail(id: string, accessToken: string): Promise<void>;
+    getVerifiedEmails(accessToken: string): Promise<ListResponse<VerifiedEmail>>;
 }
 
 export class RustyVerifiedEmails implements RustyVerifiedEmailsSpec {
@@ -38,6 +39,14 @@ export class RustyVerifiedEmails implements RustyVerifiedEmailsSpec {
     async deleteVerifiedEmail(id: string, accessToken: string): Promise<void> {
         await this.client.delete(
         `/a/emails/${id}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+    }
+
+    async setAccountEmail(id: string, accessToken: string): Promise<void> {
+        await this.client.put(
+        `/a/emails/${id}/set-account-email`,
+        {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
         );
     }

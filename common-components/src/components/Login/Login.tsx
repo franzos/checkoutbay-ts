@@ -9,7 +9,6 @@ import {
 import {
   Button,
   Center,
-  Group,
   Loader,
   Stack,
   Text,
@@ -107,64 +106,32 @@ const StepOne = ({
 
 interface StepTwoProps {
   loginMethod: LOGIN_METHOD;
-  magicLinkLoginChallengeResponse: (response: string) => void;
   setActiveStep: (step: number) => void;
-  isBusy: boolean;
   t: TFunction<"translation", undefined>
 }
 
 const StepTwo = ({
   loginMethod,
-  magicLinkLoginChallengeResponse,
   setActiveStep,
-  isBusy,
   t
 }: StepTwoProps) => {
-  const formResponse = useForm({
-    initialValues: {
-      challengeResponse: "",
-    },
-
-    validate: {
-      challengeResponse: (value) => (value ? null : t("login.codeRequired")),
-    },
-  });
 
   return (
     <>
       {loginMethod === LOGIN_METHOD.EMAIL_MAGIC_LINK && (
-        <form
-          onSubmit={formResponse.onSubmit(() => magicLinkLoginChallengeResponse(
-            formResponse.values.challengeResponse
-          ))}
-        >
-          <>
-            <TextInput
-              withAsterisk
-              label={t("login.enterCode")}
-              placeholder={t("login.codePlaceholder")}
-              mb="md"
-              {...formResponse.getInputProps("challengeResponse")}
-            />
-            <Text></Text>
-            <Group mb="md">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setActiveStep(0)}
-              >
-                {t("login.back")}
-              </Button>
-              <Button
-                type="submit"
-                loading={isBusy}
-              >
-                {t("glob_buttons.login")}
-              </Button>
-            </Group>
-            <Text>{t("login.emailInstructions")}</Text>
-          </>
-        </form>
+        <>
+          <Stack gap="md">
+            <Text size="lg" fw={500}>{t("login.emailSent")}</Text>
+            <Text>{t("login.clickLinkToLogin")}</Text>
+            <Text size="sm" c="dimmed">{t("login.wrongEmail")}</Text>
+            <Button
+              variant="outline"
+              onClick={() => setActiveStep(0)}
+            >
+              {t("login.back")}
+            </Button>
+          </Stack>
+        </>
       )}
       {loginMethod === LOGIN_METHOD.NOSTR && (
         <>
@@ -219,10 +186,6 @@ export function Login(props: LoginProps) {
   const [isBusy, setIsBusy] = useState(false);
   const [hasError, setHasError] = useState<string | null>(null);
 
-  // challenge from API
-  const [loginResponse, setLoginResponse] =
-    useState<LoginChallenge | null>(null);
-
   const nostrLogin = async () => {
     setIsBusy(true);
     setLoginMethod(LOGIN_METHOD.NOSTR);
@@ -261,10 +224,16 @@ export function Login(props: LoginProps) {
         return;
       }
       props.loginDoneCb();
-    } catch (e) {
-      setHasError(`Error: ${e}`);
-      setActiveStep(0);
+    } catch (e: any) {
       console.error(e);
+      setActiveStep(0);
+      // Parse structured error response from backend
+      const errorData = e?.response?.data;
+      if (errorData && typeof errorData === 'object' && errorData.message) {
+        setHasError(errorData.message);
+      } else {
+        setHasError(`Error: ${e?.message || e}`);
+      }
     } finally {
       setIsBusy(false);
     }
@@ -285,10 +254,16 @@ export function Login(props: LoginProps) {
         return;
       }
       window.location.href = (googleChallenge.content as any).auth_url;
-    } catch (e) {
-      setHasError(`Error: ${e}`);
-      setActiveStep(0);
+    } catch (e: any) {
       console.error(e);
+      setActiveStep(0);
+      // Parse structured error response from backend
+      const errorData = e?.response?.data;
+      if (errorData && typeof errorData === 'object' && errorData.message) {
+        setHasError(errorData.message);
+      } else {
+        setHasError(`Error: ${e?.message || e}`);
+      }
     } finally {
       setIsBusy(false);
     }
@@ -309,10 +284,16 @@ export function Login(props: LoginProps) {
         return;
       }
       window.location.href = (githubChallenge.content as any).auth_url;
-    } catch (e) {
-      setHasError(`Error: ${e}`);
-      setActiveStep(0);
+    } catch (e: any) {
       console.error(e);
+      setActiveStep(0);
+      // Parse structured error response from backend
+      const errorData = e?.response?.data;
+      if (errorData && typeof errorData === 'object' && errorData.message) {
+        setHasError(errorData.message);
+      } else {
+        setHasError(`Error: ${e?.message || e}`);
+      }
     } finally {
       setIsBusy(false);
     }
@@ -333,10 +314,16 @@ export function Login(props: LoginProps) {
         return;
       }
       window.location.href = (microsoftChallenge.content as any).auth_url;
-    } catch (e) {
-      setHasError(`Error: ${e}`);
-      setActiveStep(0);
+    } catch (e: any) {
       console.error(e);
+      setActiveStep(0);
+      // Parse structured error response from backend
+      const errorData = e?.response?.data;
+      if (errorData && typeof errorData === 'object' && errorData.message) {
+        setHasError(errorData.message);
+      } else {
+        setHasError(`Error: ${e?.message || e}`);
+      }
     } finally {
       setIsBusy(false);
     }
@@ -346,7 +333,6 @@ export function Login(props: LoginProps) {
     setIsBusy(true);
     setLoginMethod(LOGIN_METHOD.EMAIL_MAGIC_LINK);
     setHasError(null);
-    setActiveStep(1);
     try {
       const emailMagicLinkChallenge = await props.login({
         type: LOGIN_METHOD.EMAIL_MAGIC_LINK,
@@ -358,43 +344,21 @@ export function Login(props: LoginProps) {
         setHasError(t("login.emailNoChallenge"));
         return;
       }
-      setLoginResponse(emailMagicLinkChallenge);
-    } catch (e) {
-      setHasError(`Error: ${e}`);
+      // Move to step 1 to show "check your email" message
+      setActiveStep(1);
+    } catch (e: any) {
       console.error(e);
+      // Parse structured error response from backend
+      const errorData = e?.response?.data;
+      if (errorData && typeof errorData === 'object' && errorData.message) {
+        setHasError(errorData.message);
+      } else {
+        setHasError(`Error: ${e?.message || e}`);
+      }
     } finally {
       setIsBusy(false);
     }
   };
-
-  const magicLinkChallengeResponse = async (response: string) => {
-    setIsBusy(true);
-    setHasError(null);
-    try {
-      if (!loginResponse || loginResponse.type !== LOGIN_METHOD.EMAIL_MAGIC_LINK) {
-        setHasError(t("login.emailNoChallenge"));
-        return;
-      }
-      
-      const challengeResponse = await props.loginChallenge({
-        type: LOGIN_METHOD.EMAIL_MAGIC_LINK,
-        content: {
-          id: (loginResponse.content as any).id,
-          challenge: response.trim(),
-        }
-      });
-      if (!challengeResponse) {
-        setHasError(t("login.emailNoChallengeResponse"));
-        return;
-      }
-      props.loginDoneCb();
-    } catch (e) {
-      setHasError(`Error: ${e}`);
-      console.error(e);
-    } finally {
-      setIsBusy(false);
-    }
-  }
 
   const ErrorMessage = () => (
     <Text c="red" mb="md">
@@ -419,9 +383,7 @@ export function Login(props: LoginProps) {
       {activeStep === 1 && (
         <StepTwo
           loginMethod={loginMethod}
-          magicLinkLoginChallengeResponse={magicLinkChallengeResponse}
           setActiveStep={setActiveStep}
-          isBusy={isBusy}
           t={t}
         />
       )}
